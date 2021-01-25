@@ -9,25 +9,24 @@ using namespace Rcpp;
 //'
 //' @param s1, s2 two string
 int hammer_dist(std::string s1, std::string s2) {
-    if (s1.length() != s2.length()) {
-        return 999;
+  if (s1.length() != s2.length()) {
+    return 999;
+  }
+  int res = 0;
+  for (int i=0; i < s1.length(); i++) {
+    if (s1[i] != s2[i]) {
+      res++;
     }
-    int res = 0;
-    for (int i=0; i < s1.length(); i++) {
-        if (s1[i] != s2[i]) {
-            res++;
-        }
-    }
-    return res;
+  }
+  return res;
 }
 
 bool sortbycount(const std::pair<std::string, int> &a, const std::pair<std::string, int> &b) {
-    return a.second > b.second;
+  return a.second > b.second;
 }
-    
 
 
-//' Correct depth by UMI
+//' Sequence clustering
 //' 
 //' This function will merge the UMIs by using the 
 //' hammer distance. If two UMIs have hammer distance
@@ -41,133 +40,161 @@ bool sortbycount(const std::pair<std::string, int> &a, const std::pair<std::stri
 //' length of UMI
 //' @export
 // [[Rcpp::export]]
-DataFrame seq_correct(std::vector<std::string> seq, IntegerVector count, int count_threshold, int hammer_dist_threshold) {
-    
-    // tree plot without fixed, all the nodes are candidates
-    std::vector<std::pair<std::string, int>> cand;
-    // a object to store the corrected sequence
-    std::vector<std::pair<std::string, int>> res;
-    
-    for (auto i=0; i<seq.size(); i++) {
-        cand.push_back(std::make_pair(seq[i], count[i]));
-    }
+List seq_correct(std::vector<std::string> seq, IntegerVector count, int count_threshold, int hammer_dist_threshold) {
 
-    std::sort(cand.begin(), cand.end(), sortbycount);
+  // candidates: all the nodes are candidates
+  std::vector<std::pair<std::string, int>> cand;
 
-    bool flag_all_meet_threshold = false;
+  // results: a object to store the corrected sequence
+  std::vector<std::pair<std::string, int>> res;
 
-    // while the flag does not true, which means remain some barcode
-    // with count <  count_threshold
-    while (!flag_all_meet_threshold & (!cand.empty())) {
-        // tiptoe, the barcode with smallest count
-        std::vector<std::pair<std::string, int>>::iterator tiptoe = cand.end() - 1;
 
-        //std::cout<<tiptoe->first<<std::endl;
+  // the small node be merged
+  std::vector<std::string> merge_from;
+  std::vector<int> merge_from_size;
+  // the big node be merged
+  std::vector<std::string> merge_to;
+  std::vector<int> merge_to_size;
 
-        // if the tiptoe pass the threshold stop the program 
-        if (tiptoe->second >= count_threshold) {
-            flag_all_meet_threshold = true;
+  // Sort by the frequency of seq
+  for (auto i=0; i<seq.size(); i++) {
+    cand.push_back(std::make_pair(seq[i], count[i]));
+  }
+  std::sort(cand.begin(), cand.end(), sortbycount);
 
-            // store the candidates sequence
-            res.insert(res.begin(), cand.begin(), cand.end());
+  //bool flag_all_meet_threshold = false;
 
-            // stop cutting tiptoe 
-            break;
+  // while the flag does not true, which means remain some barcode
+  // with count <  count_threshold
+  while (!cand.empty()) {
 
-        // else compare the tiptoe to the branch 
-        } else {
+    // if only one nodes left in the candidates list, stop
+    if (cand.size() == 1) {
+      res.insert(res.begin(), cand.begin(), cand.end());
+      break;
+    } 
 
-            bool flag_is_connetcted = false;
-        
-            // if only one nodes left in the candidates list, stop
-            if (cand.size() == 1) {
-                res.insert(res.begin(), cand.begin(), cand.end());
-                break;
-            } 
+    // tiptoe: the barcode with smallest count
+    std::vector<std::pair<std::string, int>>::iterator tiptoe = cand.end() - 1;
 
-            // find out if tiptoe connect to branch
-            std::vector<std::pair<std::string, int>>::iterator it = cand.begin();
-            while (it != tiptoe) {
-                int h_dist = hammer_dist(it->first, tiptoe->first);
-                // if the tiptoe connect to branch
-                if (h_dist <= hammer_dist_threshold) {
-                    // add the tiptoe to the branch node
-                    it->second += tiptoe->second;
-                    //std::cout<<it->second<<std::endl;
-                    // remove the tiptoe
-                    cand.pop_back();
-                    // flag: if tiptoe is connect to branch
-                    flag_is_connetcted = true;
+    //std::cout<<tiptoe->first<<std::endl;
 
-                    // if only one nodes left in the candidates list, stop
-                    if (!cand.empty()) {
-                    //if (false) {
+    // if the tiptoe pass the threshold stop the program 
+    if (tiptoe->second >= count_threshold) {
+      // flag_all_meet_threshold = true;
 
-                        // update the order of the nodes by updated count
-                        std::vector<std::pair<std::string, int>>::iterator it_in_rank = it;
-                        while (it_in_rank != cand.begin()) {
-                            it_in_rank--;
-                            if (it_in_rank->second >= it->second) {
-                                break;
-                            }
-                        }
+      // store the candidates sequence
+      res.insert(res.begin(), cand.begin(), cand.end());
 
-                        if (it != it_in_rank) {
-                            cand.insert(it_in_rank + 1, *it);
-                            cand.erase(it);
-                        }
-                    } 
+      // stop cutting tiptoe 
+      break;
 
-                    break;
-                }
-                it++;
-            }
+      // else compare the tiptoe to the branch 
+    } else {
 
-            // if tiptoe is not connect to any branch
-            if (!flag_is_connetcted) {
-                res.push_back(*tiptoe);
-                cand.pop_back();
-            }
+      // is tiptoe is connect to big nodes
+      bool flag_is_connetcted = false;
+      int min_dist = 2147483646;
+      int h_dist;
+      std::vector<std::pair<std::string, int>>::iterator min_it;
 
+
+      // find out if tiptoe connect to branch
+      std::vector<std::pair<std::string, int>>::iterator it = cand.begin();
+      while (it != tiptoe) {
+        h_dist = hammer_dist(it->first, tiptoe->first);
+        // record the min_dist
+        if (h_dist < min_dist) {
+          min_dist = h_dist;
+          min_it = it;
         }
-    }
+        // if the branch is the nearest one to tiptoe 
+        if (h_dist == 1) {
+          break;
+        } 
+        it++;
+      }
 
-    std::vector<std::string> res_seq;
-    std::vector<int> res_count;
+      if (min_dist <= hammer_dist_threshold) {
+        // add the tiptoe to the branch node
+        min_it->second += tiptoe->second;
+        //std::cout<<min_it->second<<std::endl;
+        // record the nodes
+        merge_from.push_back(tiptoe->first);
+        merge_from_size.push_back(tiptoe->second);
+        merge_to.push_back(min_it->first);
+        merge_to_size.push_back(min_it->second);
 
-    for (auto i=0; i<res.size(); i++) {
-        res_seq.push_back(res[i].first);
-        res_count.push_back(res[i].second);
+        // remove the tiptoe
+        cand.pop_back();
+        // flag: if tiptoe is connect to branch
+        flag_is_connetcted = true;
+
+        // update the order of the nodes using updated count
+        std::vector<std::pair<std::string, int>>::iterator it_in_rank = min_it;
+        while (it_in_rank != cand.begin()) {
+          it_in_rank--;
+          if (it_in_rank->second >= min_it->second) {
+            break;
+          }
+        }
+
+        if (min_it != it_in_rank) {
+          cand.insert(it_in_rank + 1, *it);
+          cand.erase(min_it);
+        }
+      } else {
+        // if tiptoe is not connect to any branch
+        res.push_back(*tiptoe);
+        cand.pop_back();
+      }
     }
-    
-    DataFrame df = DataFrame::create(Named("barcode_seq") = res_seq, Named("count") = res_count);
-    return df;
+  }
+
+  std::vector<std::string> res_seq;
+  std::vector<int> res_count;
+
+  for (auto i=0; i<res.size(); i++) {
+    res_seq.push_back(res[i].first);
+    res_count.push_back(res[i].second);
+  }
+
+  // seqeunce frequency table
+  DataFrame seq_freq_tab = DataFrame::create(Named("barcode_seq") = res_seq, Named("count") = res_count);
+
+  // link table
+  DataFrame link_tab = DataFrame::create(Named("seq_from") = merge_from, Named("seq_to") = merge_to, _["from_size"] = merge_from_size, _["to_size"] = merge_to_size);
+
+  List L = List::create(Named("seq_freq") = seq_freq_tab, _["link_table"] = link_tab);
+
+  return L;
 }
 
-// while (umi.size() != 0) {
-//     int i = which_max(count);
-//     std::string umi_current = umi[i];
-//     res.push_back(umi_current);
-//     
-//     umi.erase(umi.begin() + i);
-//     count.erase(count.begin() + i);
-//     
-//     int size = umi.size();
-//     for (int i=0; i<size; i++) {
-//         int h_distance = hammer_dist(umi_current, umi[i]);
-//         if (h_distance == 1) {
-//             umi.erase(umi.begin() + i);
-//             count.erase(count.begin() + i);
-//         }
-//     } 
-// }
+
+  // while (umi.size() != 0) {
+  //     int i = which_max(count);
+  //     std::string umi_current = umi[i];
+  //     res.push_back(umi_current);
+  //     
+  //     umi.erase(umi.begin() + i);
+  //     count.erase(count.begin() + i);
+  //     
+  //     int size = umi.size();
+  //     for (int i=0; i<size; i++) {
+  //         int h_distance = hammer_dist(umi_current, umi[i]);
+  //         if (h_distance == 1) {
+  //             umi.erase(umi.begin() + i);
+  //             count.erase(count.begin() + i);
+  //         }
+  //     } 
+  // }
 
 
-// You can include R code blocks in C++ files processed with sourceCpp
-// (useful for testing and development). The R code will be automatically 
-// run after the compilation.
-//
+  // You can include R code blocks in C++ files processed with sourceCpp
+  // (useful for testing and development). The R code will be automatically 
+  // run after the compilation.
+  //
 
-/*** R
+  /*** R
 
 */

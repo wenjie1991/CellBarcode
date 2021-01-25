@@ -10,7 +10,7 @@
 #' @param s1, s2 two string
 NULL
 
-#' Correct depth by UMI
+#' Sequence clustering
 #' 
 #' This function will merge the UMIs by using the 
 #' hammer distance. If two UMIs have hammer distance

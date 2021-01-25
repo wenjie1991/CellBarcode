@@ -6,7 +6,7 @@
 using namespace Rcpp;
 
 // seq_correct
-DataFrame seq_correct(std::vector<std::string> seq, IntegerVector count, int count_threshold, int hammer_dist_threshold);
+List seq_correct(std::vector<std::string> seq, IntegerVector count, int count_threshold, int hammer_dist_threshold);
 RcppExport SEXP _Bc_seq_correct(SEXP seqSEXP, SEXP countSEXP, SEXP count_thresholdSEXP, SEXP hammer_dist_thresholdSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
