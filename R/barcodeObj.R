@@ -11,7 +11,7 @@
 #' #bc_obj[, c("sample1_rep1", "sample1_rep2")]
 "[.BarcodeObj" = function(barcodeObj, x = NULL, y = NULL) {
   if (is.null(x) & is.null(y)) {
-    error("Error message. TODO.")
+    stop("Error message. TODO.")
   }
   if (!is.null(y)) {
     return(subset.BarcodeObj(barcodeObj, sample = y))
@@ -36,10 +36,13 @@
 #' # subset(bc_obj, sample = "sample1_rep1", barcode = c("AACCTT", "AACCTT"))
 #' # subset(bc_obj, sample = c("sample1_rep1", "sample1_rep2"), barcode = c("AACCTT", "AACCTT"))
 subset.BarcodeObj = function(barcodeObj, sample = NULL, barcode = NULL, black_list = NULL) {
+
+  reads_eq = NULL # due to NOTE in check
+
   # TODO: The funciton only can apply the operation to the `messyBc` and `cleanBc`. We need to make it
   # capable to apply the selection to all information in the object.
   if (is.null(sample) & is.null(barcode)) {
-    error("Error message. TODO.")
+    stop("Error message. TODO.")
   }
   if (!is.null(barcode)) {
     if (!is.null(barcodeObj$cleanBc)) {

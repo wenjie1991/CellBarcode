@@ -22,7 +22,7 @@ filterFq.character = function(x, min_read_length = 0) {
   x[nchar(x) >= min_read_length]
 }
 
-filterFq.integer = function(x) {
+filterFq.integer = function(x, min_read_length = 0) {
   x[nchar(names(x)) >= min_read_length]
 }
 

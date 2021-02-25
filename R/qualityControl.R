@@ -6,7 +6,7 @@ get_base_quality_per_cycle = function(bstringset) {
   quality_v = quality_encode[rownames(m)]
 
   y = lapply(1:ncol(m), function(i) {
-    Rle(quality_v, m[, i])
+    S4Vectors::Rle(quality_v, m[, i])
   })
 
   quality_stat = sapply(y, function(x) {
@@ -25,7 +25,9 @@ get_base_freq_per_cycle = function(dnastringset) {
 }
 
 #' get the QC information of the raw sequence
+#' 
 #' fastq file name, ShortReadQ Obj, DNAStringSet Obj, data.frame, vector
+#' 
 runQC = function(...) UseMethod("runQC")
 
 runQC.ShortReadQ = function(x, n = 50, plot = F) {

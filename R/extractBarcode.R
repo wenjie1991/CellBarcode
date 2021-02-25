@@ -16,10 +16,10 @@ extractBc.ShortReadQ = function(x, pattern = "", maxLDist = 2, pattern_type = c(
   m = utils::aregexec(pattern, reads_seq, fixed = F, max.distance = maxLDist, costs = list(sub = 1))
   seq_l = regmatches(reads_seq, m)
 
-  seq_v = laply(seq_l, function(x) { x[1] })
-  barcode_v = laply(seq_l, function(x) { x[pattern_type["barcode"] + 1] })
+  seq_v = plyr::laply(seq_l, function(x) { x[1] })
+  barcode_v = plyr::laply(seq_l, function(x) { x[pattern_type["barcode"] + 1] })
   if ("UMI" %in% names(pattern_type)) {
-    umi_v = laply(seq_l, function(x) { x[pattern_type["UMI"] + 1] })
+    umi_v = plyr::laply(seq_l, function(x) { x[pattern_type["UMI"] + 1] })
     d = data.table(reads_seq = reads_seq, match_seq = seq_v, umi_seq = umi_v, barcode_seq = barcode_v, count = reads_freq)
   } else {
     d = data.table(reads_seq = reads_seq, match_seq = seq_v, barcode_seq = barcode_v, count = reads_freq)
@@ -32,10 +32,10 @@ extractBc.DNAStringSet = function(x, pattern = "", maxLDist = 2, pattern_type = 
   m = utils::aregexec(pattern, reads_seq, fixed = F, max.distance = maxLDist, costs = list(sub = 1))
   seq_l = regmatches(reads_seq, m)
 
-  seq_v = laply(seq_l, function(x) { x[1] })
-  barcode_v = laply(seq_l, function(x) { x[pattern_type["barcode"] + 1] })
+  seq_v = plyr::laply(seq_l, function(x) { x[1] })
+  barcode_v = plyr::laply(seq_l, function(x) { x[pattern_type["barcode"] + 1] })
   if ("UMI" %in% names(pattern_type)) {
-    umi_v = laply(seq_l, function(x) { x[pattern_type["UMI"] + 1] })
+    umi_v = plyr::laply(seq_l, function(x) { x[pattern_type["UMI"] + 1] })
     d = data.table(reads_seq = reads_seq, match_seq = seq_v, umi_seq = umi_v, barcode_seq = barcode_v, count = reads_freq)
   } else {
     d = data.table(reads_seq = reads_seq, match_seq = seq_v, barcode_seq = barcode_v, count = reads_freq)
@@ -76,7 +76,7 @@ extractBc.list = function(x, pattern = "", maxLDist = 2, pattern_type = c(barcod
   if (is.null(sample_name)) {
     sample_name = names(x)
   }
-  mclapply(x, function(x_i) {
+  parallel::mclapply(x, function(x_i) {
     extractBc(x_i, pattern = pattern, maxLDist = maxLDist, pattern_type = pattern_type, costs = costs)
   }) -> messyBc
   names(messyBc) = sample_name

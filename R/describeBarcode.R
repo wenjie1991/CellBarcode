@@ -25,6 +25,8 @@ plotNetwork = function(x, ...) UseMethod("plotNetwork", x)
 #' @export
 plotNetwork.BarcodeObj = function(barcodeObj, sample1 = NULL, sample2 = NULL, topN = 100, type = "raw", UMI_depth_threshold_n = 5, ...) {
 
+  count = barcode_seq = NULL  # due to NOTE in check
+
   if (type == "clean" & !is.null(barcodeObj$cleanBc)) {
     d = barcodeObj$cleanBc
   } else if (type == "raw" & !is.null(barcodeObj$messyBc)) {
@@ -88,6 +90,9 @@ calcDistance = function(seqs, weight = "", label = NULL) {
 
 ## no export
 drawNetwork = function(distance, weight, isLabel, highLight, col = NA, highLightLink = F, sample1, sample2 = NA) {
+
+  x = y = xend = yend = label = size_Log10 = edge_alpha = edge_size = vertex_col = edge_col = NULL
+
   if (is.na(col[1])) {
     col = rep(sample1, length(nrow(distance)))
   }

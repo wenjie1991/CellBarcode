@@ -7,6 +7,9 @@ stairPlot = function(x, ...) UseMethod("stairPlot", x)
 #' @return NULL
 #' @export
 stairPlot.BarcodeObj = function(barcodeObj, sample = 1, max = 1000) {
+
+  count = barcode_seq = NULL  # due to NOTE in check
+
   # TODO: The stair plot only apply to messyBc iterm, do we need to apply it to cleanBc
   #       Return the optimized cutoff point.
   messyBc = barcodeObj$messyBc
@@ -35,6 +38,8 @@ cureBc.BarcodeObj = function(
   , hammer_dist_threshold = 1
   , with_umi = F
   ) {
+
+  count = barcode_seq = NULL  # due to NOTE in check
   # TODO: Use the barcode distribution and sequence base pair quality to correct
 
   messyBc = barcodeObj$messyBc
