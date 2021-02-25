@@ -71,8 +71,7 @@ extractBc.character = function(file, sample_name = basename(file), pattern = "",
     bc_list = lapply(1:length(file), function(i) {
       extractBc(file[i], sample_name = sample_name[i], pattern = pattern, maxLDist = maxLDist, pattern_type = pattern_type, costs = costs, verbose = verbose)
     })
-    names(bc_list) = sample_name
-    bc_list
+    as.BarcodeObj(bc_list, sample_name)
   } else {
     x = ShortRead::readFastq(file)
     extractBc(x, sample_name = sample_name, pattern = pattern, maxLDist = maxLDist, pattern_type = pattern_type, costs = costs, verbose = verbose)
@@ -93,6 +92,15 @@ extractBc.list = function(x, pattern = "", sample_name = NULL, maxLDist = 2, pat
   parallel::mclapply(1:length(x), function(i) {
     extractBc(x[[i]], pattern = pattern, sample_name = sample_name[i], maxLDist = maxLDist, pattern_type = pattern_type, costs = costs, verbose = F)
   }) -> messyBc
+  names(messyBc) = sample_name
+  output = list(messyBc = messyBc)
+  class(output) = "BarcodeObj"
+  output
+}
+
+as.BarcodeObj = function(x, sample_name = names(x)) {
+  # TODO: 
+  messyBc = x
   names(messyBc) = sample_name
   output = list(messyBc = messyBc)
   class(output) = "BarcodeObj"
