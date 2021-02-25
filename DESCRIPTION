@@ -23,7 +23,7 @@ Imports:
     readr,
     ShortRead,
     Biostrings,
-    ggpubr,
+    egg,
     utils,
     parallel,
     S4Vectors

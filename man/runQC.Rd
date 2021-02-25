@@ -2,12 +2,10 @@
 % Please edit documentation in R/qualityControl.R
 \name{runQC}
 \alias{runQC}
-\title{get the QC information of the raw sequence
-fastq file name, ShortReadQ Obj, DNAStringSet Obj, data.frame, vector}
+\title{get the QC information of the raw sequence}
 \usage{
 runQC(...)
 }
 \description{
-get the QC information of the raw sequence
 fastq file name, ShortReadQ Obj, DNAStringSet Obj, data.frame, vector
 }
