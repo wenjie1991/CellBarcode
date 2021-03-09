@@ -49,7 +49,7 @@
 #' @docType package
 #' @name foo
 #' @importFrom magrittr %>% %<>% extract extract2
-#' @import data.table
+#' @importFrom data.table data.table rbindlist
 #' @import ggplot2
 #' @import Biostrings
 #' @import ShortRead

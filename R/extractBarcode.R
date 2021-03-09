@@ -17,10 +17,10 @@ report_barcode_extraction = function(sample_name, reads_num, barcode_reads) {
   }
 }
 
-extractBc.ShortReadQ = function(x, pattern = "", sample_name = NULL, maxLDist = 2, pattern_type = c(barcode = 1), costs = list(sub = 1, ins = 99, del = 99), verbose = T) {
+extractBc.ShortReadQ = function(x, pattern = "", sample_name = NULL, maxLDist = 0, pattern_type = c(barcode = 1), costs = list(sub = 1, ins = 99, del = 99), verbose = T) {
   reads_freq = ShortRead::tables(x, n=Inf)$top
   reads_seq = names(reads_freq)
-  m = utils::aregexec(pattern, reads_seq, fixed = F, max.distance = maxLDist, costs = list(sub = 1))
+  m = utils::aregexec(pattern, reads_seq, fixed = F, max.distance = maxLDist, costs = costs)
   seq_l = regmatches(reads_seq, m)
 
   seq_v = plyr::laply(seq_l, function(x) { x[1] })
@@ -32,15 +32,16 @@ extractBc.ShortReadQ = function(x, pattern = "", sample_name = NULL, maxLDist = 
     d = data.table(reads_seq = reads_seq, match_seq = seq_v, barcode_seq = barcode_v, count = reads_freq)
   }
   if (verbose) {
-    report_barcode_extraction(sample_name = sample_name, reads_num = sum(reads_freq), barcode_reads = sum(d$count, na.omit = T))
+    # BUG: The reads_num is not the total reads number
+    #     report_barcode_extraction(sample_name = sample_name, reads_num = sum(reads_freq), barcode_reads = sum(d$count, na.omit = T))
   }
   stats::na.omit(d)
 }
 
-extractBc.DNAStringSet = function(x, pattern = "", sample_name = NULL, maxLDist = 2, pattern_type = c(barcode = 1), costs = list(sub = 1, ins = 99, del = 99), verbose = T) {
+extractBc.DNAStringSet = function(x, pattern = "", sample_name = NULL, maxLDist = 0, pattern_type = c(barcode = 1), costs = list(sub = 1, ins = 99, del = 99), verbose = T) {
   reads_freq = ShortRead::tables(x, n=Inf)$top
   reads_seq = names(reads_freq)
-  m = utils::aregexec(pattern, reads_seq, fixed = F, max.distance = maxLDist, costs = list(sub = 1))
+  m = utils::aregexec(pattern, reads_seq, fixed = F, max.distance = maxLDist, costs = costs)
   seq_l = regmatches(reads_seq, m)
 
   seq_v = plyr::laply(seq_l, function(x) { x[1] })
@@ -52,13 +53,14 @@ extractBc.DNAStringSet = function(x, pattern = "", sample_name = NULL, maxLDist 
     d = data.table(reads_seq = reads_seq, match_seq = seq_v, barcode_seq = barcode_v, count = reads_freq)
   }
   if (verbose) {
-    report_barcode_extraction(sample_name = sample_name, reads_num = sum(reads_freq), barcode_reads = sum(d$count, na.omit = T))
+    # BUG: The reads_num is not the total reads number
+    #  uences    report_barcode_extraction(sample_name = sample_name, reads_num = sum(reads_freq), barcode_reads = sum(d$count, na.omit = T))
   }
   stats::na.omit(d)
 }
 
 
-extractBc.data.frame = function(x, pattern = "", maxLDist = 2, pattern_type = c(barcode = 1), costs = list(sub = 1, ins = 99, del = 99), verbose = T) {
+extractBc.data.frame = function(x, pattern = "", maxLDist = 0, pattern_type = c(barcode = 1), costs = list(sub = 1, ins = 99, del = 99), verbose = T) {
   sequences = x$seq
   freq = x$freq
   x = DNAStringSet(rep(sequences, freq))
@@ -66,7 +68,7 @@ extractBc.data.frame = function(x, pattern = "", maxLDist = 2, pattern_type = c(
   extractBc(x, pattern = pattern, maxLDist = maxLDist, pattern_type = pattern_type, costs = costs, verbose = verbose)
 }
 
-extractBc.character = function(file, sample_name = basename(file), pattern = "", maxLDist = 2, pattern_type = c(barcode = 1), costs = list(sub = 1, ins = 99, del = 99), verbose = T) {
+extractBc.character = function(file, pattern = "", sample_name = basename(file), maxLDist = 0, pattern_type = c(barcode = 1), costs = list(sub = 1, ins = 99, del = 99), verbose = T) {
   if (length(file) > 1) {
     bc_list = lapply(1:length(file), function(i) {
       extractBc(file[i], sample_name = sample_name[i], pattern = pattern, maxLDist = maxLDist, pattern_type = pattern_type, costs = costs, verbose = verbose)
@@ -78,14 +80,14 @@ extractBc.character = function(file, sample_name = basename(file), pattern = "",
   }
 }
 
-extractBc.integer = function(x, pattern = "", sample_name = NULL, maxLDist = 2, pattern_type = c(barcode = 1), costs = list(sub = 1, ins = 99, del = 99), verbose = T) {
+extractBc.integer = function(x, pattern = "", sample_name = NULL, maxLDist = 0, pattern_type = c(barcode = 1), costs = list(sub = 1, ins = 99, del = 99), verbose = T) {
   # TODO: Table result
   x = DNAStringSet(rep(names(x), x))
 
   extractBc(x, pattern = pattern, maxLDist = maxLDist, pattern_type = pattern_type, costs = costs, verbose = verbose)
 }
 
-extractBc.list = function(x, pattern = "", sample_name = NULL, maxLDist = 2, pattern_type = c(barcode = 1), costs = list(sub = 1, ins = 99, del = 99), verbose = F) {
+extractBc.list = function(x, pattern = "", sample_name = NULL, maxLDist = 0, pattern_type = c(barcode = 1), costs = list(sub = 1, ins = 99, del = 99), verbose = F) {
   if (is.null(sample_name)) {
     sample_name = names(x)
   }

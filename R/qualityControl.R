@@ -31,6 +31,7 @@ get_base_freq_per_cycle = function(dnastringset) {
 #' fastq file name, ShortReadQ Obj, DNAStringSet Obj, data.frame, vector
 #' 
 runQC = function(...) UseMethod("runQC")
+# TODO: enable rename the sample
 
 runQC.ShortReadQ = function(x, n = 50, plot = F) {
   # output: top, distribution (nOccurrences, nReads), base_quality_per_cycle, base_freq_per_cycle
@@ -90,7 +91,7 @@ runQC.character = function(file) {
 
 runQC.list = function(x) {
   qc_list = lapply(x, runQC)
-  class(qc_list) = append(class(output), "barcodeQcSet")
+  class(qc_list) = append(class(qc_list), "barcodeQcSet")
   qc_list
 }
 

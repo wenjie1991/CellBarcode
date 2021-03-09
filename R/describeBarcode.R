@@ -30,7 +30,7 @@ diversity.BarcodeObj = function(x, clean = NULL, plot = T) {
     g1 = plot_lorenz_curve(d)
     g2 = plot_reads_per_barcode_distribution(d)
     # TODO: use common legend
-    egg::ggarrange(plots = list(g1, g2), nrow = 1, ncol = 2)
+    ggpubr::ggarrange(plotlist = list(g1, g2), nrow = 1, ncol = 2, common.legend = T) %>% print
   }
 
   d[, .(
@@ -47,7 +47,7 @@ plot_lorenz_curve = function(x) {
   p_cum = sample_name = NULL
 
   # x is data.table with columns: count, barcode_seq, sample_name
-  d = x[, .(p_cum = cumsum(sort(count / sum(count), decreasing = T)), x = 1:length(count)), by = "sample_name"]
+  d = x[, .(p_cum = cumsum(sort(count / sum(count), decreasing = T)), x = 1:length(count)), by = sample_name]
   g = ggplot(d) + aes(x = x, y = p_cum, color = sample_name, fill = sample_name) + geom_line() + geom_abline(slope = 1 / max(d$x), alpha = 0.3, color = 'black') + theme_bw()
   g = g + labs(x = "Barcodes", y = "Cumulative reads per sample", color = "Sample")
   g

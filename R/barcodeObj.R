@@ -10,17 +10,7 @@
 #' #bc_obj[, "sample1_rep1"]
 #' #bc_obj[, c("sample1_rep1", "sample1_rep2")]
 "[.BarcodeObj" = function(barcodeObj, x = NULL, y = NULL) {
-  if (is.null(x) & is.null(y)) {
-    stop("Error message. TODO.")
-  }
-  if (!is.null(y)) {
-    return(subset.BarcodeObj(barcodeObj, sample = y))
-  }
-  if (!is.null(x)) {
-    return(subset.BarcodeObj(barcodeObj, barcode = x))
-  }
   return(subset.BarcodeObj(barcodeObj, sample = y, barcode = x))
-  return(barcodeObj)
 }
 
 #' Subset operation of BarcodeObj object
@@ -29,7 +19,6 @@
 #' @param barcode A vector or string. Select the barcode subset from BarcodeObj
 #' @param black_list A vector or string. Remove the the barcode in the list.
 #' @return A BarcodeObj
-#' @export
 #' @examples
 #' # Not run
 #' # subset(bc_obj, barcode = c("AACCTT", "AACCTT"))
@@ -41,31 +30,20 @@ subset.BarcodeObj = function(barcodeObj, sample = NULL, barcode = NULL, black_li
 
   # TODO: The funciton only can apply the operation to the `messyBc` and `cleanBc`. We need to make it
   # capable to apply the selection to all information in the object.
-  if (is.null(sample) & is.null(barcode)) {
-    stop("Error message. TODO.")
-  }
   if (!is.null(barcode)) {
     if (!is.null(barcodeObj$cleanBc)) {
-      barcodeObj$messyBc = lapply(barcodeObj$messyBc, function(d) {
-        d[reads_seq %in% barcode]
-})
+      barcodeObj$messyBc = lapply(barcodeObj$messyBc, function(d) { d[reads_seq %in% barcode] })
     }
     if (!is.null(barcodeObj$cleanBc)) {
-      barcodeObj$cleanBc = lapply(barcodeObj$cleanBc, function(d) {
-        d[reads_seq %in% barcode]
-})
+      barcodeObj$cleanBc = lapply(barcodeObj$cleanBc, function(d) { d[reads_seq %in% barcode] })
     }
   }
   if (!is.null(black_list)) {
     if (!is.null(barcodeObj$cleanBc)) {
-      barcodeObj$messyBc = lapply(barcodeObj$messyBc, function(d) {
-        d[!(reads_seq %in% black_list)]
-})
+      barcodeObj$messyBc = lapply(barcodeObj$messyBc, function(d) { d[!(reads_seq %in% black_list)] })
     }
     if (!is.null(barcodeObj$cleanBc)) {
-      barcodeObj$cleanBc = lapply(barcodeObj$cleanBc, function(d) {
-        d[!(reads_seq %in% black_list)]
-})
+      barcodeObj$cleanBc = lapply(barcodeObj$cleanBc, function(d) { d[!(reads_seq %in% black_list)] })
     }
   }
   if (!is.null(sample)) {
@@ -89,7 +67,9 @@ subset.BarcodeObj = function(barcodeObj, sample = NULL, barcode = NULL, black_li
   # TODO: Apply the merge to all parts of the data
   #       How to deal when two BarcodeObj have the same samples
   x$messyBc = append(x$messyBc, y$messyBc)
-  x$cleanBc = append(x$cleanBc, y$cleanBc)
+  if (!is.null(x$cleanBc) & !is.null(y$cleanBc)) {
+    x$cleanBc = append(x$cleanBc, y$cleanBc)
+  }
   x
 }
 

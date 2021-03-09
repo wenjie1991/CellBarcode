@@ -1,24 +1,5 @@
-#' Stair plot used to find a optimized cutoff point
-stairPlot = function(x, ...) UseMethod("stairPlot", x)
-
-#' Stair plot used to find a optimized cutoff point
-#'
-#' @param barcodeObj A BarcodeObj with extracted barcode.
-#' @return NULL
-#' @export
-stairPlot.BarcodeObj = function(barcodeObj, sample = 1, max = 1000) {
-
-  count = barcode_seq = NULL  # due to NOTE in check
-
-  # TODO: The stair plot only apply to messyBc iterm, do we need to apply it to cleanBc
-  #       Return the optimized cutoff point.
-  messyBc = barcodeObj$messyBc
-  d = data.table::data.table(messyBc[[sample]])
-  d = d[, .(count = sum(count)), by = barcode_seq][order(count)]
-  y = cumsum(d$count)
-  x = d$count
-  graphics::plot(x, log10(y), type = 's', xlab = "Reads count", ylab = "log10 Accumlated Reads count", xlim = c(0, max))
-}
+# TODO: Remove barcode reads distribution graph with log x-axis
+# Correlation between two samples w/o distribution information
 
 #' Correct the PCR and sequencing mutation in the barcode sequence
 cureBc = function(x, ...) UseMethod("cureBc", x)

@@ -1,5 +1,5 @@
 #' Filter the reads by the QC threshold
-filterFq = function( ...) UseMethod("filterFq")
+filterFq = function(...) UseMethod("filterFq")
 
 #' Filter the reads by the QC threshold
 filterFq.ShortReadQ = function(x, min_average_quality = 30, min_read_length = 0) {
