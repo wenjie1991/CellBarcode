@@ -156,7 +156,7 @@ In the following example, the regular expression
    defined by `barcode = 2`.
 
 4. In the tail of the sequence, there should be a constant sequence
-   `TAGCAAGCTCGAGAGTAGACCTACT`.
+   `TAGCAAGCTC`.
 
 The `bc_extract` will extract the sequences wrapped by `()`, and saved them as
 barcode or UMI according to their ranks according to the inform provided by
@@ -169,7 +169,9 @@ The `BarcodeObj` is a `List` under the hood. In the list, there is a `$messyBc` 
 And the `$messyBc` is a list too, in the item, there are 4 samples. Those sample names are printed together with how many unique sequences (tags) identified.
 
 ```{r extract_barcode_with_UMI}
-pattern = "([ACGT]{16})CCTCGAGGTCATCGAAGTATCAAG([ACGT]+)TAGCAAGCTCGAGAGTAGACCTACT"
+# pattern = "([ACGT]{16})CCTCGAGGTCATCGAAGTATCAAG([ACGT]+)TAGCAAGCTCGAGAGTAGACCTACT"
+CTCGAGGNCATCGAAGTATCAAG
+pattern = "([ACGT]{16})CCTCGAGGTCATCGAAGTATCAAG([ACGT]+)TAGCAAGCTC"
 bc_obj_umi = bc_extract(fq_filter, sample_name = sample_names, pattern = pattern, maxLDist = 0, pattern_type = c(UMI = 1, barcode = 2))
 class(bc_obj_umi)
 bc_obj_umi
@@ -289,8 +291,8 @@ In the following example, you can use:
 ## `bc_2names`
 
 To get sample name list.
-```{r eval=FALSE, include=FALSE}
-bc_2names(bc_obj)
+```{r}
+bc_names(bc_obj)
 ```
 
 
@@ -337,7 +339,7 @@ svdj = bc_splitVDJ(candidate_bc)
 ok_seq = rownames(svdj$add.del.ok)
 head(ok_seq)
 
-bc_obj = bc_obj * ok_seq
+bc_obj = bc_obj[ok_seq, ]
 bc_obj
 
 candidate_bc = bc_barcodes(bc_obj_umi)
