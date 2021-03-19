@@ -5,7 +5,8 @@
 #' @param BC_backbone A string, the backbone of the barcode
 #' @param resDir A string, the location to store the data of genBarCode object
 #' @return A list, contains genBarCode object
-bc2genBarCode = function(barcodeObj, BC_backbone = "", resDir = getwd(), type = "messyBc") {
+#' @export
+bc_2genBarCode = function(barcodeObj, BC_backbone = "", resDir = getwd(), type = "messyBc") {
   count = barcode_seq = read_count = NULL # due to NOTE in check
 
   # TODO: include the genBaRcode barcode object, so that the user no need to load the genBaRcode package

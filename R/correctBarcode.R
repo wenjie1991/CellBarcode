@@ -2,7 +2,9 @@
 # Correlation between two samples w/o distribution information
 
 #' Correct the PCR and sequencing mutation in the barcode sequence
-cureBc = function(x, ...) UseMethod("cureBc", x)
+#'
+#' @export
+bc_cure = function(x, ...) UseMethod("bc_cure", x)
 
 #' Correct the PCR and sequencing mutation in the barcode sequence
 #'
@@ -12,12 +14,14 @@ cureBc = function(x, ...) UseMethod("cureBc", x)
 #' @param with_umi A bool value, True when UMI is used
 #' @return A BarcodeObj
 #' @export
-cureBc.BarcodeObj = function(
+bc_cure.BarcodeObj = function(
   barcodeObj
-  , depth_threshold = 0
-  , barcode_count_threshold = 1000
-  , hammer_dist_threshold = 1
+  , depth_threshold = 2
+  , barcode_count_threshold = 10000
+  , hammer_dist_threshold = 0
   , with_umi = F
+  , doFish = T
+  , isUniqueUMI = F
   ) {
 
   count = barcode_seq = NULL  # due to NOTE in check
@@ -27,46 +31,65 @@ cureBc.BarcodeObj = function(
 
   if (with_umi) {
     ## When UMI used, count the UMI-barcode
-    messyBc = lapply(messyBc,
-      function(d) {
-        d = data.table(d)
-        d = d[count > depth_threshold, .(count = .N), by = .(barcode_seq)]
+    messyBc = lapply(messyBc, function(d) {
+      d0 = data.table(d)
+      d1 = d0[count > depth_threshold]
+      if (isUniqueUMI) {
+        d1 = d1[count > depth_threshold, .(barcode_seq = barcode_seq[which.max(count)], count = max(count)), by = umi_seq]
+      } else {
+        d1 = d1[count > depth_threshold]
       }
-    )
+      if (doFish) {
+        d1 = d0[barcode_seq %in% d1$barcode_seq, .(count = .N), by = barcode_seq]
+      } else {
+        d1 = d1[, .(count = .N), by = barcode_seq]
+      }
+      d1
+    })
   } else {
     ## If no UMI, count the reads
     messyBc = lapply(messyBc,
       function(d) {
         d = data.table(d)
-        d = d[, .(count = sum(count)), by = barcode_seq][count > depth_threshold]
+        ## TODO: If the output is empty (with 0 row) ...
+        d[, .(count = sum(count)), by = barcode_seq][count > depth_threshold]
       }
     )
   }
+
   ## Do the correction
-  correct_out = lapply(messyBc,
-    function(d) {
-      seq_v = d$barcode_seq
-      count_v = d$count
-      seq_correct(seq_v, count_v, barcode_count_threshold, hammer_dist_threshold)
-    }
-  )
+  if (hammer_dist_threshold > 0) {
+    correct_out = lapply(messyBc,
+      function(d) {
+        seq_v = d$barcode_seq
+        count_v = d$count
+        seq_correct(seq_v, count_v, barcode_count_threshold, hammer_dist_threshold)
+      }
+    )
+    ## Prepare output
+    cleanBc = lapply(correct_out,
+      function(d) {
+        data.frame(d$seq_freq[order(d$seq_freq$count, decreasing = T), ])
+      }
+    )
 
-  ## Prepare output
-  cleanBc = lapply(correct_out,
-    function(d) {
-      data.frame(d$seq_freq[order(d$seq_freq$count, decreasing = T), ])
-    }
-  )
+    ## The correction log
+    cleanProc = lapply(correct_out,
+      function(d) {
+        d$link_table
+      }
+    )
 
-  ## The correction log, in another words, who correction has been done
-  cleanProc = lapply(correct_out,
-    function(d) {
-      d$link_table
-    }
-  )
+    names(cleanBc) = names(messyBc)
+    names(cleanProc) = names(messyBc)
 
-  names(cleanBc) = names(messyBc)
-  names(cleanProc) = names(messyBc)
+  } else {
+
+    cleanBc = messyBc
+    cleanProc = NULL
+
+  }
+
 
   ## save the result
   barcodeObj$cleanBc = cleanBc

@@ -1,8 +1,8 @@
 Package: Bc
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Genetic Barcode Analysis toolkit
 Version: 0.1.0
-Author: Who wrote it
+Author: Wenjie Sun, Anne-Marie Lyne, Leila Perie
 Maintainer: The package maintainer <yourself@somewhere.net>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
@@ -25,10 +25,14 @@ Imports:
     Biostrings,
     egg,
     utils,
-    parallel,
-    S4Vectors
+    S4Vectors,
+    seqinr,
+    ggpubr
 LinkingTo: Rcpp
 RoxygenNote: 7.1.1
 Suggests: 
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown
 Config/testthat/edition: 3
+VignetteBuilder: knitr

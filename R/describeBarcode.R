@@ -1,12 +1,11 @@
 #' @export
-diversity.BarcodeObj = function(x, clean = NULL, plot = T) {
+bc_diversity.BarcodeObj = function(x, clean = NULL, plot = T) {
 
   # TODO: output UMI relate information when UMI is available
   #       - reads per UMI barcode
   #       - UMI number
   #       - UMI barcode Number
   #       - ...
-
   count = barcode_seq = NULL
 
   # x is BarcodeObj
@@ -98,21 +97,10 @@ calc_bit_info = function(x) {
   sum(-(p * log2(p)))
 }
 
-
-#' Readout the barcode count
-countBc = function(x, ...) UseMethod("countBc", x)
-
-#' Readout the barcode count
-#'
-#' @param barcodeObj A BarcodeObj
-#' @return A list, the item is a data.frame, with column names of `barcode_seq` and `count`, the list name is sample names
-#' @export
-countBc.BarcodeObj = function(barcodeObj) {
-  barcodeObj$cleanBc
-}
-
 #' Draw Network graph to show the similarity of barcode
-plotNetwork = function(x, ...) UseMethod("plotNetwork", x)
+#'
+#' @export
+bc_plotNetwork = function(x, ...) UseMethod("bc_plotNetwork", x)
 
 #' Draw Network graph to show the similarity of barcode
 #'
@@ -124,7 +112,7 @@ plotNetwork = function(x, ...) UseMethod("plotNetwork", x)
 #' @param UMI_depth_threshold_n A integer, only the barcode with read depth or UMI-barcode count greater than the value will be used
 #' @return NULL
 #' @export
-plotNetwork.BarcodeObj = function(barcodeObj, sample1 = NULL, sample2 = NULL, topN = 100, type = "raw", UMI_depth_threshold_n = 5, ...) {
+bc_plotNetwork.BarcodeObj = function(barcodeObj, sample1 = NULL, sample2 = NULL, topN = 100, type = "raw", UMI_depth_threshold_n = 5, ...) {
 
   count = barcode_seq = NULL  # due to NOTE in check
 
@@ -158,7 +146,6 @@ plotNetwork.BarcodeObj = function(barcodeObj, sample1 = NULL, sample2 = NULL, to
   }
 }
 
-## no export
 clusterSeq = function(seqs, seqs2 = NA, weight = 1, isLabel = T, highLight = NA, highLightLink=F, sample1, sample2 = NA) {
   if (is.na(seqs2[1])) {
     drawNetwork(calcDistance(seqs), weight, isLabel, highLight)
@@ -177,7 +164,6 @@ clusterSeq = function(seqs, seqs2 = NA, weight = 1, isLabel = T, highLight = NA,
   }
 }
 
-## no export
 calcDistance = function(seqs, weight = "", label = NULL) {
 
   distance = utils::adist(seqs)
@@ -189,7 +175,6 @@ calcDistance = function(seqs, weight = "", label = NULL) {
   distance
 }
 
-## no export
 drawNetwork = function(distance, weight, isLabel, highLight, col = NA, highLightLink = F, sample1, sample2 = NA) {
 
   x = y = xend = yend = label = size_Log10 = edge_alpha = edge_size = vertex_col = edge_col = NULL

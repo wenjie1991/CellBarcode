@@ -2,3 +2,5 @@
 ^\.Rproj\.user$
 devtools.R
 ^LICENSE\.md$
+./data/
+./vignettes

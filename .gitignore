@@ -31,3 +31,6 @@ unsrturl.bst
 .settings
 .tm_properties
 devtools.R
+.Rproj.user
+inst/doc
+./data

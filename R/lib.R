@@ -1,7 +1,7 @@
 # Design
 # library(Bc)
 # 
-# (Reads) -> runQc -> filterBc -> (Reads) -> runQc
+# (Reads) -> runQc -> filterBc -> (Reads) -> runQc -> plot
 # (Reads) -> extractBc -> cureBc -> check -> cureBc -> count -> biological analysis
 # 
 # runQc() -> class BarcodeObj(meta, rawBc)
@@ -32,27 +32,32 @@
 
 
 # TODO:
+# One function do all the job
 # filterFq() -> output the filtering detail
 # make function to cross talk with genBaRcode and other packages
 # create function to identify the cutoff point
 # evaluate the sequencing depth (saturation of the sequene)
 
 
-#' foo: A package for computating the notorious bar statistic
-#'
-#' The foo package provides three categories of important functions:
-#' foo, bar and baz.
-#' 
-#' @section Foo functions:
-#' The foo functions ...
-#'
-#' @docType package
-#' @name foo
+##' foo: A package for computating the notorious bar statistic
+##'
+##' The foo package provides three categories of important functions:
+##' foo, bar and baz.
+##' 
+##' @section Foo functions:
+##' The foo functions ...
+##'
+##' @docType package
+##' @name foo
+
 #' @importFrom magrittr %>% %<>% extract extract2
 #' @importFrom data.table data.table rbindlist
+#' @importFrom ShortRead readFastq
+#' @importFrom Biostrings readDNAStringSet
 #' @import ggplot2
 #' @import Biostrings
 #' @import ShortRead
 NULL
 
 . <- list()
+

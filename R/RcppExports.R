@@ -24,6 +24,6 @@ NULL
 #' length of UMI
 #' @export
 seq_correct <- function(seq, count, count_threshold, hammer_dist_threshold) {
-    .Call(`_Bc_seq_correct`, seq, count, count_threshold, hammer_dist_threshold)
+    .Call('_Bc_seq_correct', PACKAGE = 'Bc', seq, count, count_threshold, hammer_dist_threshold)
 }
 

@@ -30,24 +30,25 @@ subset.BarcodeObj = function(barcodeObj, sample = NULL, barcode = NULL, black_li
 
   # TODO: The funciton only can apply the operation to the `messyBc` and `cleanBc`. We need to make it
   # capable to apply the selection to all information in the object.
+  ## TODO: How do handle messyBc
   if (!is.null(barcode)) {
+    #     if (!is.null(barcodeObj$messyBc)) {
+    #       barcodeObj$messyBc = lapply(barcodeObj$messyBc, function(d) { d[reads_seq %in% barcode] })
+    #     }
     if (!is.null(barcodeObj$cleanBc)) {
-      barcodeObj$messyBc = lapply(barcodeObj$messyBc, function(d) { d[reads_seq %in% barcode] })
-    }
-    if (!is.null(barcodeObj$cleanBc)) {
-      barcodeObj$cleanBc = lapply(barcodeObj$cleanBc, function(d) { d[reads_seq %in% barcode] })
+      barcodeObj$cleanBc = lapply(barcodeObj$cleanBc, function(d) { d[barcode_seq %in% barcode] })
     }
   }
   if (!is.null(black_list)) {
+    #     if (!is.null(barcodeObj$messyBc)) {
+    #       barcodeObj$messyBc = lapply(barcodeObj$messyBc, function(d) { d[!(reads_seq %in% black_list)] })
+    #     }
     if (!is.null(barcodeObj$cleanBc)) {
-      barcodeObj$messyBc = lapply(barcodeObj$messyBc, function(d) { d[!(reads_seq %in% black_list)] })
-    }
-    if (!is.null(barcodeObj$cleanBc)) {
-      barcodeObj$cleanBc = lapply(barcodeObj$cleanBc, function(d) { d[!(reads_seq %in% black_list)] })
+      barcodeObj$cleanBc = lapply(barcodeObj$cleanBc, function(d) { d[!(barcode_seq %in% black_list)] })
     }
   }
   if (!is.null(sample)) {
-    if (!is.null(barcodeObj$cleanBc)) {
+    if (!is.null(barcodeObj$messyBc)) {
       barcodeObj$messyBc =  barcodeObj$messyBc[sample]
     }
     if (!is.null(barcodeObj$cleanBc)) {
@@ -78,51 +79,79 @@ subset.BarcodeObj = function(barcodeObj, sample = NULL, barcode = NULL, black_li
 #' @param x A BarcodeObj
 #' @param y A string or vector, the barcode black list to revmoe
 #' @return A BarcodeObj
+#' @export
 "-.BarcodeObj" = function(x, y) {
   subset(x, black_list = y)
 }
-
-#' Get the sample names from BarcodeObj
-#'
-#' @export
-samplenames = function(x, ...) UseMethod("samplenames", x)
-
-#' Get the sample names from BarcodeObj
-#'
-#' @param barcodeObj BarcodeObj
-#' @return A string vector
-#' @export
-samplenames.BarcodeObj = function(barcodeObj) {
-  barcodeObj$sampleNames
-}
-
 
 #' Select the barcode by white list
 #'
 #' @param x A BarcodeObj
 #' @param y A string or vector, the barcode white list
 #' @return A BarcodeObj
+#' @export
 "*.BarcodeObj" = function(x, y) {
   subset(x, barcode = y)
 }
 
-
-sampleNames = function(...) UseMethod("rename")
-
-sampleNames.BarcodeObj = function(barcodeObj, rename) {
-  if (!is.null(barcodeObj$messyBc)) {
-    old_name = names(barcodeObj$messyBc)
-    old_name[names(rename)] = rename
-    names(barcodeObj$messyBc) = old_name
+#' @export
+bc_barcodes = function(barcodeObj, unlist = T) {
+  d = lapply(barcodeObj$cleanBc, function(x) { x$barcode_seq }) 
+  if (unlist) {
+    unlist(d) %>% as.character
+  } else {
+    names(d) = names(barcodeObj$cleanBc)
+    d
   }
-
-  if (!is.null(barcodeObj$cleanBc)) {
-    old_name = names(barcodeObj$cleanBc)
-    old_name[names(rename)] = rename
-    names(barcodeObj$cleanBc) = old_name
-  }
-  barcodeObj
 }
+
+#' @export
+bc_names = function(barcodeObj) {
+  if (!is.null(barcodeObj$messyBc)) {
+    names(barcodeObj$messyBc)
+  } else {
+    names(barcodeObj$cleanBc)
+  }
+}
+
+#' @export
+bc_2df = function(barcodeObj) {
+  # TODO: enable messyBc
+  if (is.null(barcodeObj$cleanBc)) {
+    stop("No cleanBc found.")
+  }
+  d = barcodeObj$cleanBc %>% rbindlist(idcol = T)
+  names(d)[1] = "sample_name"
+  d
+}
+
+#' @export
+bc_2matrix = function(barcodeObj) {
+  # TODO: enable messyBc
+  if (is.null(barcodeObj$cleanBc)) {
+    stop("No cleanBc found.")
+  }
+  # TODO: use sparse matrix
+  bc_2df(barcodeObj) %>% dcast(barcode_seq ~ sample_name, value.var = "count", fill = 0)
+}
+
+# TODO: How to update the sample name?
+# sampleNames = function(...) UseMethod("rename")
+# 
+# sampleNames.BarcodeObj = function(barcodeObj, rename) {
+#   if (!is.null(barcodeObj$messyBc)) {
+#     old_name = names(barcodeObj$messyBc)
+#     old_name[names(rename)] = rename
+#     names(barcodeObj$messyBc) = old_name
+#   }
+# 
+#   if (!is.null(barcodeObj$cleanBc)) {
+#     old_name = names(barcodeObj$cleanBc)
+#     old_name[names(rename)] = rename
+#     names(barcodeObj$cleanBc) = old_name
+#   }
+#   barcodeObj
+# }
 
 #' Print out the summary of BarcodeObj
 #'
@@ -133,13 +162,13 @@ print.BarcodeObj = function(barcodeObj) {
   cat("Bonjour le monde. This is a baby barcode Object.\n----------\n")
   cat("It contains:\n")
   ## The items in the list
-  paste(cat(names(barcodeObj), collapse = "  "), "\n----------\n")
+  cat(names(barcodeObj), collapse = "  ", "\n----------\n")
   if (!is.null(barcodeObj$messyBc)) {
     ## How many samples in messyBc item
     cat("$messyBc:", length(barcodeObj$messyBc), "Samples for uncleaned barcodes\n")
     for (i in names(barcodeObj$messyBc)) {
       ## The number of barcode in each sample
-      cat("    In sample", paste0("$", i), "there are:", nrow(barcodeObj$messyBc[[i]]), "barcodes\n")
+      cat("    In sample", paste0("$", i), "there are:", nrow(barcodeObj$messyBc[[i]]), "Tags\n")
     }
     cat("\n")
   }
@@ -154,7 +183,7 @@ print.BarcodeObj = function(barcodeObj) {
   }
 }
 
-view = function(x, ...) UseMethod("view", x)
-view.BarcodeObj = function(barcodeObj) {
-  print.default(barcodeObj)
-}
+# view = function(x, ...) UseMethod("view", x)
+# view.BarcodeObj = function(barcodeObj) {
+#   print.default(barcodeObj)
+# }

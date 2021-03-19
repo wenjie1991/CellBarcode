@@ -23,17 +23,18 @@ get_base_freq_per_cycle = function(dnastringset) {
   base_m = alphabetByCycle(dnastringset)
   base_m = t(base_m[c("A", "C", "G", "T"), ])
   base_m = data.table(Cycle = seq(1:nrow(base_m)), base_m)
-  melt(base_m, id.vars = "Cycle", measure.vars = c("A", "C", "G", "T"), value.name = "Count", variable.name = "Base")
+  data.table::melt(base_m, id.vars = "Cycle", measure.vars = c("A", "C", "G", "T"), value.name = "Count", variable.name = "Base")
 }
 
 #' get the QC information of the raw sequence
 #' 
 #' fastq file name, ShortReadQ Obj, DNAStringSet Obj, data.frame, vector
 #' 
-runQC = function(...) UseMethod("runQC")
-# TODO: enable rename the sample
+#' @export
+bc_runQC = function(...) UseMethod("bc_runQC")
 
-runQC.ShortReadQ = function(x, n = 50, plot = F) {
+#' @export
+bc_runQC.ShortReadQ = function(x, n = 50, plot = F) {
   # output: top, distribution (nOccurrences, nReads), base_quality_per_cycle, base_freq_per_cycle
   output = ShortRead::tables(x)
   output$base_quality_per_cycle = get_base_quality_per_cycle(x@quality)
@@ -42,7 +43,8 @@ runQC.ShortReadQ = function(x, n = 50, plot = F) {
   output
 }
 
-runQC.DNAStringSet = function(x, plot = F) {
+#' @export
+bc_runQC.DNAStringSet = function(x, plot = F) {
   # output: top, distribution (nOccurrences, nReads), base_freq_per_cycle
   output = ShortRead::tables(x)
   output$base_freq_per_cycle = get_base_freq_per_cycle(x)
@@ -50,7 +52,8 @@ runQC.DNAStringSet = function(x, plot = F) {
   output
 }
 
-runQC.data.frame = function(x) {
+#' @export
+bc_runQC.data.frame = function(x) {
   ## Input: data.frame(seq, freq)
   ## convert data.frame to DNAStringSet
   sequences = x$seq
@@ -63,7 +66,8 @@ runQC.data.frame = function(x) {
   output
 }
 
-runQC.integer = function(x) {
+#' @export
+bc_runQC.integer = function(x) {
   x = DNAStringSet(rep(names(x), x))
 
   output = ShortRead::tables(x)
@@ -72,25 +76,26 @@ runQC.integer = function(x) {
   output
 }
 
-runQC.character = function(file) {
+#' @export
+bc_runQC.character = function(file, sample_name = basename(file)) {
   # TODO: use qa to do fast check for the quality
   ## generate reads quality information
   # TODO: Create a new function to check the quality of fastq file.
   if (length(file) == 1) {
-    runQC(ShortRead::readFastq(file))
+    bc_runQC(ShortRead::readFastq(file))
   } else {
     qc_list = lapply(file, function(f) {
-      runQC(ShortRead::readFastq(f))
+      bc_runQC(ShortRead::readFastq(f))
     })
-    names(qc_list) = basename(file)
+    names(qc_list) = sample_name
     class(qc_list) = append(class(qc_list), "barcodeQcSet")
     qc_list
   }
 }
 
-
-runQC.list = function(x) {
-  qc_list = lapply(x, runQC)
+#' @export
+bc_runQC.list = function(x) {
+  qc_list = lapply(x, bc_runQC)
   class(qc_list) = append(class(qc_list), "barcodeQcSet")
   qc_list
 }
@@ -101,7 +106,7 @@ plot_reads_depth_distribution = function(distribution) {
 
   # distribution is data.frame with two columns "nOccurrences" and "nReads".
   d = distribution
-  g = ggplot(d) + aes(x = nReads, y = nOccurrences) + geom_line() + theme_bw()
+  g = ggplot(d) + aes(x = nReads, y = nOccurrences) + geom_line() + theme_bw() + scale_x_log10()
   g
 }
 
@@ -127,6 +132,7 @@ plot_base_quality_distribution = function(base_quality_per_cycle) {
   g
 }
 
+#' @export
 plot.barcodeQc = function(x, opt = "all") {
   # barcodeQc has: top, distribution (nOccurrences, nReads), base_quality_per_cycle, base_freq_per_cycle
   # TODO: user can select which figure to draw
@@ -145,6 +151,7 @@ plot.barcodeQc = function(x, opt = "all") {
   egg::ggarrange(plots = g_list, nrow = 2, ncol=col_n)
 }
 
+#' @export
 plot.barcodeQcSet = function(x) {
 
   Count = Cycle = fileName = base_num = Base = base_percent = Median = NULL

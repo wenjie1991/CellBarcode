@@ -7,7 +7,7 @@
 #' @param costs A vector. Define the weight for each mismatch events
 #' @return A barcodeObj
 #' @export
-extractBc = function(x, ...) UseMethod("extractBc", x)
+bc_extract = function(x, ...) UseMethod("bc_extract", x)
 
 report_barcode_extraction = function(sample_name, reads_num, barcode_reads) {
   if (is.null(sample_name)) {
@@ -17,7 +17,8 @@ report_barcode_extraction = function(sample_name, reads_num, barcode_reads) {
   }
 }
 
-extractBc.ShortReadQ = function(x, pattern = "", sample_name = NULL, maxLDist = 0, pattern_type = c(barcode = 1), costs = list(sub = 1, ins = 99, del = 99), verbose = T) {
+#' @export
+bc_extract.ShortReadQ = function(x, pattern = "", sample_name = NULL, maxLDist = 0, pattern_type = c(barcode = 1), costs = list(sub = 1, ins = 99, del = 99), verbose = T) {
   reads_freq = ShortRead::tables(x, n=Inf)$top
   reads_seq = names(reads_freq)
   m = utils::aregexec(pattern, reads_seq, fixed = F, max.distance = maxLDist, costs = costs)
@@ -38,7 +39,8 @@ extractBc.ShortReadQ = function(x, pattern = "", sample_name = NULL, maxLDist = 
   stats::na.omit(d)
 }
 
-extractBc.DNAStringSet = function(x, pattern = "", sample_name = NULL, maxLDist = 0, pattern_type = c(barcode = 1), costs = list(sub = 1, ins = 99, del = 99), verbose = T) {
+#' @export
+bc_extract.DNAStringSet = function(x, pattern = "", sample_name = NULL, maxLDist = 0, pattern_type = c(barcode = 1), costs = list(sub = 1, ins = 99, del = 99), verbose = T) {
   reads_freq = ShortRead::tables(x, n=Inf)$top
   reads_seq = names(reads_freq)
   m = utils::aregexec(pattern, reads_seq, fixed = F, max.distance = maxLDist, costs = costs)
@@ -60,39 +62,45 @@ extractBc.DNAStringSet = function(x, pattern = "", sample_name = NULL, maxLDist 
 }
 
 
-extractBc.data.frame = function(x, pattern = "", maxLDist = 0, pattern_type = c(barcode = 1), costs = list(sub = 1, ins = 99, del = 99), verbose = T) {
+#' @export
+bc_extract.data.frame = function(x, pattern = "", maxLDist = 0, pattern_type = c(barcode = 1), costs = list(sub = 1, ins = 99, del = 99), verbose = T) {
   sequences = x$seq
   freq = x$freq
   x = DNAStringSet(rep(sequences, freq))
 
-  extractBc(x, pattern = pattern, maxLDist = maxLDist, pattern_type = pattern_type, costs = costs, verbose = verbose)
+  bc_extract(x, pattern = pattern, maxLDist = maxLDist, pattern_type = pattern_type, costs = costs, verbose = verbose)
 }
 
-extractBc.character = function(file, pattern = "", sample_name = basename(file), maxLDist = 0, pattern_type = c(barcode = 1), costs = list(sub = 1, ins = 99, del = 99), verbose = T) {
+#' @export
+bc_extract.character = function(file, pattern = "", sample_name = basename(file), maxLDist = 0, pattern_type = c(barcode = 1), costs = list(sub = 1, ins = 99, del = 99), verbose = T) {
   if (length(file) > 1) {
     bc_list = lapply(1:length(file), function(i) {
-      extractBc(file[i], sample_name = sample_name[i], pattern = pattern, maxLDist = maxLDist, pattern_type = pattern_type, costs = costs, verbose = verbose)
+      bc_extract(file[i], sample_name = sample_name[i], pattern = pattern, maxLDist = maxLDist, pattern_type = pattern_type, costs = costs, verbose = verbose)
     })
     as.BarcodeObj(bc_list, sample_name)
   } else {
     x = ShortRead::readFastq(file)
-    extractBc(x, sample_name = sample_name, pattern = pattern, maxLDist = maxLDist, pattern_type = pattern_type, costs = costs, verbose = verbose)
+    bc_extract(x, sample_name = sample_name, pattern = pattern, maxLDist = maxLDist, pattern_type = pattern_type, costs = costs, verbose = verbose)
   }
 }
 
-extractBc.integer = function(x, pattern = "", sample_name = NULL, maxLDist = 0, pattern_type = c(barcode = 1), costs = list(sub = 1, ins = 99, del = 99), verbose = T) {
+
+#' @export
+bc_extract.integer = function(x, pattern = "", sample_name = NULL, maxLDist = 0, pattern_type = c(barcode = 1), costs = list(sub = 1, ins = 99, del = 99), verbose = T) {
   # TODO: Table result
   x = DNAStringSet(rep(names(x), x))
 
-  extractBc(x, pattern = pattern, maxLDist = maxLDist, pattern_type = pattern_type, costs = costs, verbose = verbose)
+  bc_extract(x, pattern = pattern, maxLDist = maxLDist, pattern_type = pattern_type, costs = costs, verbose = verbose)
 }
 
-extractBc.list = function(x, pattern = "", sample_name = NULL, maxLDist = 0, pattern_type = c(barcode = 1), costs = list(sub = 1, ins = 99, del = 99), verbose = F) {
+
+#' @export
+bc_extract.list = function(x, pattern = "", sample_name = NULL, maxLDist = 0, pattern_type = c(barcode = 1), costs = list(sub = 1, ins = 99, del = 99), verbose = F) {
   if (is.null(sample_name)) {
     sample_name = names(x)
   }
   parallel::mclapply(1:length(x), function(i) {
-    extractBc(x[[i]], pattern = pattern, sample_name = sample_name[i], maxLDist = maxLDist, pattern_type = pattern_type, costs = costs, verbose = F)
+    bc_extract(x[[i]], pattern = pattern, sample_name = sample_name[i], maxLDist = maxLDist, pattern_type = pattern_type, costs = costs, verbose = F)
   }) -> messyBc
   names(messyBc) = sample_name
   output = list(messyBc = messyBc)
@@ -100,8 +108,9 @@ extractBc.list = function(x, pattern = "", sample_name = NULL, maxLDist = 0, pat
   output
 }
 
+#' @export
 as.BarcodeObj = function(x, sample_name = names(x)) {
-  # TODO: 
+  # TODO: Ask for advice, how to make it work better
   messyBc = x
   names(messyBc) = sample_name
   output = list(messyBc = messyBc)
