@@ -1,9 +1,5 @@
 ---
 title: "UMI_VDJ_Barcode"
-author: 
-  - Wenjie Sun, sunwjie@gmail.com
-  - Anne-Marie Lyne, Anne-Marie.Lyne@curie.fr
-  - Leïla Perié, leila.perie@curie.fr
 output: rmarkdown::html_document
 vignette: >
   %\VignetteIndexEntry{UMI_VDJ_Barcode}
@@ -20,7 +16,6 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(data.table)
-library(magrittr)
 library(ggplot2)
 library(Bc)
 ```
@@ -249,12 +244,7 @@ bc_obj_umi
 The `doFish` option does not change the barcode been identified, but the UMI count is increased when `doFish` was applied.
 Because those UMI-barcode tags under depth threshold will be counted by "fish".
 
-```{r}
-bc_obj_umi = bc_cure(bc_obj_umi, with_umi = T, isUniqueUMI = T, doFish = T, depth_threshold = 5)
-bc_obj_umi$cleanBc$E12_lum_a
-```
-
-If no `doFish` applied, the tags counts decrease.
+If no `doFish` applied.
 
 ```{r}
 ## TODO: sort the result by count or not [option]
@@ -262,6 +252,12 @@ bc_obj_umi = bc_cure(bc_obj_umi, with_umi = T, isUniqueUMI = T, doFish = F, dept
 bc_obj_umi$cleanBc$E12_lum_a
 ```
 
+Tags counts increased by "fishing".
+
+```{r}
+bc_obj_umi = bc_cure(bc_obj_umi, with_umi = T, isUniqueUMI = T, doFish = T, depth_threshold = 5)
+bc_obj_umi$cleanBc$E12_lum_a
+```
 
 ## Without UMI 
 
@@ -359,10 +355,11 @@ bc_obj_umi
 ```{r compare_bc_previous_res}
 d = data.table::fread("../data/Meghan_batch1/cleaned_A6_9622_lum_E12_a.txt")
 
+## Bc analysis with umi V.S. Anne-Marie pipeline
 d_plot = merge(bc_obj_umi$cleanBc[[1]], d, by.x = "barcode_seq", by.y = "var", all = T)
 qplot(x = count, y = nmol.fish, data = d_plot, xlim = c(0, NA), ylim = c(0, NA)) + geom_abline(slope = 1, color = 'red', alpha = 0.5)
 
+## Bc analysis without umi V.S. Anne-Marie pipeline
 d_plot = merge(bc_obj$cleanBc[[1]], d, by.x = "barcode_seq", by.y = "var", all = T)
 qplot(x = count, y = nmol.fish, data = d_plot, xlim = c(0, NA), ylim = c(0, NA))
 ```
-

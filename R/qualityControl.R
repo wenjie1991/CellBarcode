@@ -106,7 +106,7 @@ plot_reads_depth_distribution = function(distribution) {
 
   # distribution is data.frame with two columns "nOccurrences" and "nReads".
   d = distribution
-  g = ggplot(d) + aes(x = nReads, y = nOccurrences) + geom_line() + theme_bw() + scale_x_log10()
+  g = ggplot(d) + aes(y = nReads, x = nOccurrences) + geom_point() + theme_bw() + scale_y_log10() + scale_x_log10()
   g
 }
 
