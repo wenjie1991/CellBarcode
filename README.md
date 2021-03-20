@@ -1,13 +1,13 @@
 # BC
 
-**Bc** is a R package for dealing with **genetic barcode** data.
+**Bc** is an R package for dealing with **genetic barcode** data.
 
 ## What you can do with **Bc**
 
-In other words, what Bc can do for you. If you are an ordinary users, you must
-know the general knowledge of genetic barcode. If you don't, maybe you need
-read following reviews "# TODO add paper links". Of course, our article about
-this tool is also good (but not yet written) :-p.
+In other words, what Bc can do for you. If you are reading these words, you must
+know the general knowledge of genetic barcodes. If you don't, maybe you need
+to read the following reviews "# TODO add paper links". Of course, our article about
+this tool is also good (but not yet written).
 
 Briefly, **Bc** can provide you (so far)
 
@@ -16,12 +16,12 @@ Briefly, **Bc** can provide you (so far)
 
 - Parsing sequences, extracting Barcode (and UMI) information.
 
-- Quality control and filter the Barcode. And give you reliable Barcode.
+- Quality control and filter the Barcode. And give you reliable Barcodes.
 
-- Provide Toolkits makes it easier to manipulate Barcode data.
+- Toolkits make it easier to manipulate Barcode data.
 
 If you want to learn more about the **Bc** utilization, reading the examples in
-vignette can be a good way (Vignette link):
+vignettes can be a good way (Vignette link):
 
 - [A simple example]()
 
@@ -31,7 +31,7 @@ vignette can be a good way (Vignette link):
 
 ## Installing
 
-1. Use the `devtools` install package from github
+1. Use the `devtools` install package from GitHub
 
 ```
 library(devtools)
@@ -44,14 +44,6 @@ install_github("wenjie1991/Bc")
 TBD (I hope the package can be accepted in Bioconductor).
 
 ## Contributing
-
-**Bc** Package has similarities to life. 
-
-- It has a birthday, which is when it was first released.
-
-- It grows, as the version number increases, and more functions are added.
-
-- It will die 💀, and one day it will be unusable (or/and useless).
 
 If you think it's useful to you now, then please make the most of it. "Useful"
 is the value of its existence.
