@@ -22,7 +22,6 @@ bc_cure.BarcodeObj = function(
   , with_umi = F
   , doFish = T
   , isUniqueUMI = F
-  , ordered = T
   ) {
 
   count = barcode_seq = NULL  # due to NOTE in check
@@ -70,6 +69,7 @@ bc_cure.BarcodeObj = function(
     ## Prepare output
     cleanBc = lapply(correct_out,
       function(d) {
+        # The result is default ordered
         data.frame(d$seq_freq[order(d$seq_freq$count, decreasing = T), ])
       }
     )
@@ -86,6 +86,7 @@ bc_cure.BarcodeObj = function(
 
   } else {
 
+    # The result is default ordered
     cleanBc = lapply(messyBc, function(x) { x[order(count, decreasing = T)] })
     cleanProc = NULL
 
