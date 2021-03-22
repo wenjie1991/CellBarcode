@@ -18,7 +18,7 @@ report_barcode_extraction = function(sample_name, reads_num, barcode_reads) {
 }
 
 #' @export
-bc_extract.ShortReadQ = function(x, pattern = "", sample_name = NULL, maxLDist = 0, pattern_type = c(barcode = 1), costs = list(sub = 1, ins = 99, del = 99), verbose = T) {
+bc_extract.ShortReadQ = function(x, pattern = "", sample_name = NULL, maxLDist = 0, pattern_type = c(barcode = 1), costs = list(sub = 1, ins = 99, del = 99), ordered = T, verbose = T) {
   reads_freq = ShortRead::tables(x, n=Inf)$top
   reads_seq = names(reads_freq)
   m = utils::aregexec(pattern, reads_seq, fixed = F, max.distance = maxLDist, costs = costs)
@@ -28,9 +28,17 @@ bc_extract.ShortReadQ = function(x, pattern = "", sample_name = NULL, maxLDist =
   barcode_v = plyr::laply(seq_l, function(x) { x[pattern_type["barcode"] + 1] })
   if ("UMI" %in% names(pattern_type)) {
     umi_v = plyr::laply(seq_l, function(x) { x[pattern_type["UMI"] + 1] })
-    d = data.table(reads_seq = reads_seq, match_seq = seq_v, umi_seq = umi_v, barcode_seq = barcode_v, count = reads_freq)
+    if (ordered) {
+      d = data.table(reads_seq = reads_seq, match_seq = seq_v, umi_seq = umi_v, barcode_seq = barcode_v, count = reads_freq)[order(count, decreasing = T)]
+    } else {
+      d = data.table(reads_seq = reads_seq, match_seq = seq_v, umi_seq = umi_v, barcode_seq = barcode_v, count = reads_freq)
+    }
   } else {
-    d = data.table(reads_seq = reads_seq, match_seq = seq_v, barcode_seq = barcode_v, count = reads_freq)
+    if (ordered) {
+      d = data.table(reads_seq = reads_seq, match_seq = seq_v, barcode_seq = barcode_v, count = reads_freq)[order(count, decreasing = T)]
+    } else {
+      d = data.table(reads_seq = reads_seq, match_seq = seq_v, barcode_seq = barcode_v, count = reads_freq)
+    }
   }
   if (verbose) {
     # BUG: The reads_num is not the total reads number
@@ -40,7 +48,7 @@ bc_extract.ShortReadQ = function(x, pattern = "", sample_name = NULL, maxLDist =
 }
 
 #' @export
-bc_extract.DNAStringSet = function(x, pattern = "", sample_name = NULL, maxLDist = 0, pattern_type = c(barcode = 1), costs = list(sub = 1, ins = 99, del = 99), verbose = T) {
+bc_extract.DNAStringSet = function(x, pattern = "", sample_name = NULL, maxLDist = 0, pattern_type = c(barcode = 1), costs = list(sub = 1, ins = 99, del = 99), ordered = T, verbose = T) {
   reads_freq = ShortRead::tables(x, n=Inf)$top
   reads_seq = names(reads_freq)
   m = utils::aregexec(pattern, reads_seq, fixed = F, max.distance = maxLDist, costs = costs)
@@ -50,9 +58,17 @@ bc_extract.DNAStringSet = function(x, pattern = "", sample_name = NULL, maxLDist
   barcode_v = plyr::laply(seq_l, function(x) { x[pattern_type["barcode"] + 1] })
   if ("UMI" %in% names(pattern_type)) {
     umi_v = plyr::laply(seq_l, function(x) { x[pattern_type["UMI"] + 1] })
-    d = data.table(reads_seq = reads_seq, match_seq = seq_v, umi_seq = umi_v, barcode_seq = barcode_v, count = reads_freq)
+    if (ordered) {
+      d = data.table(reads_seq = reads_seq, match_seq = seq_v, umi_seq = umi_v, barcode_seq = barcode_v, count = reads_freq)[order(count, decreasing = T)]
+    } else {
+      d = data.table(reads_seq = reads_seq, match_seq = seq_v, umi_seq = umi_v, barcode_seq = barcode_v, count = reads_freq)
+    }
   } else {
-    d = data.table(reads_seq = reads_seq, match_seq = seq_v, barcode_seq = barcode_v, count = reads_freq)
+    if (ordered) {
+      d = data.table(reads_seq = reads_seq, match_seq = seq_v, barcode_seq = barcode_v, count = reads_freq)[order(count, decreasing = T)]
+    } else {
+      d = data.table(reads_seq = reads_seq, match_seq = seq_v, barcode_seq = barcode_v, count = reads_freq)
+    }
   }
   if (verbose) {
     # BUG: The reads_num is not the total reads number
@@ -63,44 +79,44 @@ bc_extract.DNAStringSet = function(x, pattern = "", sample_name = NULL, maxLDist
 
 
 #' @export
-bc_extract.data.frame = function(x, pattern = "", maxLDist = 0, pattern_type = c(barcode = 1), costs = list(sub = 1, ins = 99, del = 99), verbose = T) {
+bc_extract.data.frame = function(x, pattern = "", maxLDist = 0, pattern_type = c(barcode = 1), costs = list(sub = 1, ins = 99, del = 99), ordered = T, verbose = T) {
   sequences = x$seq
   freq = x$freq
   x = DNAStringSet(rep(sequences, freq))
 
-  bc_extract(x, pattern = pattern, maxLDist = maxLDist, pattern_type = pattern_type, costs = costs, verbose = verbose)
+  bc_extract(x, pattern = pattern, maxLDist = maxLDist, pattern_type = pattern_type, costs = costs, ordered = ordered, verbose = verbose)
 }
 
 #' @export
-bc_extract.character = function(file, pattern = "", sample_name = basename(file), maxLDist = 0, pattern_type = c(barcode = 1), costs = list(sub = 1, ins = 99, del = 99), verbose = T) {
+bc_extract.character = function(file, pattern = "", sample_name = basename(file), maxLDist = 0, pattern_type = c(barcode = 1), costs = list(sub = 1, ins = 99, del = 99), ordered = T, verbose = T) {
   if (length(file) > 1) {
     bc_list = lapply(1:length(file), function(i) {
-      bc_extract(file[i], sample_name = sample_name[i], pattern = pattern, maxLDist = maxLDist, pattern_type = pattern_type, costs = costs, verbose = verbose)
+      bc_extract(file[i], sample_name = sample_name[i], pattern = pattern, maxLDist = maxLDist, pattern_type = pattern_type, costs = costs, ordered = ordered, verbose = verbose)
     })
     as.BarcodeObj(bc_list, sample_name)
   } else {
     x = ShortRead::readFastq(file)
-    bc_extract(x, sample_name = sample_name, pattern = pattern, maxLDist = maxLDist, pattern_type = pattern_type, costs = costs, verbose = verbose)
+    bc_extract(x, sample_name = sample_name, pattern = pattern, maxLDist = maxLDist, pattern_type = pattern_type, costs = costs, ordered = ordered, verbose = verbose)
   }
 }
 
 
 #' @export
-bc_extract.integer = function(x, pattern = "", sample_name = NULL, maxLDist = 0, pattern_type = c(barcode = 1), costs = list(sub = 1, ins = 99, del = 99), verbose = T) {
+bc_extract.integer = function(x, pattern = "", sample_name = NULL, maxLDist = 0, pattern_type = c(barcode = 1), costs = list(sub = 1, ins = 99, del = 99), ordered = T, verbose = T) {
   # TODO: Table result
   x = DNAStringSet(rep(names(x), x))
 
-  bc_extract(x, pattern = pattern, maxLDist = maxLDist, pattern_type = pattern_type, costs = costs, verbose = verbose)
+  bc_extract(x, pattern = pattern, maxLDist = maxLDist, pattern_type = pattern_type, costs = costs, ordered = ordered, verbose = verbose)
 }
 
 
 #' @export
-bc_extract.list = function(x, pattern = "", sample_name = NULL, maxLDist = 0, pattern_type = c(barcode = 1), costs = list(sub = 1, ins = 99, del = 99), verbose = F) {
+bc_extract.list = function(x, pattern = "", sample_name = NULL, maxLDist = 0, pattern_type = c(barcode = 1), costs = list(sub = 1, ins = 99, del = 99), ordered = T, verbose = F) {
   if (is.null(sample_name)) {
     sample_name = names(x)
   }
   parallel::mclapply(1:length(x), function(i) {
-    bc_extract(x[[i]], pattern = pattern, sample_name = sample_name[i], maxLDist = maxLDist, pattern_type = pattern_type, costs = costs, verbose = F)
+    bc_extract(x[[i]], pattern = pattern, sample_name = sample_name[i], maxLDist = maxLDist, pattern_type = pattern_type, costs = costs, ordered = ordered, verbose = F)
   }) -> messyBc
   names(messyBc) = sample_name
   output = list(messyBc = messyBc)

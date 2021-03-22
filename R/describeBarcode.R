@@ -1,6 +1,8 @@
 #' @export
 bc_diversity.BarcodeObj = function(x, clean = NULL, plot = T) {
 
+  # BUG: Could not work.
+
   # TODO: output UMI relate information when UMI is available
   #       - reads per UMI barcode
   #       - UMI number

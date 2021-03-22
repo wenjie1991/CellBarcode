@@ -22,6 +22,7 @@ bc_cure.BarcodeObj = function(
   , with_umi = F
   , doFish = T
   , isUniqueUMI = F
+  , ordered = T
   ) {
 
   count = barcode_seq = NULL  # due to NOTE in check
@@ -85,11 +86,10 @@ bc_cure.BarcodeObj = function(
 
   } else {
 
-    cleanBc = messyBc
+    cleanBc = lapply(messyBc, function(x) { x[order(count, decreasing = T)] })
     cleanProc = NULL
 
   }
-
 
   ## save the result
   barcodeObj$cleanBc = cleanBc
