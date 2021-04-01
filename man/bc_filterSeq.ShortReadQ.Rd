@@ -4,7 +4,7 @@
 \alias{bc_filterSeq.ShortReadQ}
 \title{Filter the reads by the QC threshold}
 \usage{
-\method{bc_filterSeq}{ShortReadQ}(x, min_average_quality = 30, min_read_length = 0)
+\method{bc_filterSeq}{ShortReadQ}(x, min_average_quality = 30, min_read_length = 0, N_threshold = 0)
 }
 \description{
 Filter the reads by the QC threshold

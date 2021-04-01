@@ -1,8 +1,8 @@
 # Design
 # library(Bc)
 # 
-# (Reads) -> runQc -> filterBc -> (Reads) -> runQc -> plot
-# (Reads) -> extractBc -> cureBc -> check -> cureBc -> count -> biological analysis
+# (Reads) -> bc_runQc -> bc_filterSeq -> (Reads) -> bc_runQc -> plot
+# (Reads) -> bc_extract -> bc_cure -> check -> bc_curec -> count -> biological analysis
 # 
 # runQc() -> class BarcodeObj(meta, rawBc)
 # filterFq.Barcode() -> class BarcodeObj(meta, rawBc)

@@ -19,15 +19,13 @@ Imports:
     stringr,
     magrittr,
     network,
-    ggnetwork,
     readr,
     ShortRead,
     Biostrings,
     egg,
     utils,
     S4Vectors,
-    seqinr,
-    ggpubr
+    seqinr
 LinkingTo: Rcpp
 RoxygenNote: 7.1.1
 Suggests: 

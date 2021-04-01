@@ -30,8 +30,8 @@ bc_diversity.BarcodeObj = function(x, clean = NULL, plot = T) {
   if (plot) {
     g1 = plot_lorenz_curve(d)
     g2 = plot_reads_per_barcode_distribution(d)
-    # TODO: use common legend
-    ggpubr::ggarrange(plotlist = list(g1, g2), nrow = 1, ncol = 2, common.legend = T) %>% print
+    # TODO: use common legend?
+    egg::ggarrange(plots = list(g1, g2), nrow = 1, ncol = 2) %>% print
   }
 
   d[, .(
@@ -99,9 +99,10 @@ calc_bit_info = function(x) {
   sum(-(p * log2(p)))
 }
 
+# TODO: How to deal the network graph
 #' Draw Network graph to show the similarity of barcode
 #'
-#' @export
+# @export
 bc_plotNetwork = function(x, ...) UseMethod("bc_plotNetwork", x)
 
 #' Draw Network graph to show the similarity of barcode
@@ -113,7 +114,7 @@ bc_plotNetwork = function(x, ...) UseMethod("bc_plotNetwork", x)
 #' @param type A integer, "raw" or "clean" correspond to the uncorrected or corrected barcde data
 #' @param UMI_depth_threshold_n A integer, only the barcode with read depth or UMI-barcode count greater than the value will be used
 #' @return NULL
-#' @export
+# @export
 bc_plotNetwork.BarcodeObj = function(barcodeObj, sample1 = NULL, sample2 = NULL, topN = 100, type = "raw", UMI_depth_threshold_n = 5, ...) {
 
   count = barcode_seq = NULL  # due to NOTE in check

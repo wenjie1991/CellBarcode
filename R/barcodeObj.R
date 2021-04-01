@@ -98,7 +98,7 @@ subset.BarcodeObj = function(barcodeObj, sample = NULL, barcode = NULL, black_li
 bc_barcodes = function(barcodeObj, unlist = T) {
   d = lapply(barcodeObj$cleanBc, function(x) { x$barcode_seq }) 
   if (unlist) {
-    unlist(d) %>% as.character
+    unlist(d) %>% as.character %>% unique
   } else {
     names(d) = names(barcodeObj$cleanBc)
     d

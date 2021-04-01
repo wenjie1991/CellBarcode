@@ -18,6 +18,7 @@ knitr::opts_chunk$set(
 library(data.table)
 library(ggplot2)
 library(Bc)
+test_data_set = "../data/Meghan_batch1_test/"
 ```
 
 # Convention
@@ -43,7 +44,7 @@ induced VDJ recombination in luminal and two technical replicates in basal
 cells.
 
 ```{r smaples}
-fq_files = dir("../data/Meghan_batch1/", "gz", full=T)
+fq_files = dir(test_data_set, "gz", full=T)
 sample_names = c("E12_lum_a", "E12_lum_b", "E12_bas_a", "E12_bas_b")
 fq_files
 ```
@@ -170,7 +171,6 @@ And the `$messyBc` is a list too, in the item, there are 4 samples. Those sample
 
 ```{r extract_barcode_with_UMI}
 # pattern = "([ACGT]{16})CCTCGAGGTCATCGAAGTATCAAG([ACGT]+)TAGCAAGCTCGAGAGTAGACCTACT"
-CTCGAGGNCATCGAAGTATCAAG
 pattern = "([ACGT]{16})CCTCGAGGTCATCGAAGTATCAAG([ACGT]+)TAGCAAGCTC"
 bc_obj_umi = bc_extract(fq_filter, sample_name = sample_names, pattern = pattern, maxLDist = 0, pattern_type = c(UMI = 1, barcode = 2))
 class(bc_obj_umi)
@@ -323,7 +323,7 @@ In the following examples, specific barcode is selected for one sample, then
 get the result in matrix format.
 
 ```{r}
-bc_2matrix(bc_obj[c("TCCAGTAGGCTATCGTTACGACGTAGCTACTACCG"), "E12_lum_b"])
+bc_2matrix(bc_obj[bc_barcodes(bc_obj)[1:5], "E12_lum_b"])
 ```
 
 # Verify VDJ barcodes
@@ -355,7 +355,7 @@ bc_obj_umi
 # Check the correctness of result
 
 ```{r compare_bc_previous_res}
-d = data.table::fread("../data/Meghan_batch1/cleaned_A6_9622_lum_E12_a.txt")
+d = data.table::fread(paste0(test_data_set, "/cleaned_A6_9622_lum_E12_a.txt"))
 
 ## Bc analysis with umi V.S. Anne-Marie pipeline
 d_plot = merge(bc_obj_umi$cleanBc[[1]], d, by.x = "barcode_seq", by.y = "var", all = T)
