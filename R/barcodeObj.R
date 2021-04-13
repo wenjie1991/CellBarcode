@@ -115,14 +115,18 @@ bc_names = function(barcodeObj) {
 }
 
 #' @export
-bc_2df = function(barcodeObj) {
+bc_2df = function(barcodeObj, isDT=F) {
   # TODO: enable messyBc
   if (is.null(barcodeObj$cleanBc)) {
     stop("No cleanBc found.")
   }
   d = barcodeObj$cleanBc %>% rbindlist(idcol = T)
   names(d)[1] = "sample_name"
-  d
+  if (isDT) {
+    return(d)
+  } else {
+    return(as.data.frame(d))
+  }
 }
 
 #' @export
@@ -132,8 +136,11 @@ bc_2matrix = function(barcodeObj) {
     stop("No cleanBc found.")
   }
   # TODO: use sparse matrix
-  bc_2df(barcodeObj) %>% dcast(barcode_seq ~ sample_name, value.var = "count", fill = 0)
-}
+  d = bc_2df(barcodeObj) %>% dcast(barcode_seq ~ sample_name, value.var = "count", fill = 0) 
+  m = data.frame(d[, -1]) %>% data.matrix
+  rownames(m) = d[, barcode_seq]
+  m
+} 
 
 # TODO: How to update the sample name?
 # sampleNames = function(...) UseMethod("rename")

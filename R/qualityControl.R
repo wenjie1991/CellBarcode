@@ -162,20 +162,25 @@ plot.barcodeQcSet = function(x) {
   #   Reads length distribution
   #   nucleic acide per base
   #   quality per base
-  g_list = list()
 
-  d = lapply(1:length(x), function(i) { data.table(x[[i]]$base_freq_per_cycle, fileName = names(x)[i]) }) %>% rbindlist()
-  d[, base_num := sum(Count), by = .(Cycle, fileName)]
-  d[, base_percent := Count / base_num, by = .(Base, Cycle, fileName)]
-  p1 = ggplot(d, aes(Cycle, fileName, fill = Base, alpha = base_percent)) + geom_tile(color = "black") + labs(y = "Sample Name") + theme_bw()
-  g_list = append(g_list, list(p1))
+  if (length(x) == 1) {
+    plot(x[[1]])
+  } else {
+    g_list = list()
 
-  if ("base_quality_per_cycle" %in% names(x[[1]])) {
-    d = lapply(1:length(x), function(i) { data.table(x[[i]]$base_quality_per_cycle, sample_name = names(x)[i]) }) %>% rbindlist()
-    p2 = ggplot(d, aes(Cycle, sample_name, fill = Median)) + geom_tile(color = "black") + labs(y = "Sample Name", fill = "Median Base Quality") + theme_bw()
-    g_list = append(g_list, list(p2))
+    d = lapply(1:length(x), function(i) { data.table(x[[i]]$base_freq_per_cycle, fileName = names(x)[i]) }) %>% rbindlist()
+    d[, base_num := sum(Count), by = .(Cycle, fileName)]
+    d[, base_percent := Count / base_num, by = .(Base, Cycle, fileName)]
+    p1 = ggplot(d, aes(Cycle, fileName, fill = Base, alpha = base_percent)) + geom_tile(color = "black") + labs(y = "Sample Name") + theme_bw()
+    g_list = append(g_list, list(p1))
+
+    if ("base_quality_per_cycle" %in% names(x[[1]])) {
+      d = lapply(1:length(x), function(i) { data.table(x[[i]]$base_quality_per_cycle, sample_name = names(x)[i]) }) %>% rbindlist()
+      p2 = ggplot(d, aes(Cycle, sample_name, fill = Median)) + geom_tile(color = "black") + labs(y = "Sample Name", fill = "Median Base Quality") + theme_bw()
+      g_list = append(g_list, list(p2))
+    }
+
+    row_n = length(g_list)
+    egg::ggarrange(plots = g_list, nrow = row_n, ncol=1)
   }
-
-  row_n = length(g_list)
-  egg::ggarrange(plots = g_list, nrow = row_n, ncol=1)
 }

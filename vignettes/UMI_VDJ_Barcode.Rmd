@@ -354,6 +354,8 @@ bc_obj_umi
 
 # Check the correctness of result
 
+TODO: compare result w/o UMI
+
 ```{r compare_bc_previous_res}
 d = data.table::fread(paste0(test_data_set, "/cleaned_A6_9622_lum_E12_a.txt"))
 

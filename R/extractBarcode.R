@@ -79,7 +79,7 @@ bc_extract.DNAStringSet = function(x, pattern = "", sample_name = NULL, maxLDist
 
 
 #' @export
-bc_extract.data.frame = function(x, pattern = "", maxLDist = 0, pattern_type = c(barcode = 1), costs = list(sub = 1, ins = 99, del = 99), ordered = T, verbose = T) {
+bc_extract.data.frame = function(x, pattern = "", sample_name = NULL, maxLDist = 0, pattern_type = c(barcode = 1), costs = list(sub = 1, ins = 99, del = 99), ordered = T, verbose = T) {
   sequences = x$seq
   freq = x$freq
   x = DNAStringSet(rep(sequences, freq))
@@ -89,15 +89,10 @@ bc_extract.data.frame = function(x, pattern = "", maxLDist = 0, pattern_type = c
 
 #' @export
 bc_extract.character = function(file, pattern = "", sample_name = basename(file), maxLDist = 0, pattern_type = c(barcode = 1), costs = list(sub = 1, ins = 99, del = 99), ordered = T, verbose = T) {
-  if (length(file) > 1) {
-    bc_list = lapply(1:length(file), function(i) {
-      bc_extract(file[i], sample_name = sample_name[i], pattern = pattern, maxLDist = maxLDist, pattern_type = pattern_type, costs = costs, ordered = ordered, verbose = verbose)
-    })
-    as.BarcodeObj(bc_list, sample_name)
-  } else {
-    x = ShortRead::readFastq(file)
-    bc_extract(x, sample_name = sample_name, pattern = pattern, maxLDist = maxLDist, pattern_type = pattern_type, costs = costs, ordered = ordered, verbose = verbose)
-  }
+  bc_list = lapply(1:length(file), function(i) {
+    bc_extract(file[i], sample_name = sample_name[i], pattern = pattern, maxLDist = maxLDist, pattern_type = pattern_type, costs = costs, ordered = ordered, verbose = verbose)
+  })
+  as.BarcodeObj(bc_list, sample_name)
 }
 
 
@@ -114,6 +109,9 @@ bc_extract.integer = function(x, pattern = "", sample_name = NULL, maxLDist = 0,
 bc_extract.list = function(x, pattern = "", sample_name = NULL, maxLDist = 0, pattern_type = c(barcode = 1), costs = list(sub = 1, ins = 99, del = 99), ordered = T, verbose = F) {
   if (is.null(sample_name)) {
     sample_name = names(x)
+  }
+  if (is.null(sample_name)) {
+    sample_name = 1:length(x)
   }
   parallel::mclapply(1:length(x), function(i) {
     bc_extract(x[[i]], pattern = pattern, sample_name = sample_name[i], maxLDist = maxLDist, pattern_type = pattern_type, costs = costs, ordered = ordered, verbose = F)

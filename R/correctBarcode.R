@@ -20,7 +20,7 @@ bc_cure.BarcodeObj = function(
   , barcode_count_threshold = 10000
   , hammer_dist_threshold = 0
   , with_umi = F
-  , doFish = T
+  , doFish = F
   , isUniqueUMI = F
   ) {
 
