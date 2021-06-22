@@ -10,19 +10,19 @@ l_sr = list(sample1 = sr, sample2 = sr)
 
 test_that("Quality Control", {
 
-  expect_s3_class(plot(bc_runQC(l_sr)), "egg")
-  expect_s3_class(plot(bc_runQC(fq_file[[1]])), "egg")
+  expect_s3_class(plot(bc_seqQC(l_sr)), "egg")
+  expect_s3_class(plot(bc_seqQC(fq_file[[1]])), "egg")
 
-  expect_snapshot(bc_runQC(sr))
+  expect_snapshot(bc_seqQC(sr))
 
-  expect_snapshot(bc_runQC(ds))
+  expect_snapshot(bc_seqQC(ds))
 
-  expect_snapshot(bc_runQC(iv))
+  expect_snapshot(bc_seqQC(iv))
 
-  expect_snapshot(bc_runQC(df))
+  expect_snapshot(bc_seqQC(df))
 
-  expect_snapshot(bc_runQC(l))
+  expect_snapshot(bc_seqQC(l))
 
-  expect_snapshot(bc_runQC(l_sr))
+  expect_snapshot(bc_seqQC(l_sr))
 })
 

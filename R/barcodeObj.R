@@ -6,26 +6,6 @@ check_sample_name = function(barcodeObj) {
   }
 }
 
-#' Subset operation of BarcodeObj object
-#'
-#' @param barcodeObj A BarcodeObj
-#' @param x A vector of integer or string, select the barcode subset from BarcodeObj
-#' @param y A vector or an expression, select the sample subset from BarcodeObj
-#' @return A BarcodeObj
-#'
-#' @export
-#' @examples
-#' data(bc_obj)
-#' bc_obj[c("AGAG", "AAAG"), ]
-#' bc_obj[, "test1"]
-#' bc_obj[, sample_name == "test1"]
-#' bc_obj[, c("test1", "test2")]
-#'
-"[.BarcodeObj" = function(barcodeObj, x = NULL, y = NULL) {
-
-  y_call = substitute(y)
-  return(subset.BarcodeObj(barcodeObj, sample = y_call, barcode = x, sample_is_expression = T))
-}
 
 #' Subset operation of BarcodeObj object
 #'
@@ -35,13 +15,49 @@ check_sample_name = function(barcodeObj) {
 #' @param black_list A vector or string. Remove the the barcode in the list.
 #' @return A BarcodeObj
 #'
-#' @export
 #' @examples
-#' # Not run
-#' # subset(bc_obj, barcode = c("AACCTT", "AACCTT"))
-#' # subset(bc_obj, sample = "sample1_rep1", barcode = c("AACCTT", "AACCTT"))
-#' # subset(bc_obj, sample = c("sample1_rep1", "sample1_rep2"), barcode = c("AACCTT", "AACCTT"))
-subset.BarcodeObj = function(barcodeObj, sample = NULL, barcode = NULL, black_list = NULL, sample_is_expression = F) {
+#' data(bc_obj)
+#'
+#' bc_obj
+#'
+#' # Select barcodes
+#' bc_subset(bc_obj, barcode = c("AACCTT", "AACCTT"))
+#' bc_obj[c("AGAG", "AAAG"), ]
+#'
+#' # Select by meta data
+#' bc_meta(bc_obj)$phenotype = c("l", "b")
+#' bc_meta(bc_obj)
+#' bc_subset(bc_obj, phenotype == "l")
+#'
+#' bc_obj[, phenotype == "l"]
+#'
+#' # Select samples by sample name
+#' bc_obj[, "test1"]
+#' bc_obj[, c("test1", "test2")]
+#' bc_subset(bc_obj, sample = "sample1_rep1", barcode = c("AACCTT", "AACCTT"))
+#' 
+#' # Apply black list
+#' bc_subset(bc_obj, sample = c("sample1_rep1", "sample1_rep2"), barcode = c("AACCTT"))
+#'
+#' # Join two samples with different barcode sets
+#' bc_obj["AGAG", "test1"] + bc_obj["AAAG", "test1"]
+#'
+#' # Join two samples with overlap barcodes
+#' bc_obj_join = bc_obj["AGAG", "test1"] + bc_obj["AGAG", "test1"]
+#' bc_obj_join
+#' # The same barcode will merged after applying bc_cure()
+#' bc_cure(bc_obj_join)
+#'
+#' # Remove barcodes
+#' bc_obj
+#' bc_obj - "AAAG"
+#' 
+#' # Select barcode in white list
+#' bc_obj
+#' bc_obj * "AAAG"
+#' @export bc_subset
+#' @rdname bc_subset
+bc_subset = function(barcodeObj, sample = NULL, barcode = NULL, black_list = NULL, sample_is_expression = F) {
 
   reads_eq = NULL # due to NOTE in check
 
@@ -89,16 +105,22 @@ subset.BarcodeObj = function(barcodeObj, sample = NULL, barcode = NULL, black_li
   return(barcodeObj)
 }
 
-#' Combined the BarcodeObj
-#'
-#' @param x A BarcodeObj
-#' @param y A BarcodeObj
-#' @return A BarcodeObj
-#'
 #' @export
-"+.BarcodeObj" = function(x, y) {
+#' @rdname bc_subset
+"[.BarcodeObj" = function(barcodeObj, barcode = NULL, sample = NULL) {
+
+  y_call = substitute(sample)
+  return(bc_subset(barcodeObj, sample = y_call, barcode = barcode, sample_is_expression = T))
+}
+
+#' @rdname bc_subset
+#' @export
+"+.BarcodeObj" = function(barcodeObj_x, barcodeObj_y) {
   # TODO: Apply the merge to all parts of the data
   #       How to deal when two BarcodeObj have the same samples, the same samples will merged
+
+  x = barcodeObj_x
+  y = barcodeObj_y
 
   meta_data_x = x$meta_data
   meta_data_y = y$meta_data
@@ -122,30 +144,37 @@ subset.BarcodeObj = function(barcodeObj, sample = NULL, barcode = NULL, black_li
   x
 }
 
-#' Remove the barcode in black list
-#'
-#' @param x A BarcodeObj
-#' @param y A string or vector, the barcode black list to revmoe
-#' @return A BarcodeObj
-#'
+#' @rdname bc_subset
 #' @export
-"-.BarcodeObj" = function(x, y) {
-  subset(x, black_list = y)
+"-.BarcodeObj" = function(barcodeObj, barcode_black_list) {
+
+  x = barcodeObj
+  y = barcode_black_list
+
+  bc_subset(x, black_list = y)
 }
 
-#' Select the barcode by white list
-#'
-#' @param x A BarcodeObj
-#' @param y A string or vector, the barcode white list
-#' @return A BarcodeObj
-#'
+#' @rdname bc_subset
 #' @export
-"*.BarcodeObj" = function(x, y) {
-  subset(x, barcode = y)
+"*.BarcodeObj" = function(barcodeObj, barcode_white_list) {
+
+  x = barcodeObj
+  y = barcode_white_list
+
+  bc_subset(x, barcode = y)
 }
 
 #' Get barcode sequences
+#' 
+#' @param barcodeObj A BarcodeObj.
+#' @param unlist A bool value, if TRUE, then the function will return a vector of barcodes; else a list will be returned, each element is corresponding to a sample.
+#' @return A character vector or a list
+#' @examples
+#' data(bc_obj)
 #'
+#' bc_barcodes(bc_obj)
+#'
+#' bc_barcodes(bc_obj, unlist = FALSE)
 #' @export
 bc_barcodes = function(barcodeObj, unlist = T) {
   d = lapply(barcodeObj$cleanBc, function(x) { x$barcode_seq }) 
@@ -159,15 +188,21 @@ bc_barcodes = function(barcodeObj, unlist = T) {
 
 #' Get sample names
 #'
+#' @param barcodeObj A BarcodeObj.
+#' @return A character vector
+#' @examples
+#' data(bc_obj)
+#'
+#' bc_names(bc_obj)
+#' bc_names(bc_obj) = c("new1", "new2")
+#' bc_names
 #' @export
 bc_names = function(barcodeObj) {
   check_sample_name(barcodeObj)
   rownames(barcodeObj$meta_data)
 }
 
-
-#' Assign sample names
-#'
+#' @rdname bc_names
 #' @export
 "bc_names<-" = function(barcodeObj, value) {
   check_sample_name(barcodeObj)
@@ -185,15 +220,28 @@ bc_names = function(barcodeObj) {
 
 #' Get meta data
 #'
+#' @param barcodeObj A BarcodeObj
+#' @return A BarcodeObj
+#' @examples
+#' data(bc_obj)
+#'
+#' bc_meta(bc_obj)
+#' bc_meta(bc_obj)$phenotype = c("l", "b")
+#' bc_meta(bc_obj, key = "sample_type") = c("l", "b")
+#' bc_meta(bc_obj)
+#' meta_data = data.frame(
+#'   sample_name = c("test1", "test2"),
+#'   phenotype = c("l", "b")
+#'   )
+#' bc_meta(bc_obj) = meta_data
+#' bc_meta
 #' @export
 bc_meta = function(barcodeObj) {
   check_sample_name(barcodeObj)
   barcodeObj$meta_data
 }
 
-
-#' Assign meta data
-#'
+#' @rdname bc_meta
 #' @export
 "bc_meta<-" = function(barcodeObj, key = NULL, value) {
   check_sample_name(barcodeObj)
@@ -208,8 +256,25 @@ bc_meta = function(barcodeObj) {
 }
 
 
-#' Get barcode reslt data.table format
+#' Transform BarcodeObj into other data type
+#' 
+#' @param barcodeObj A BarcodeObj
+#' @return data.frame
+#' @examples
+#' data(bc_obj)
 #'
+#' bc_obj = bc_cure(bc_obj)
+#'
+#' bc_2df(bc_obj)
+#' bc_2dt(bc_obj)
+#' bc_2matrix(bc_obj)
+#' @export
+bc_2df = function(barcodeObj) {
+  bc_2dt(barcodeObj) %>% as.data.frame
+}
+
+#' @rdname bc_2df
+#' @return data.table
 #' @export
 bc_2dt = function(barcodeObj) {
   # TODO: enable messyBc
@@ -221,15 +286,9 @@ bc_2dt = function(barcodeObj) {
   return(d)
 }
 
-#' Get barcode reslt data.frame format
-#'
-#' @export
-bc_2df = function(barcodeObj) {
-  bc_2dt(barcodeObj) %>% as.data.frame
-}
 
-#' Get barcode result in matrix format
-#'
+#' @rdname bc_2df
+#' @return matrix
 #' @export
 bc_2matrix = function(barcodeObj) {
   # TODO: enable messyBc
@@ -242,25 +301,6 @@ bc_2matrix = function(barcodeObj) {
   rownames(m) = d[, barcode_seq]
   m
 } 
-
-# TODO: How to update the sample name?
-# sampleNames = function(...) UseMethod("rename")
-# 
-# sampleNames.BarcodeObj = function(barcodeObj, rename) {
-#   if (!is.null(barcodeObj$messyBc)) {
-#     old_name = names(barcodeObj$messyBc)
-#     old_name[names(rename)] = rename
-#     names(barcodeObj$messyBc) = old_name
-#   }
-# 
-#   if (!is.null(barcodeObj$cleanBc)) {
-#     old_name = names(barcodeObj$cleanBc)
-#     old_name[names(rename)] = rename
-#     names(barcodeObj$cleanBc) = old_name
-#   }
-#   barcodeObj
-# }
-
 
 summary_BarcodeObj = function(barcodeObj) {
 
@@ -277,6 +317,12 @@ summary_BarcodeObj = function(barcodeObj) {
 
 #' Format the summary of BarcodeObj
 #'
+#' @param barcodeObj A BarcodeObj
+#' @examples
+#' data(bc_obj)
+#'
+#' format(bc_obj)
+#' print(bc_obj)
 #' @export
 format.BarcodeObj = function(barcodeObj) {
 
@@ -323,11 +369,13 @@ $cleanBc: {cleanBc_n} Samples for cleaned barcodes
   res
 }
 
-#' Print out the summary of BarcodeObj
+#' Print the summary of BarcodeObj
 #'
-#' @param barcodeObj A BarcodeObj
-#' @return The general information about the BarcodeObj
+#' @examples
+#' data(bc_obj)
 #'
+#' format(bc_obj)
+#' print(bc_obj)
 #' @export
 print.BarcodeObj = function(barcodeObj) {
   cat(format(barcodeObj), "\n")
@@ -354,8 +402,3 @@ print.BarcodeObj = function(barcodeObj) {
   #     cat("\n")
   #   }
 }
-
-# view = function(x, ...) UseMethod("view", x)
-# view.BarcodeObj = function(barcodeObj) {
-#   print.default(barcodeObj)
-# }

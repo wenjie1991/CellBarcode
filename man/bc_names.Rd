@@ -2,10 +2,26 @@
 % Please edit documentation in R/barcodeObj.R
 \name{bc_names}
 \alias{bc_names}
+\alias{bc_names<-}
 \title{Get sample names}
 \usage{
 bc_names(barcodeObj)
+
+bc_names(barcodeObj) <- value
+}
+\arguments{
+\item{barcodeObj}{A BarcodeObj.}
+}
+\value{
+A character vector
 }
 \description{
 Get sample names
+}
+\examples{
+data(bc_obj)
+
+bc_names(bc_obj)
+bc_names(bc_obj) = c("new1", "new2")
+bc_names
 }

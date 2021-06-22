@@ -15,7 +15,7 @@ get_base_quality_per_cycle = function(bstringset) {
     c(Mean = mean(x), quantile_result)
   }) 
   quality_stat = t(quality_stat)
-  data.table(Cycle = seq(1, nrow(quality_stat)), quality_stat)
+  as.data.frame(data.table(Cycle = seq(1, nrow(quality_stat)), quality_stat))
 }
 
 get_base_freq_per_cycle = function(dnastringset) {
@@ -23,20 +23,37 @@ get_base_freq_per_cycle = function(dnastringset) {
   base_m = alphabetByCycle(dnastringset)
   base_m = t(base_m[c("A", "C", "G", "T"), ])
   base_m = data.table(Cycle = seq(1:nrow(base_m)), base_m)
-  data.table::melt(base_m, id.vars = "Cycle", measure.vars = c("A", "C", "G", "T"), value.name = "Count", variable.name = "Base")
+  as.data.frame(data.table::melt(base_m, id.vars = "Cycle", measure.vars = c("A", "C", "G", "T"), value.name = "Count", variable.name = "Base"))
 }
 
 #' Perform quality control
 #' 
-#' fastq file name, ShortReadQ Obj, DNAStringSet Obj, data.frame, vector
+#' @param x A string. fastq file name, ShortReadQ Obj, DNAStringSet Obj, data.frame or integer vector
+#' @return A barcodeQc or barcodeQcSet class. 
+#' The barcodeQc is list with two elements, 
+#'   base_quality_per_cycle: data.frame with row of sequence basepair location, the columns are the basepair sequencing quality summary
+#'   base_freq_per_cycle: data.frame with three columns, Cycle: the sequence basepair location (NGS sequencing cycle); Base: DNA base; Count: reads count.
+#' The barcodeQcSet is list of barcodeQc
 #' 
-#' @export
-bc_runQC = function(...) UseMethod("bc_runQC")
-
-#' Perform quality control for ShortReadQ
+#' @examples
+#' fq_file = system.file("extdata", "simple.fq", package="Bc")
+#' sr = readFastq(fq_file)
+#' ds = sr@sread
+#' l = list(sample1 = ds, sample2 = ds)
+#' l_sr = list(sample1 = sr, sample2 = sr)
+#'
+#' bc_seqQC(fq_file)
+#' bc_seqQC(sr)
+#' bc_seqQC(ds)
+#' plot(bc_seqQC(l))
+#' plot(bc_seqQC(l_sr))
 #'
 #' @export
-bc_runQC.ShortReadQ = function(x, n = 50, plot = F) {
+bc_seqQC = function(...) UseMethod("bc_seqQC")
+
+#' @rdname bc_seqQC
+#' @export
+bc_seqQC.ShortReadQ = function(x) {
   # output: top, distribution (nOccurrences, nReads), base_quality_per_cycle, base_freq_per_cycle
   output = ShortRead::tables(x)
   output$base_quality_per_cycle = get_base_quality_per_cycle(x@quality)
@@ -45,10 +62,9 @@ bc_runQC.ShortReadQ = function(x, n = 50, plot = F) {
   output
 }
 
-#' Perform quality control for DNAStringSet
-#'
+#' @rdname bc_seqQC
 #' @export
-bc_runQC.DNAStringSet = function(x, plot = F) {
+bc_seqQC.DNAStringSet = function(x) {
   # output: top, distribution (nOccurrences, nReads), base_freq_per_cycle
   output = ShortRead::tables(x)
   output$base_freq_per_cycle = get_base_freq_per_cycle(x)
@@ -56,10 +72,9 @@ bc_runQC.DNAStringSet = function(x, plot = F) {
   output
 }
 
-#' Perform quality control for data.frame
-#'
+#' @rdname bc_seqQC
 #' @export
-bc_runQC.data.frame = function(x) {
+bc_seqQC.data.frame = function(x) {
   ## Input: data.frame(seq, freq)
   ## convert data.frame to DNAStringSet
   sequences = x$seq
@@ -72,10 +87,9 @@ bc_runQC.data.frame = function(x) {
   output
 }
 
-#' Perform quality control for integer vector
-#'
+#' @rdname bc_seqQC
 #' @export
-bc_runQC.integer = function(x) {
+bc_seqQC.integer = function(x) {
   x = DNAStringSet(rep(names(x), x))
 
   output = ShortRead::tables(x)
@@ -84,18 +98,17 @@ bc_runQC.integer = function(x) {
   output
 }
 
-#' Perform quality control for character vector
-#'
+#' @rdname bc_seqQC
 #' @export
-bc_runQC.character = function(file, sample_name = basename(file)) {
+bc_seqQC.character = function(file, sample_name = basename(file)) {
   # TODO: use qa to do fast check for the quality
   ## generate reads quality information
   # TODO: Create a new function to check the quality of fastq file.
   if (length(file) == 1) {
-    bc_runQC(ShortRead::readFastq(file))
+    bc_seqQC(ShortRead::readFastq(file))
   } else {
     qc_list = lapply(file, function(f) {
-      bc_runQC(ShortRead::readFastq(f))
+      bc_seqQC(ShortRead::readFastq(f))
     })
     names(qc_list) = sample_name
     class(qc_list) = append(class(qc_list), "barcodeQcSet")
@@ -103,11 +116,10 @@ bc_runQC.character = function(file, sample_name = basename(file)) {
   }
 }
 
-#' Perform quality control for list
-#'
+#' @rdname bc_seqQC
 #' @export
-bc_runQC.list = function(x) {
-  qc_list = lapply(x, bc_runQC)
+bc_seqQC.list = function(x) {
+  qc_list = lapply(x, bc_seqQC)
   class(qc_list) = append(class(qc_list), "barcodeQcSet")
   qc_list
 }
@@ -144,8 +156,7 @@ plot_base_quality_distribution = function(base_quality_per_cycle) {
   g
 }
 
-#' Visualize sequencing quality for single sample
-#'
+#' @rdname bc_seqQC
 #' @export
 plot.barcodeQc = function(x, opt = "all") {
   # barcodeQc has: top, distribution (nOccurrences, nReads), base_quality_per_cycle, base_freq_per_cycle
@@ -165,8 +176,7 @@ plot.barcodeQc = function(x, opt = "all") {
   egg::ggarrange(plots = g_list, nrow = 2, ncol=col_n)
 }
 
-#' Visualize sequencing quality for several samples
-#'
+#' @rdname bc_seqQC
 #' @export
 plot.barcodeQcSet = function(x) {
 

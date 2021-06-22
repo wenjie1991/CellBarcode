@@ -2,10 +2,60 @@
 % Please edit documentation in R/filtering.R
 \name{bc_filterSeq}
 \alias{bc_filterSeq}
+\alias{bc_filterSeq.DNAStringSet}
+\alias{bc_filterSeq.data.frame}
+\alias{bc_filterSeq.character}
+\alias{bc_filterSeq.integer}
+\alias{bc_filterSeq.list}
 \title{Filter the reads by the QC threshold}
 \usage{
 bc_filterSeq(...)
+
+\method{bc_filterSeq}{DNAStringSet}(x, min_read_length = 0, N_threshold = 0)
+
+\method{bc_filterSeq}{data.frame}(x, min_read_length = 0, N_threshold = 0)
+
+\method{bc_filterSeq}{character}(
+  x,
+  min_average_quality = 30,
+  min_read_length = 0,
+  N_threshold = 0,
+  sample_name = basename(x)
+)
+
+\method{bc_filterSeq}{integer}(x, min_read_length = 0, N_threshold = 0)
+
+\method{bc_filterSeq}{list}(
+  x,
+  min_average_quality = 30,
+  min_read_length = 0,
+  N_threshold = 0,
+  sample_name = names(x)
+)
+}
+\arguments{
+\item{x}{file location, ShortReadQ, DNAStringSet, data.frame, integer vector or list of above data type.}
+
+\item{min_read_length}{A integer, sequence with length shorter than the value are filtered.}
+
+\item{N_threshold}{A integer, sequence with reads number less that the value are filtered.}
+
+\item{min_average_quality}{A number, sequence with average base smaller than the value are filtered.}
+
+\item{sample_name}{A string vector, applicable when a list is used as input, it provides new sample_name for the output list.}
+}
+\value{
+Sequences pass the filter criterial
 }
 \description{
 Filter the reads by the QC threshold
+}
+\examples{
+fq_file = system.file("extdata", "simple.fq", package="Bc")
+sr = readFastq(fq_file)
+ds = sr@sread
+
+bc_filterSeq(fq_file)
+bc_filterSeq(sr)
+bc_filterSeq(ds)
 }

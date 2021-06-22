@@ -2,10 +2,35 @@
 % Please edit documentation in R/barcodeObj.R
 \name{bc_2df}
 \alias{bc_2df}
-\title{Get barcode reslt data.frame format}
+\alias{bc_2dt}
+\alias{bc_2matrix}
+\title{Transform BarcodeObj into other data type}
 \usage{
 bc_2df(barcodeObj)
+
+bc_2dt(barcodeObj)
+
+bc_2matrix(barcodeObj)
+}
+\arguments{
+\item{barcodeObj}{A BarcodeObj}
+}
+\value{
+data.frame
+
+data.table
+
+matrix
 }
 \description{
-Get barcode reslt data.frame format
+Transform BarcodeObj into other data type
+}
+\examples{
+data(bc_obj)
+
+bc_obj = bc_cure(bc_obj)
+
+bc_2df(bc_obj)
+bc_2dt(bc_obj)
+bc_2matrix(bc_obj)
 }

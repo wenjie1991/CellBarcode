@@ -50,7 +50,5 @@ test_that("barcode diversity", {
  
   expect_snapshot(bc_diversity(bc_obj, plot = F))
 
-  expect_snapshot(bc_diversity(bc_obj, data_type = "messyBc", plot=F))
-
 })
 

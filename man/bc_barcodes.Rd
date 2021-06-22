@@ -6,6 +6,21 @@
 \usage{
 bc_barcodes(barcodeObj, unlist = T)
 }
+\arguments{
+\item{barcodeObj}{A BarcodeObj.}
+
+\item{unlist}{A bool value, if TRUE, then the function will return a vector of barcodes; else a list will be returned, each element is corresponding to a sample.}
+}
+\value{
+A character vector or a list
+}
 \description{
 Get barcode sequences
+}
+\examples{
+data(bc_obj)
+
+bc_barcodes(bc_obj)
+
+bc_barcodes(bc_obj, unlist = FALSE)
 }

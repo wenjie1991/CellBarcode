@@ -1,7 +1,20 @@
 #' Calculate barcode diversity
+#' 
+#' @param barcodeObj A BarcodeObj
+#' @param plot A bool, if draw the lorenz curve and barcode distribution curve
+#' @return A data.frame with following columns
+#'   total_reads: total resds number
+#'   shannon_index: Shannon information
+#'   equitability_index: Equitability index
+#'   bit_index: Shannon bit information
+#'   complexity: e^shannon_index
+#' @examples
+#' data(bc_obj)
 #'
+#' bc_obj = bc_cure(bc_obj)
+#' bc_diversity(bc_obj)
 #' @export
-bc_diversity = function(x, data_type = "clean", plot = T) {
+bc_diversity = function(barcodeObj, plot = T) {
 
   # BUG: Could not work.
 
@@ -13,13 +26,13 @@ bc_diversity = function(x, data_type = "clean", plot = T) {
   count = barcode_seq = NULL
 
   # x is BarcodeObj
-  if (data_type == "clean" & "cleanBc" %in% names(x)) {
-    d = x$cleanBc
-  } else {
-    d = lapply(x$messyBc, function(x) { x[, .(count = sum(count)), by = barcode_seq] })
-    names(d) = names(x$messyBc)
+  if (!("cleanBc" %in% names(barcodeObj))) {
+    stop("Please run bc_cure() first.")
+    # d = lapply(barcodeObj$messyBc, function(barcodeObj) { barcodeObj[, .(count = sum(count)), by = barcode_seq] })
+    # names(d) = names(barcodeObj$messyBc)
   }
 
+  d = barcodeObj$cleanBc
   d = rbindlist(d, idcol = "sample_name")
 
   if (plot) {
@@ -36,7 +49,7 @@ bc_diversity = function(x, data_type = "clean", plot = T) {
     , equitability_index = calc_equitability_index(count)
     , bit_index = calc_bit_info(count)
     , complexity = calc_correct_barcode_number(count)
-    ), by = "sample_name"]
+    ), by = "sample_name"] %>% as.data.frame
 }
 
 plot_lorenz_curve = function(x) {

@@ -4,8 +4,27 @@
 \alias{bc_diversity}
 \title{Calculate barcode diversity}
 \usage{
-bc_diversity(x, clean = NULL, plot = T)
+bc_diversity(barcodeObj, plot = T)
+}
+\arguments{
+\item{barcodeObj}{A BarcodeObj}
+
+\item{plot}{A bool, if draw the lorenz curve and barcode distribution curve}
+}
+\value{
+A data.frame with following columns
+  total_reads: total resds number
+  shannon_index: Shannon information
+  equitability_index: Equitability index
+  bit_index: Shannon bit information
+  complexity: e^shannon_index
 }
 \description{
 Calculate barcode diversity
+}
+\examples{
+data(bc_obj)
+
+bc_obj = bc_cure(bc_obj)
+bc_diversity(bc_obj)
 }

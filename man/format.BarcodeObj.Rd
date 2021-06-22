@@ -6,6 +6,15 @@
 \usage{
 \method{format}{BarcodeObj}(barcodeObj)
 }
+\arguments{
+\item{barcodeObj}{A BarcodeObj}
+}
 \description{
 Format the summary of BarcodeObj
+}
+\examples{
+data(bc_obj)
+
+format(bc_obj)
+print(bc_obj)
 }

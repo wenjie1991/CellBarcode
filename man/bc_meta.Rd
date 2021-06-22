@@ -2,10 +2,33 @@
 % Please edit documentation in R/barcodeObj.R
 \name{bc_meta}
 \alias{bc_meta}
+\alias{bc_meta<-}
 \title{Get meta data}
 \usage{
 bc_meta(barcodeObj)
+
+bc_meta(barcodeObj, key = NULL) <- value
+}
+\arguments{
+\item{barcodeObj}{A BarcodeObj}
+}
+\value{
+A BarcodeObj
 }
 \description{
 Get meta data
+}
+\examples{
+data(bc_obj)
+
+bc_meta(bc_obj)
+bc_meta(bc_obj)$phenotype = c("l", "b")
+bc_meta(bc_obj, key = "sample_type") = c("l", "b")
+bc_meta(bc_obj)
+meta_data = data.frame(
+  sample_name = c("test1", "test2"),
+  phenotype = c("l", "b")
+  )
+bc_meta(bc_obj) = meta_data
+bc_meta
 }

@@ -79,7 +79,7 @@ test_that("subset operation", {
     data.frame(sample_name = "test1", barcode_seq = c("AGAG"), count = c(104)))
 
   expect_equal(
-    bc_2df(subset(bc_obj, barcode = "AGAG", sample = sample_name == "test1")), 
+    bc_2df(bc_subset(bc_obj, barcode = "AGAG", sample = sample_name == "test1")), 
     data.frame(sample_name = "test1", barcode_seq = c("AGAG"), count = c(104)))
 
   expect_equal(

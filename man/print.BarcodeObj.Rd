@@ -2,16 +2,16 @@
 % Please edit documentation in R/barcodeObj.R
 \name{print.BarcodeObj}
 \alias{print.BarcodeObj}
-\title{Print out the summary of BarcodeObj}
+\title{Print the summary of BarcodeObj}
 \usage{
 \method{print}{BarcodeObj}(barcodeObj)
 }
-\arguments{
-\item{barcodeObj}{A BarcodeObj}
-}
-\value{
-The general information about the BarcodeObj
-}
 \description{
-Print out the summary of BarcodeObj
+Print the summary of BarcodeObj
+}
+\examples{
+data(bc_obj)
+
+format(bc_obj)
+print(bc_obj)
 }
