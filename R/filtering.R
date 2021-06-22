@@ -5,7 +5,7 @@
 #' @export
 bc_filterSeq = function(...) UseMethod("bc_filterSeq")
 
-#' Filter the reads by the QC threshold
+#' Filter the reads by the QC threshold for ShortReadQ
 #'
 #' @export
 bc_filterSeq.ShortReadQ = function(x, min_average_quality = 30, min_read_length = 0, N_threshold = 0) {
@@ -16,6 +16,8 @@ bc_filterSeq.ShortReadQ = function(x, min_average_quality = 30, min_read_length 
   x[goodFinal(x)]
 }
 
+#' Filter the reads by the QC threshold for DNAStringSet
+#'
 #' @export
 bc_filterSeq.DNAStringSet = function(x, min_read_length = 0, N_threshold = 0) {
   goodlength <- srFilter(function(x) { width(x) >= min_read_length}, name="GoodReadLength")
@@ -24,6 +26,8 @@ bc_filterSeq.DNAStringSet = function(x, min_read_length = 0, N_threshold = 0) {
   x[goodFinal(x)]
 }
 
+#' Filter the reads by the QC threshold for data.frame
+#'
 #' @export
 bc_filterSeq.data.frame = function(x, min_read_length = 0, N_threshold = 0) {
   sequences = x$seq
@@ -33,6 +37,8 @@ bc_filterSeq.data.frame = function(x, min_read_length = 0, N_threshold = 0) {
   bc_filterSeq(x, min_read_length = min_read_length, N_threshold = N_threshold)
 }
 
+#' Filter the reads by the QC threshold for character vector
+#'
 #' @export
 bc_filterSeq.character = function(x, min_average_quality = 30, min_read_length = 0, N_threshold = 0, sample_name = basename(x)) {
   # TODO: when sample_name length is not right ... 
@@ -41,16 +47,20 @@ bc_filterSeq.character = function(x, min_average_quality = 30, min_read_length =
   bc_filterSeq(fq_list, min_average_quality = min_average_quality, min_read_length = min_read_length, N_threshold = N_threshold)
 }
 
+#' Filter the reads by the QC threshold for integer vector
+#'
 #' @export
-bc_filterSeq.integer = function(x, min_read_length = 0, N_threshold = N_threshold) {
+bc_filterSeq.integer = function(x, min_read_length = 0, N_threshold = 0) {
   # TODO: Use Rle?
   x = DNAStringSet(rep(names(x), x))
   bc_filterSeq(x, min_read_length = min_read_length, N_threshold = N_threshold)
 }
 
+#' Filter the reads by the QC threshold for list
+#'
 #' @export
 bc_filterSeq.list = function(x, min_average_quality = 30, min_read_length = 0, N_threshold = 0, sample_name = names(x)) {
-  if (class(x[0]) == "ShortReadQ") {
+  if (is(x[[1]], "ShortReadQ")) {
     output = lapply(x, bc_filterSeq, min_average_quality = min_average_quality, min_read_length = min_read_length, N_threshold = N_threshold)
     names(output) = sample_name
     output

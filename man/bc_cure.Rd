@@ -2,10 +2,39 @@
 % Please edit documentation in R/correctBarcode.R
 \name{bc_cure}
 \alias{bc_cure}
-\title{Correct the PCR and sequencing mutation in the barcode sequence}
+\title{Cleaning sequences}
 \usage{
-bc_cure(x, ...)
+bc_cure(
+  barcodeObj,
+  depth_threshold = 0,
+  with_umi = F,
+  umi_depth = 2,
+  doFish = F,
+  isUniqueUMI = F,
+  hammer_dist_threshold = 0,
+  barcode_count_threshold = 10000
+)
+}
+\arguments{
+\item{barcodeObj}{A BarcodeObj}
+
+\item{depth_threshold}{A Numeric, only a sequence with reads depth larger than that will be processed. If a UMI is used, the depth_threshold is the reads threshold for the UMI-sequence amplicon.}
+
+\item{with_umi}{A bool value, True when UMI is applied.}
+
+\item{umi_depth}{A Numeric, the minimum UMI-sequence amplicon counts needed for consider a true sequence.}
+
+\item{doFish}{A bool value, the UMI-sequence amplicon unsatisfied the depth_threshold are counted when when the sequence is in the final sequence list which satisfied the umi_depth threshold.}
+
+\item{isUniqueUMI}{A bool value, True if UMI is considered absolute unique, if so only the dominant sequence is chosen for each UMI.}
+
+\item{hammer_dist_threshold}{A integer, the less abundent sequence are compared to the most abundent ones and the hammering distance is calculated, the less abundent seuqneces with hammering distance less than the value will be removed.}
+
+\item{barcode_count_threshold}{A integer, appliable when hammer_dist_threshold > 0, the max sequences number should be, when the number of sequence are satisfied all the rest less abundent sequences are removed.}
+}
+\value{
+A BarcodeObj
 }
 \description{
-Correct the PCR and sequencing mutation in the barcode sequence
+Cleaning sequences
 }

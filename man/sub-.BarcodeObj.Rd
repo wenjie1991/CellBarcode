@@ -7,9 +7,11 @@
 \method{[}{BarcodeObj}(barcodeObj, x = NULL, y = NULL)
 }
 \arguments{
-\item{x}{A vector or string. Select the barcode subset from BarcodeObj}
+\item{barcodeObj}{A BarcodeObj}
 
-\item{y}{A vector or string. Select the sample subset from BarcodeObj}
+\item{x}{A vector of integer or string, select the barcode subset from BarcodeObj}
+
+\item{y}{A vector or an expression, select the sample subset from BarcodeObj}
 }
 \value{
 A BarcodeObj
@@ -18,8 +20,10 @@ A BarcodeObj
 Subset operation of BarcodeObj object
 }
 \examples{
-# Not run
-#bc_obj[c("AACCTT", "AACCTT"), ]
-#bc_obj[, "sample1_rep1"]
-#bc_obj[, c("sample1_rep1", "sample1_rep2")]
+data(bc_obj)
+bc_obj[c("AGAG", "AAAG"), ]
+bc_obj[, "test1"]
+bc_obj[, sample_name == "test1"]
+bc_obj[, c("test1", "test2")]
+
 }

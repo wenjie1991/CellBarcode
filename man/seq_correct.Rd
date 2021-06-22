@@ -7,8 +7,11 @@
 seq_correct(seq, count, count_threshold, hammer_dist_threshold)
 }
 \arguments{
-\item{count}{An integer vector with the same order and 
-length of UMI}
+\item{count}{An integer vector with the same order and length of UMI}
+
+\item{count_threshold}{An integer the maximum barcodes number}
+
+\item{hammer_dist_threshold}{An integer the hammer distance threshold}
 
 \item{umi}{An String vector with UMI}
 }

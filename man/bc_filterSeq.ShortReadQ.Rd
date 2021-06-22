@@ -2,10 +2,10 @@
 % Please edit documentation in R/filtering.R
 \name{bc_filterSeq.ShortReadQ}
 \alias{bc_filterSeq.ShortReadQ}
-\title{Filter the reads by the QC threshold}
+\title{Filter the reads by the QC threshold for ShortReadQ}
 \usage{
 \method{bc_filterSeq}{ShortReadQ}(x, min_average_quality = 30, min_read_length = 0, N_threshold = 0)
 }
 \description{
-Filter the reads by the QC threshold
+Filter the reads by the QC threshold for ShortReadQ
 }

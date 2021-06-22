@@ -4,12 +4,20 @@
 \alias{subset.BarcodeObj}
 \title{Subset operation of BarcodeObj object}
 \usage{
-\method{subset}{BarcodeObj}(barcodeObj, sample = NULL, barcode = NULL, black_list = NULL)
+\method{subset}{BarcodeObj}(
+  barcodeObj,
+  sample = NULL,
+  barcode = NULL,
+  black_list = NULL,
+  sample_is_expression = F
+)
 }
 \arguments{
-\item{sample}{A vector or string. Select the sample subset from BarcodeObj}
+\item{barcodeObj}{A BarcodeObj}
 
-\item{barcode}{A vector or string. Select the barcode subset from BarcodeObj}
+\item{sample}{A vector of integer or string, select the barcode subset from BarcodeObj}
+
+\item{barcode}{A vector or an expression, select the sample subset from BarcodeObj}
 
 \item{black_list}{A vector or string. Remove the the barcode in the list.}
 }

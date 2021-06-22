@@ -20,8 +20,9 @@ NULL
 #' This function will return the corrected UMI list.
 #'
 #' @param umi An String vector with UMI
-#' @param count An integer vector with the same order and 
-#' length of UMI
+#' @param count An integer vector with the same order and length of UMI
+#' @param count_threshold An integer the maximum barcodes number
+#' @param hammer_dist_threshold An integer the hammer distance threshold
 #' @export
 seq_correct <- function(seq, count, count_threshold, hammer_dist_threshold) {
     .Call('_Bc_seq_correct', PACKAGE = 'Bc', seq, count, count_threshold, hammer_dist_threshold)

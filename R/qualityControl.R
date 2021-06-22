@@ -26,13 +26,15 @@ get_base_freq_per_cycle = function(dnastringset) {
   data.table::melt(base_m, id.vars = "Cycle", measure.vars = c("A", "C", "G", "T"), value.name = "Count", variable.name = "Base")
 }
 
-#' get the QC information of the raw sequence
+#' Perform quality control
 #' 
 #' fastq file name, ShortReadQ Obj, DNAStringSet Obj, data.frame, vector
 #' 
 #' @export
 bc_runQC = function(...) UseMethod("bc_runQC")
 
+#' Perform quality control for ShortReadQ
+#'
 #' @export
 bc_runQC.ShortReadQ = function(x, n = 50, plot = F) {
   # output: top, distribution (nOccurrences, nReads), base_quality_per_cycle, base_freq_per_cycle
@@ -43,6 +45,8 @@ bc_runQC.ShortReadQ = function(x, n = 50, plot = F) {
   output
 }
 
+#' Perform quality control for DNAStringSet
+#'
 #' @export
 bc_runQC.DNAStringSet = function(x, plot = F) {
   # output: top, distribution (nOccurrences, nReads), base_freq_per_cycle
@@ -52,6 +56,8 @@ bc_runQC.DNAStringSet = function(x, plot = F) {
   output
 }
 
+#' Perform quality control for data.frame
+#'
 #' @export
 bc_runQC.data.frame = function(x) {
   ## Input: data.frame(seq, freq)
@@ -66,6 +72,8 @@ bc_runQC.data.frame = function(x) {
   output
 }
 
+#' Perform quality control for integer vector
+#'
 #' @export
 bc_runQC.integer = function(x) {
   x = DNAStringSet(rep(names(x), x))
@@ -76,6 +84,8 @@ bc_runQC.integer = function(x) {
   output
 }
 
+#' Perform quality control for character vector
+#'
 #' @export
 bc_runQC.character = function(file, sample_name = basename(file)) {
   # TODO: use qa to do fast check for the quality
@@ -93,6 +103,8 @@ bc_runQC.character = function(file, sample_name = basename(file)) {
   }
 }
 
+#' Perform quality control for list
+#'
 #' @export
 bc_runQC.list = function(x) {
   qc_list = lapply(x, bc_runQC)
@@ -132,6 +144,8 @@ plot_base_quality_distribution = function(base_quality_per_cycle) {
   g
 }
 
+#' Visualize sequencing quality for single sample
+#'
 #' @export
 plot.barcodeQc = function(x, opt = "all") {
   # barcodeQc has: top, distribution (nOccurrences, nReads), base_quality_per_cycle, base_freq_per_cycle
@@ -151,6 +165,8 @@ plot.barcodeQc = function(x, opt = "all") {
   egg::ggarrange(plots = g_list, nrow = 2, ncol=col_n)
 }
 
+#' Visualize sequencing quality for several samples
+#'
 #' @export
 plot.barcodeQcSet = function(x) {
 

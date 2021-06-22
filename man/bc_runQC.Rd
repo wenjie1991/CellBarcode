@@ -2,7 +2,7 @@
 % Please edit documentation in R/qualityControl.R
 \name{bc_runQC}
 \alias{bc_runQC}
-\title{get the QC information of the raw sequence}
+\title{Perform quality control}
 \usage{
 bc_runQC(...)
 }

@@ -36,8 +36,9 @@ bool sortbycount(const std::pair<std::string, int> &a, const std::pair<std::stri
 //' This function will return the corrected UMI list.
 //'
 //' @param umi An String vector with UMI
-//' @param count An integer vector with the same order and 
-//' length of UMI
+//' @param count An integer vector with the same order and length of UMI
+//' @param count_threshold An integer the maximum barcodes number
+//' @param hammer_dist_threshold An integer the hammer distance threshold
 //' @export
 // [[Rcpp::export]]
 List seq_correct(std::vector<std::string> seq, IntegerVector count, int count_threshold, int hammer_dist_threshold) {

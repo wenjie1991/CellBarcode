@@ -29,6 +29,8 @@
 # library(Biostrings)
 # TODO: Make C++ version
 
+#' Parse VDJ recombination
+#'
 #' @export
 bc_splitVDJ = function(seqs) {
 

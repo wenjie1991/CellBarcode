@@ -38,18 +38,6 @@
 # create function to identify the cutoff point
 # evaluate the sequencing depth (saturation of the sequene)
 
-
-##' foo: A package for computating the notorious bar statistic
-##'
-##' The foo package provides three categories of important functions:
-##' foo, bar and baz.
-##' 
-##' @section Foo functions:
-##' The foo functions ...
-##'
-##' @docType package
-##' @name foo
-
 #' @importFrom magrittr %>% %<>% extract extract2
 #' @importFrom data.table data.table rbindlist
 #' @importFrom ShortRead readFastq
@@ -57,7 +45,7 @@
 #' @import ggplot2
 #' @import Biostrings
 #' @import ShortRead
-NULL
+#' @useDynLib Bc
 
 . <- list()
 

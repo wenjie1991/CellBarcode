@@ -1,0 +1,56 @@
+## set up a dummy data set
+d1 = data.frame(
+  seq = c(
+    "ACTTCGATCGATCGAAAAGATCGATCGATC",
+    "AATTCGATCGATCGAAGAGATCGATCGATC",
+    "CCTTCGATCGATCGAAGAAGATCGATCGATC",
+    "TTTTCGATCGATCGAAAAGATCGATCGATC",
+    "AAATCGATCGATCGAAGAGATCGATCGATC",
+    "CCCTCGATCGATCGAAGAAGATCGATCGATC",
+    "GGGTCGATCGATCGAAAAGATCGATCGATC",
+    "GGATCGATCGATCGAAGAGATCGATCGATC",
+    "ACTTCGATCGATCGAACAAGATCGATCGATC",
+    "GGTTCGATCGATCGACGAGATCGATCGATC",
+    "GCGTCCATCGATCGAAGAAGATCGATCGATC"
+    ),
+  freq = c(
+    30, 60, 9, 10, 14, 5, 10, 30, 6, 4 , 6
+    )
+  )
+
+
+d2 = data.frame(
+  seq = c(
+    "ACTTCGATCGATCGAAAAGATCGATCGATC",
+    "AATTCGATCGATCGAAGAGATCGATCGATC",
+    "CCTTCGATCGATCGAAGAAGATCGATCGATC",
+    "TTTTCGATCGATCGAAAAGATCGATCGATC",
+    "AAATCGATCGATCGAAGAGATCGATCGATC",
+    "CCCTCGATCGATCGAAGAAGATCGATCGATC",
+    "GGGTCGATCGATCGAAAAGATCGATCGATC",
+    "GGATCGATCGATCGAAGAGATCGATCGATC",
+    "ACTTCGATCGATCGAACAAGATCGATCGATC",
+    "GGTTCGATCGATCGACGAGATCGATCGATC",
+    "GCGTCCATCGATCGAAGAAGATCGATCGATC"
+    ),
+  freq = c(
+    30, 60, 9, 10, 14, 5, 10, 30, 6, 4 , 6
+    )
+  )
+
+
+d_l = list(test1 = d1, test2 = d2)
+
+pattern = "TCGATCGATCGA([ACTG]+)ATCGATCGATC"
+bc_obj = bc_extract(d_l, pattern, sample_name=c("test1", "test2"))
+bc_obj = bc_cure(bc_obj, depth=5)
+
+
+test_that("barcode diversity", {
+ 
+  expect_snapshot(bc_diversity(bc_obj, plot = F))
+
+  expect_snapshot(bc_diversity(bc_obj, data_type = "messyBc", plot=F))
+
+})
+

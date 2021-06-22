@@ -1,0 +1,2 @@
+var	rds.fish	nmol.fish
+TCCAGTACTATCGTTGTAGCTACTACCG	19062	475

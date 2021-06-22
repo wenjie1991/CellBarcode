@@ -1,6 +1,7 @@
 ---
 title: "UMI_VDJ_Barcode"
-output: rmarkdown::html_document
+output: BiocStyle::html_document
+toc_float: true
 vignette: >
   %\VignetteIndexEntry{UMI_VDJ_Barcode}
   %\VignetteEngine{knitr::rmarkdown}
@@ -18,8 +19,18 @@ knitr::opts_chunk$set(
 library(data.table)
 library(ggplot2)
 library(Bc)
-test_data_set = "../data/Meghan_batch1_test/"
+test_data_set = "../inst/extdata/Meghan_batch1_test/"
 ```
+
+# Introduction
+
+TBD
+
+$ Installation
+
+```{r eval=F}
+```
+
 
 # Convention
 
@@ -207,9 +218,17 @@ You could easily selected one or several samples by their names.
 Here, we choose "E12_lum_a" and "E12_lum_b" for the following analysis.
 
 ```{r}
-bc_obj_umi[, c("E12_lum_a", "E12_lum_b")]
+bc_obj_umi[, c("E12_bas_a", "E12_bas_b")]
+names(bc_obj_umi$messyBc)
+
+bc_meta(bc_obj_umi, "cell_type") = c("lum", "lum", "bas", "bas")
+bc_meta(bc_obj_umi)$rep = c(1, 2, 1, 2)
+bc_meta(bc_obj_umi)
+
+bc_obj_umi[, cell_type == "lum"]
+subset(bc_obj_umi, sample = cell_type == "lum")
+
 bc_obj_umi = bc_obj_umi[, c("E12_lum_a", "E12_lum_b")]
-bc_obj_umi
 ```
 
 The `bc_extract` will give you all the barcodes irregardless of if it is artificial or not.
@@ -232,7 +251,8 @@ Which is not shown here.
 (diagram for how bc_cure process data here)
 
 ```{r correct_barcodde_with_UMI}
-bc_obj_umi = bc_cure(bc_obj_umi, with_umi = T, isUniqueUMI = T, doFish = T, depth_threshold = 2)
+bc_obj_umi = bc_cure(bc_obj_umi, with_umi = T, isUniqueUMI = T, doFish = T, depth_threshold = 3)
+bc_meta(bc_obj_umi)
 bc_obj_umi
 ```
 
@@ -240,6 +260,8 @@ If the `depth_threshold` is increased, the identified barcodes number decreases.
 
 ```{r}
 bc_obj_umi = bc_cure(bc_obj_umi, with_umi = T, isUniqueUMI = T, doFish = T, depth_threshold = 5)
+bc_obj_umi
+bc_2dt(bc_obj_umi)
 bc_obj_umi
 ```
 
@@ -367,3 +389,10 @@ qplot(x = count, y = nmol.fish, data = d_plot, xlim = c(0, NA), ylim = c(0, NA))
 d_plot = merge(bc_obj$cleanBc[[1]], d, by.x = "barcode_seq", by.y = "var", all = T)
 qplot(x = count, y = nmol.fish, data = d_plot, xlim = c(0, NA), ylim = c(0, NA))
 ```
+
+# Session Info
+
+```{r}
+sessionInfo()
+```
+
