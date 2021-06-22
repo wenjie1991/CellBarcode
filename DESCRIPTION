@@ -2,7 +2,7 @@ Package: Bc
 Type: Package
 Title: Genetic Barcode Analysis toolkit
 Version: 0.1.0
-Author@R: Wenjie Sun<sunwjie@gmail.com>, Anne-Marie Lyne<Anne-Marie.Lyne@curie.fr>
+Author: Wenjie Sun<sunwjie@gmail.com>, Anne-Marie Lyne<Anne-Marie.Lyne@curie.fr>
 Maintainer: Wenjie Sun<sunwjie@gmail.com>
 Description: This package provides functions for amplicon NGS data analysis and management. The package is originally designed for preprocessing genetic barcode lineage tracing data, however,  the preprocssing of CRISPR gRNA screening, immue repotoire sequencing and meta genome data also can benifit from it.
     The functions included in the package quality control of sequencing data, target sequence extraction, sequence identification as well as data management.

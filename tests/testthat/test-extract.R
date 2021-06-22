@@ -1,11 +1,11 @@
 library(ShortRead)
 
-fq_file = system.file("extdata", "simple.fq", package="Bc")
-sr = readFastq(fq_file)
-ds = sr@sread
-iv = tables(ds, n = Inf)$top
-df = data.frame(seq = names(iv), freq = as.character(iv))
-l = list(sample1 = ds, sample2 = ds)
+fq_file <- system.file("extdata", "simple.fq", package="Bc")
+sr <- readFastq(fq_file)
+ds <- sr@sread
+iv <- tables(ds, n = Inf)$top
+df <- data.frame(seq = names(iv), freq = as.character(iv))
+l <- list(sample1 = ds, sample2 = ds)
 
 test_that("read in data", {
 

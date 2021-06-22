@@ -4,10 +4,12 @@
 \alias{format.BarcodeObj}
 \title{Format the summary of BarcodeObj}
 \usage{
-\method{format}{BarcodeObj}(barcodeObj)
+\method{format}{BarcodeObj}(x, ...)
 }
 \arguments{
-\item{barcodeObj}{A BarcodeObj}
+\item{x}{A BarcodeObj}
+
+\item{...}{Additional arguments}
 }
 \description{
 Format the summary of BarcodeObj

@@ -7,10 +7,10 @@
 bc_cure(
   barcodeObj,
   depth_threshold = 0,
-  with_umi = F,
+  with_umi = FALSE,
   umi_depth = 2,
-  doFish = F,
-  isUniqueUMI = F,
+  doFish = FALSE,
+  isUniqueUMI = FALSE,
   hammer_dist_threshold = 0,
   barcode_count_threshold = 10000
 )
@@ -41,7 +41,7 @@ Clean barcode sequences
 \examples{
 data(bc_obj)
 
-d1 = data.frame(
+d1 <- data.frame(
  seq = c(
    "ACTTCGATCGATCGAAAAGATCGATCGATC",
    "AATTCGATCGATCGAAGAGATCGATCGATC",
@@ -60,20 +60,23 @@ d1 = data.frame(
    )
  )
 
-pattern = "([ACTG]{3})TCGATCGATCGA([ACTG]+)ATCGATCGATC"
-bc_obj = bc_extract(list(test = d1), pattern, sample_name=c("test"), pattern_type=c(UMI=1, barcode=2))
+pattern <- "([ACTG]{3})TCGATCGATCGA([ACTG]+)ATCGATCGATC"
+bc_obj <- bc_extract(list(test = d1), pattern, sample_name=c("test"), 
+  pattern_type=c(UMI=1, barcode=2))
 
 # Remove barcodes with depth <= 5
-(bc_cured = bc_cure(bc_obj, depth_threshold=5))
+(bc_cured <- bc_cure(bc_obj, depth_threshold=5))
 bc_2matrix(bc_cured)
 
-# Do the clustering, integre the less abundent barcodes to the more abundent one by hammering distance <= 1
+# Do the clustering, integre the less abundent barcodes to the more abundent one by hammering 
+# distance <= 1
 bc_cure(bc_obj, depth_threshold=5, hammer_dist_threshold = 1)
 
 # Use UMI information to filter the barcode <= 5 UMI-barcode tags
-bc_cure(bc_obj, depth_threshold=0, doFish=F, with_umi=T, umi_depth=5, isUniqueUMI=T)
+bc_cure(bc_obj, depth_threshold=0, doFish=FALSE, with_umi=TRUE, umi_depth=5, isUniqueUMI=TRUE)
 
 # Use UMI information to filter the barcode <= 5 UMI-barcode tags
-# Meanwhile, take into acount the UMI-barcode tags that do not meet the reads depth threshold but contains the true barcode
-bc_cure(bc_obj, depth_threshold=0, doFish=T, with_umi=T, umi_depth=5, isUniqueUMI=F)
+# Meanwhile, take into acount the UMI-barcode tags that do not meet the reads depth threshold 
+# but contains the true barcode
+bc_cure(bc_obj, depth_threshold=0, doFish=TRUE, with_umi=TRUE, umi_depth=5, isUniqueUMI=FALSE)
 }

@@ -14,24 +14,30 @@
 \usage{
 bc_seqQC(...)
 
-\method{bc_seqQC}{ShortReadQ}(x)
+\method{bc_seqQC}{ShortReadQ}(x, ...)
 
-\method{bc_seqQC}{DNAStringSet}(x)
+\method{bc_seqQC}{DNAStringSet}(x, ...)
 
-\method{bc_seqQC}{data.frame}(x)
+\method{bc_seqQC}{data.frame}(x, ...)
 
-\method{bc_seqQC}{integer}(x)
+\method{bc_seqQC}{integer}(x, ...)
 
-\method{bc_seqQC}{character}(file, sample_name = basename(file))
+\method{bc_seqQC}{character}(file, sample_name = basename(file), ...)
 
-\method{bc_seqQC}{list}(x)
+\method{bc_seqQC}{list}(x, ...)
 
-\method{plot}{barcodeQc}(x, opt = "all")
+\method{plot}{barcodeQc}(x, ...)
 
-\method{plot}{barcodeQcSet}(x)
+\method{plot}{barcodeQcSet}(x, ...)
 }
 \arguments{
-\item{x}{A string. fastq file name, ShortReadQ Obj, DNAStringSet Obj, data.frame or integer vector}
+\item{...}{Additional arguments}
+
+\item{x}{A string. ShortReadQ Obj, DNAStringSet Obj, data.frame or integer vector}
+
+\item{file}{A string. Fastq file name}
+
+\item{sample_name}{A string vector. Rename the samples}
 }
 \value{
 A barcodeQc or barcodeQcSet class. 
@@ -44,11 +50,12 @@ The barcodeQcSet is list of barcodeQc
 Perform quality control
 }
 \examples{
-fq_file = system.file("extdata", "simple.fq", package="Bc")
-sr = readFastq(fq_file)
-ds = sr@sread
-l = list(sample1 = ds, sample2 = ds)
-l_sr = list(sample1 = sr, sample2 = sr)
+library(ShortRead)
+fq_file <- system.file("extdata", "simple.fq", package="Bc")
+sr <- readFastq(fq_file)
+ds <- sr@sread
+l <- list(sample1 = ds, sample2 = ds)
+l_sr <- list(sample1 = sr, sample2 = sr)
 
 bc_seqQC(fq_file)
 bc_seqQC(sr)

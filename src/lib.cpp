@@ -1,7 +1,7 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-//' Hammer Distance
+//' @title Hammer Distance
 //' 
 //' This function return hammer distance between two string.
 //' If the two string do not have the same length, it will
@@ -26,7 +26,7 @@ bool sortbycount(const std::pair<std::string, int> &a, const std::pair<std::stri
 }
 
 
-//' Sequence clustering
+//' @title Sequence clustering
 //' 
 //' This function will merge the UMIs by using the 
 //' hammer distance. If two UMIs have hammer distance
@@ -35,7 +35,7 @@ bool sortbycount(const std::pair<std::string, int> &a, const std::pair<std::stri
 //' 
 //' This function will return the corrected UMI list.
 //'
-//' @param umi An String vector with UMI
+//' @param seq A string vector
 //' @param count An integer vector with the same order and length of UMI
 //' @param count_threshold An integer the maximum barcodes number
 //' @param hammer_dist_threshold An integer the hammer distance threshold

@@ -10,7 +10,7 @@
 \alias{bc_extract.list}
 \title{Extract barcode from reads}
 \usage{
-bc_extract(x, ...)
+bc_extract(...)
 
 \method{bc_extract}{ShortReadQ}(
   x,
@@ -19,7 +19,8 @@ bc_extract(x, ...)
   maxLDist = 0,
   pattern_type = c(barcode = 1),
   costs = list(sub = 1, ins = 99, del = 99),
-  ordered = T
+  ordered = TRUE,
+  ...
 )
 
 \method{bc_extract}{DNAStringSet}(
@@ -29,7 +30,8 @@ bc_extract(x, ...)
   maxLDist = 0,
   pattern_type = c(barcode = 1),
   costs = list(sub = 1, ins = 99, del = 99),
-  ordered = T
+  ordered = TRUE,
+  ...
 )
 
 \method{bc_extract}{data.frame}(
@@ -39,7 +41,8 @@ bc_extract(x, ...)
   maxLDist = 0,
   pattern_type = c(barcode = 1),
   costs = list(sub = 1, ins = 99, del = 99),
-  ordered = T
+  ordered = TRUE,
+  ...
 )
 
 \method{bc_extract}{character}(
@@ -50,7 +53,8 @@ bc_extract(x, ...)
   maxLDist = 0,
   pattern_type = c(barcode = 1),
   costs = list(sub = 1, ins = 99, del = 99),
-  ordered = T
+  ordered = TRUE,
+  ...
 )
 
 \method{bc_extract}{integer}(
@@ -60,7 +64,8 @@ bc_extract(x, ...)
   maxLDist = 0,
   pattern_type = c(barcode = 1),
   costs = list(sub = 1, ins = 99, del = 99),
-  ordered = T
+  ordered = TRUE,
+  ...
 )
 
 \method{bc_extract}{list}(
@@ -71,10 +76,13 @@ bc_extract(x, ...)
   maxLDist = 0,
   pattern_type = c(barcode = 1),
   costs = list(sub = 1, ins = 99, del = 99),
-  ordered = T
+  ordered = TRUE,
+  ...
 )
 }
 \arguments{
+\item{...}{Additional arguments}
+
 \item{x}{file location, ShortReadQ, DNAStringSet, data.frame, integer or list of above data types.}
 
 \item{pattern}{A string. The regular expression with capture to match the barcode which capture pattern}
@@ -89,6 +97,8 @@ bc_extract(x, ...)
 
 \item{ordered}{A bool value. if the value is true, then the return barcodes (tages) are ordered by the reads counts.}
 
+\item{file}{A character vector, Fastq file name.}
+
 \item{meta_data}{A data.frame with rownames of sample_name, the column is the meta data to keep the characteristics of the samples.}
 }
 \value{
@@ -98,15 +108,15 @@ If x is a file location vector with more than 1 items or x is a list, the output
 Extract barcode from reads
 }
 \examples{
-fq_file = system.file("extdata", "simple.fq", package="Bc")
+fq_file <- system.file("extdata", "simple.fq", package="Bc")
 
 library(ShortRead)
 
-sr = readFastq(fq_file)  # ShortReadQ
-ds = sr@sread  # DNAStringSet
-iv = tables(ds, n = Inf)$top # integer vector
-df = data.frame(seq = names(iv), freq = as.character(iv)) # data.frame
-l = list(sample1 = ds, sample2 = ds) # list
+sr <- readFastq(fq_file)  # ShortReadQ
+ds <- sr@sread  # DNAStringSet
+iv <- tables(ds, n = Inf)$top # integer vector
+df <- data.frame(seq = names(iv), freq = as.character(iv)) # data.frame
+l <- list(sample1 = ds, sample2 = ds) # list
 
 ds
 # extract barcode from fastq file
@@ -128,7 +138,7 @@ bc_extract(df, pattern = "AAAAA(.*)CCCCC")
 bc_extract(l, pattern = "AAAAA(.*)CCCCC")
 
 # Extract UMI and barcode
-d1 = data.frame(
+d1 <- data.frame(
   seq = c(
     "ACTTCGATCGATCGAAAAGATCGATCGATC",
     "AATTCGATCGATCGAAGAGATCGATCGATC",
@@ -146,7 +156,8 @@ d1 = data.frame(
     30, 60, 9, 10, 14, 5, 10, 30, 6, 4 , 6
     )
   ) 
-pattern = "([ACTG]{3})TCGATCGATCGA([ACTG]+)ATCGATCGATC"
-(bc_obj = bc_extract(list(test = d1), pattern, sample_name=c("test"), pattern_type=c(UMI=1, barcode=2)))
-(bc_obj = bc_cure(bc_obj, depth=0, doFish=F, with_umi=T, umi_depth=5, isUniqueUMI=T))
+pattern <- "([ACTG]{3})TCGATCGATCGA([ACTG]+)ATCGATCGATC"
+(bc_obj <- bc_extract(list(test = d1), pattern, sample_name=c("test"), 
+  pattern_type=c(UMI=1, barcode=2)))
+(bc_obj <- bc_cure(bc_obj, depth=0, doFish=FALSE, with_umi=TRUE, umi_depth=5, isUniqueUMI=TRUE))
 }

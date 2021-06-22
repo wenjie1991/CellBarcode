@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 library(data.table)
 library(ggplot2)
 library(Bc)
-test_data_set = "../inst/extdata/Meghan_batch1_test/"
+test_data_set <- "../inst/extdata/Meghan_batch1_test/"
 ```
 
 # Introduction
@@ -43,7 +43,7 @@ IDEs to remember the function name for you. We makes it easier to take
 advantage of IDE's auto-complement function.
 
 However, there are some S3 functions, we believe every R user should be
-familiar with them, such as `plot`, `print` and `subset`. We use the convention
+familiar with them, such as `plot`, `print`. We use the convention
 name, because you do not need to remember much more.
 
 # FastQ reads quality control
@@ -55,19 +55,19 @@ induced VDJ recombination in luminal and two technical replicates in basal
 cells.
 
 ```{r smaples}
-fq_files = dir(test_data_set, "gz", full=T)
-sample_names = c("E12_lum_a", "E12_lum_b", "E12_bas_a", "E12_bas_b")
+fq_files <- dir(test_data_set, "gz", full=T)
+sample_names <- c("E12_lum_a", "E12_lum_b", "E12_bas_a", "E12_bas_b")
 fq_files
 ```
 
-We can use the `bc_runQC` function to directly check the sequencing quality of
+We can use the `bc_seqQC` function to directly check the sequencing quality of
 fastq files. The input here is a series of fastq files, and the result is a
 `BarcodeQcSet` object. If the input is a single fastq file, then the result of
-`bc_runQC` will be a `BarcodeQC` object. Here we get the QC results for 4
+`bc_seqQC` will be a `BarcodeQC` object. Here we get the QC results for 4
 samples. 
 
 ```{r quality_control_1}
-qc_noFilter = bc_runQC(fq_files)
+qc_noFilter <- bc_seqQC(fq_files)
 names(qc_noFilter[[1]])
 class(qc_noFilter)
 ```
@@ -114,7 +114,7 @@ read the fastq file and apply filter. The output is a `ShortReadQ` object.
 ```{r filter_low_quality_seq}
 # TODO: output the filtering percentage
 # TODO: Trimming
-fq_filter = bc_filterSeq(fq_files, min_average_quality = 30, min_read_length = 60, sample_name = sample_names)
+fq_filter <- bc_filterSeq(fq_files, min_average_quality = 30, min_read_length = 60, sample_name = sample_names)
 fq_filter
 ```
 
@@ -122,7 +122,7 @@ By performing a quality check on the newly obtained `ShortReadQ` data, the
 quality of the data after filtering is checked again. 
 
 ```{r Quality_control_2}
-qc_withFilte = bc_runQC(fq_filter)
+qc_withFilte <- bc_seqQC(fq_filter)
 plot(qc_withFilte) 
 plot(qc_withFilte[[1]]) 
 ```
@@ -181,9 +181,9 @@ The `BarcodeObj` is a `List` under the hood. In the list, there is a `$messyBc` 
 And the `$messyBc` is a list too, in the item, there are 4 samples. Those sample names are printed together with how many unique sequences (tags) identified.
 
 ```{r extract_barcode_with_UMI}
-# pattern = "([ACGT]{16})CCTCGAGGTCATCGAAGTATCAAG([ACGT]+)TAGCAAGCTCGAGAGTAGACCTACT"
-pattern = "([ACGT]{16})CCTCGAGGTCATCGAAGTATCAAG([ACGT]+)TAGCAAGCTC"
-bc_obj_umi = bc_extract(fq_filter, sample_name = sample_names, pattern = pattern, maxLDist = 0, pattern_type = c(UMI = 1, barcode = 2))
+# pattern <- "([ACGT]{16})CCTCGAGGTCATCGAAGTATCAAG([ACGT]+)TAGCAAGCTCGAGAGTAGACCTACT"
+pattern <- "([ACGT]{16})CCTCGAGGTCATCGAAGTATCAAG([ACGT]+)TAGCAAGCTC"
+bc_obj_umi <- bc_extract(fq_filter, sample_name = sample_names, pattern = pattern, maxLDist = 0, pattern_type = c(UMI = 1, barcode = 2))
 class(bc_obj_umi)
 bc_obj_umi
 ```
@@ -221,14 +221,14 @@ Here, we choose "E12_lum_a" and "E12_lum_b" for the following analysis.
 bc_obj_umi[, c("E12_bas_a", "E12_bas_b")]
 names(bc_obj_umi$messyBc)
 
-bc_meta(bc_obj_umi, "cell_type") = c("lum", "lum", "bas", "bas")
-bc_meta(bc_obj_umi)$rep = c(1, 2, 1, 2)
+bc_meta(bc_obj_umi, "cell_type") <- c("lum", "lum", "bas", "bas")
+bc_meta(bc_obj_umi)$rep <- c(1, 2, 1, 2)
 bc_meta(bc_obj_umi)
 
 bc_obj_umi[, cell_type == "lum"]
-subset(bc_obj_umi, sample = cell_type == "lum")
+bc_subset(bc_obj_umi, sample <- cell_type == "lum")
 
-bc_obj_umi = bc_obj_umi[, c("E12_lum_a", "E12_lum_b")]
+bc_obj_umi <- bc_obj_umi[, c("E12_lum_a", "E12_lum_b")]
 ```
 
 The `bc_extract` will give you all the barcodes irregardless of if it is artificial or not.
@@ -251,7 +251,7 @@ Which is not shown here.
 (diagram for how bc_cure process data here)
 
 ```{r correct_barcodde_with_UMI}
-bc_obj_umi = bc_cure(bc_obj_umi, with_umi = T, isUniqueUMI = T, doFish = T, depth_threshold = 3)
+bc_obj_umi <- bc_cure(bc_obj_umi, with_umi = T, isUniqueUMI = T, doFish = T, depth_threshold = 3)
 bc_meta(bc_obj_umi)
 bc_obj_umi
 ```
@@ -259,7 +259,7 @@ bc_obj_umi
 If the `depth_threshold` is increased, the identified barcodes number decreases.
 
 ```{r}
-bc_obj_umi = bc_cure(bc_obj_umi, with_umi = T, isUniqueUMI = T, doFish = T, depth_threshold = 5)
+bc_obj_umi <- bc_cure(bc_obj_umi, with_umi = T, isUniqueUMI = T, doFish = T, depth_threshold = 5)
 bc_obj_umi
 bc_2dt(bc_obj_umi)
 bc_obj_umi
@@ -272,22 +272,22 @@ If no `doFish` applied.
 
 ```{r}
 ## TODO: sort the result by count or not [option]
-bc_obj_umi = bc_cure(bc_obj_umi, with_umi = T, isUniqueUMI = T, doFish = F, depth_threshold = 5)
+bc_obj_umi <- bc_cure(bc_obj_umi, with_umi = T, isUniqueUMI = T, doFish = F, depth_threshold = 5)
 bc_obj_umi$cleanBc$E12_lum_a
 ```
 
 Tags counts increased by "fishing".
 
 ```{r}
-bc_obj_umi = bc_cure(bc_obj_umi, with_umi = T, isUniqueUMI = T, doFish = T, depth_threshold = 5)
+bc_obj_umi <- bc_cure(bc_obj_umi, with_umi = T, isUniqueUMI = T, doFish = T, depth_threshold = 5)
 bc_obj_umi$cleanBc$E12_lum_a
 ```
 
 ## Without UMI 
 
 ```{r extract_barcode_no_UMI}
-pattern = "CGAAGTATCAAG(.+)TAGCAAGCTCGAGAGTAGACCTACT"
-bc_obj = bc_extract(fq_filter[1:2], sample_name = sample_names[1:2], pattern = pattern, maxLDist = 0, pattern_type = c(barcode = 1))
+pattern <- "CGAAGTATCAAG(.+)TAGCAAGCTCGAGAGTAGACCTACT"
+bc_obj <- bc_extract(fq_filter[1:2], sample_name = sample_names[1:2], pattern = pattern, maxLDist = 0, pattern_type = c(barcode = 1))
 bc_obj
 bc_obj$messyBc[[1]] 
 ```
@@ -295,11 +295,11 @@ bc_obj$messyBc[[1]]
 No UMI used here, among the options explained above, only `depth_threshold` works.
 
 ```{r correct_barcode_no_UMI}
-bc_obj = bc_cure(bc_obj, depth_threshold = 10)
+bc_obj <- bc_cure(bc_obj, depth_threshold = 10)
 bc_obj
-bc_obj = bc_cure(bc_obj, depth_threshold = 100)
+bc_obj <- bc_cure(bc_obj, depth_threshold = 100)
 bc_obj
-bc_obj = bc_cure(bc_obj, depth_threshold = 500)
+bc_obj <- bc_cure(bc_obj, depth_threshold = 500)
 bc_obj
 ```
 
@@ -348,29 +348,29 @@ get the result in matrix format.
 bc_2matrix(bc_obj[bc_barcodes(bc_obj)[1:5], "E12_lum_b"])
 ```
 
-# Verify VDJ barcodes
+# Verify VDJ barcodes (need to remove)
 
 We provides `bc_splitVDJ` to parse the VDJ barcode.
 The input is the sequence. 
 
 (The VDJ barcode verify assumption...)
 
-```{r check_VDJ_sequence}
-candidate_bc = bc_barcodes(bc_obj, unlist = T)
-svdj = bc_splitVDJ(candidate_bc)
-ok_seq = rownames(svdj$add.del.ok)
+```{r check_VDJ_sequence, eval=F}
+candidate_bc <- bc_barcodes(bc_obj, unlist = T)
+svdj <- bc_splitVDJ(candidate_bc)
+ok_seq <- rownames(svdj$add.del.ok)
 head(ok_seq)
 
-bc_obj = bc_obj[ok_seq, ]
+bc_obj <- bc_obj[ok_seq, ]
 bc_obj
 
-candidate_bc = bc_barcodes(bc_obj_umi)
-svdj = bc_splitVDJ(candidate_bc)
+candidate_bc <- bc_barcodes(bc_obj_umi)
+svdj <- bc_splitVDJ(candidate_bc)
 names(svdj)
-ok_seq = rownames(svdj$add.del.ok)
+ok_seq <- rownames(svdj$add.del.ok)
 head(ok_seq)
 
-bc_obj_umi = bc_obj_umi * ok_seq
+bc_obj_umi <- bc_obj_umi * ok_seq
 bc_obj_umi
 ```
 
@@ -379,14 +379,14 @@ bc_obj_umi
 TODO: compare result w/o UMI
 
 ```{r compare_bc_previous_res}
-d = data.table::fread(paste0(test_data_set, "/cleaned_A6_9622_lum_E12_a.txt"))
+d <- data.table::fread(paste0(test_data_set, "/cleaned_A6_9622_lum_E12_a.txt"))
 
 ## Bc analysis with umi V.S. Anne-Marie pipeline
-d_plot = merge(bc_obj_umi$cleanBc[[1]], d, by.x = "barcode_seq", by.y = "var", all = T)
+d_plot <- merge(bc_obj_umi$cleanBc[[1]], d, by.x = "barcode_seq", by.y = "var", all = T)
 qplot(x = count, y = nmol.fish, data = d_plot, xlim = c(0, NA), ylim = c(0, NA)) + geom_abline(slope = 1, color = 'red', alpha = 0.5)
 
 ## Bc analysis without umi V.S. Anne-Marie pipeline
-d_plot = merge(bc_obj$cleanBc[[1]], d, by.x = "barcode_seq", by.y = "var", all = T)
+d_plot <- merge(bc_obj$cleanBc[[1]], d, by.x = "barcode_seq", by.y = "var", all = T)
 qplot(x = count, y = nmol.fish, data = d_plot, xlim = c(0, NA), ylim = c(0, NA))
 ```
 

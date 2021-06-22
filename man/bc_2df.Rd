@@ -28,7 +28,7 @@ Transform BarcodeObj into other data type
 \examples{
 data(bc_obj)
 
-bc_obj = bc_cure(bc_obj)
+bc_obj <- bc_cure(bc_obj)
 
 bc_2df(bc_obj)
 bc_2dt(bc_obj)

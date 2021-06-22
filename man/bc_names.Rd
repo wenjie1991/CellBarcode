@@ -10,7 +10,9 @@ bc_names(barcodeObj)
 bc_names(barcodeObj) <- value
 }
 \arguments{
-\item{barcodeObj}{A BarcodeObj.}
+\item{barcodeObj}{A BarcodeObj}
+
+\item{value}{A string vector, the new sample names}
 }
 \value{
 A character vector
@@ -22,6 +24,5 @@ Get sample names
 data(bc_obj)
 
 bc_names(bc_obj)
-bc_names(bc_obj) = c("new1", "new2")
-bc_names
+bc_names(bc_obj) <- c("new1", "new2")
 }

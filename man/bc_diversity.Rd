@@ -4,7 +4,7 @@
 \alias{bc_diversity}
 \title{Calculate barcode diversity}
 \usage{
-bc_diversity(barcodeObj, plot = T)
+bc_diversity(barcodeObj, plot = TRUE)
 }
 \arguments{
 \item{barcodeObj}{A BarcodeObj}
@@ -25,6 +25,6 @@ Calculate barcode diversity
 \examples{
 data(bc_obj)
 
-bc_obj = bc_cure(bc_obj)
+bc_obj <- bc_cure(bc_obj)
 bc_diversity(bc_obj)
 }

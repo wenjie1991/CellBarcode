@@ -11,6 +11,10 @@ bc_meta(barcodeObj, key = NULL) <- value
 }
 \arguments{
 \item{barcodeObj}{A BarcodeObj}
+
+\item{key}{A string, the meta data record name}
+
+\item{value}{A string vector, the meta data record value}
 }
 \value{
 A BarcodeObj
@@ -22,13 +26,13 @@ Get meta data
 data(bc_obj)
 
 bc_meta(bc_obj)
-bc_meta(bc_obj)$phenotype = c("l", "b")
-bc_meta(bc_obj, key = "sample_type") = c("l", "b")
+bc_meta(bc_obj)$phenotype <- c("l", "b")
+bc_meta(bc_obj, key = "sample_type") <- c("l", "b")
 bc_meta(bc_obj)
-meta_data = data.frame(
-  sample_name = c("test1", "test2"),
-  phenotype = c("l", "b")
+meta_data <- data.frame(
+  sample_name <- c("test1", "test2"),
+  phenotype <- c("l", "b")
   )
-bc_meta(bc_obj) = meta_data
+bc_meta(bc_obj) <- meta_data
 bc_meta
 }

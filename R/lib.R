@@ -47,5 +47,56 @@
 #' @import ShortRead
 #' @useDynLib Bc
 
+#' @title A dummy BarcodeObj
+#'
+#'  dataset contains a BarcodeObj
+#'
+#' @format A BarcodeObj with raw barcode, derived from:
+#' \describe{
+#' d1 = data.frame(
+#'   seq = c(
+#'     "ACTTCGATCGATCGAAAAGATCGATCGATC",
+#'     "AATTCGATCGATCGAAGAGATCGATCGATC",
+#'     "CCTTCGATCGATCGAAGAAGATCGATCGATC",
+#'     "TTTTCGATCGATCGAAAAGATCGATCGATC",
+#'     "AAATCGATCGATCGAAGAGATCGATCGATC",
+#'     "CCCTCGATCGATCGAAGAAGATCGATCGATC",
+#'     "GGGTCGATCGATCGAAAAGATCGATCGATC",
+#'     "GGATCGATCGATCGAAGAGATCGATCGATC",
+#'     "ACTTCGATCGATCGAACAAGATCGATCGATC",
+#'     "GGTTCGATCGATCGACGAGATCGATCGATC",
+#'     "GCGTCCATCGATCGAAGAAGATCGATCGATC"
+#'     ),
+#'   freq = c(
+#'     30, 60, 9, 10, 14, 5, 10, 30, 6, 4 , 6
+#'     )
+#'   )
+#' 
+#' d2 = data.frame(
+#'   seq = c(
+#'     "ACTTCGATCGATCGAAACGATCGATCGATC",
+#'     "AATTCGATCGATCGAAGAGATCGATCGATC",
+#'     "TTTTCGATCGATCGAAAAGATCGATCGATC",
+#'     "AAATCGATCGATCGAAGAGATCGATCGATC",
+#'     "CCCTCGATCGATCGAAGAAGATCGATCGATC",
+#'     "GGGTCGATCGATCGAAAAGATCGATCGATC",
+#'     "GGATCGATCGATCGAAGAGATCGATCGATC",
+#'     "ACTTCGATCGATCGAACAAGATCGATCGATC",
+#'     "GGTTCGATCGATCGACGAGATCGATCGATC",
+#'     "GCGTCCATCGATCGAAGAAGATCGATCGATC"
+#'     ),
+#'   freq = c(
+#'     30, 9, 10, 14, 5, 10, 30, 6, 4 , 6
+#'     )
+#'   )
+#' 
+#' pattern = "TCGATCGATCGA([ACTG]+)ATCGATCGATC"
+#' bc_obj = bc_extract(list(test1 = d1, test2 = d2), pattern, sample_name=c("test1", "test2"))
+#' save(bc_obj, file = "./data/bc_obj.RData")
+#' }
+#'
+"bc_obj" 
+
 . <- list()
+
 

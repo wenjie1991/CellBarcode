@@ -1,5 +1,5 @@
 ## set up a dummy data set
-d1 = data.frame(
+d1 <- data.frame(
   seq = c(
     "ACTTCGATCGATCGAAAAGATCGATCGATC",
     "AATTCGATCGATCGAAGAGATCGATCGATC",
@@ -19,7 +19,7 @@ d1 = data.frame(
   )
 
 
-d2 = data.frame(
+d2 <- data.frame(
   seq = c(
     "ACTTCGATCGATCGAAAAGATCGATCGATC",
     "AATTCGATCGATCGAAGAGATCGATCGATC",
@@ -38,11 +38,11 @@ d2 = data.frame(
     )
   )
 
-d_l = list(test1 = d1, test2 = d2)
+d_l <- list(test1 = d1, test2 = d2)
 
-pattern = "TCGATCGATCGA([ACTG]+)ATCGATCGATC"
-bc_obj = bc_extract(d_l, pattern, sample_name=c("test1", "test2"))
-bc_obj = bc_cure(bc_obj, depth=5)
+pattern <- "TCGATCGATCGA([ACTG]+)ATCGATCGATC"
+bc_obj <- bc_extract(d_l, pattern, sample_name=c("test1", "test2"))
+bc_obj <- bc_cure(bc_obj, depth=5)
 
 
 test_that("data type transformation", {
@@ -55,11 +55,11 @@ test_that("data type transformation", {
     bc_2dt(bc_obj[, "test1"]), 
     data.table(sample_name = "test1", barcode_seq = c("AGAG", "AAAG", "AGAAG", "ACAAG"), count = c(104, 50, 14, 6)))
 
-  out_test = bc_2matrix(bc_obj) 
-  out_test = out_test[order(out_test[, 1]), ]
-  out_truth = matrix(c(104, 50, 14, 6, 104, 50, 14, 6), byrow=F, ncol=2)
-  dimnames(out_truth) = list(c("AGAG", "AAAG", "AGAAG", "ACAAG"), c("test1", "test2"))
-  out_truth = out_truth[order(out_truth[, 1]), ]
+  out_test <- bc_2matrix(bc_obj) 
+  out_test <- out_test[order(out_test[, 1]), ]
+  out_truth <- matrix(c(104, 50, 14, 6, 104, 50, 14, 6), byrow=F, ncol=2)
+  dimnames(out_truth) <- list(c("AGAG", "AAAG", "AGAAG", "ACAAG"), c("test1", "test2"))
+  out_truth <- out_truth[order(out_truth[, 1]), ]
   expect_equal(out_test, out_truth)
 })
 
@@ -108,10 +108,10 @@ test_that("meta data", {
     bc_names(bc_obj), c("test1", "test2"))
 
   
-  bc_meta(bc_obj)$id = c(1, 2) 
+  bc_meta(bc_obj)$id <- c(1, 2) 
   expect_equal(bc_meta(bc_obj)$id, c(1, 2))
 
-  bc_names(bc_obj) = c("test11", "test12")
+  bc_names(bc_obj) <- c("test11", "test12")
   expect_equal(
     bc_names(bc_obj), c("test11", "test12"))
 

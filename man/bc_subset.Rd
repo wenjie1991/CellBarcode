@@ -13,16 +13,16 @@ bc_subset(
   sample = NULL,
   barcode = NULL,
   black_list = NULL,
-  sample_is_expression = F
+  is_sample_quoted_exp = FALSE
 )
 
-\method{[}{BarcodeObj}(barcodeObj, barcode = NULL, sample = NULL)
+\method{[}{BarcodeObj}(barcodeObj, barcode = NULL, sample = NULL, ...)
 
 \method{+}{BarcodeObj}(barcodeObj_x, barcodeObj_y)
 
-\method{-}{BarcodeObj}(barcodeObj, barcode_black_list)
+\method{-}{BarcodeObj}(barcodeObj, black_list)
 
-\method{*}{BarcodeObj}(barcodeObj, barcode_white_list)
+\method{*}{BarcodeObj}(barcodeObj, white_list)
 }
 \arguments{
 \item{barcodeObj}{A BarcodeObj}
@@ -31,7 +31,17 @@ bc_subset(
 
 \item{barcode}{A vector or an expression, select the sample subset from BarcodeObj}
 
-\item{black_list}{A vector or string. Remove the the barcode in the list.}
+\item{black_list}{A character vector. Remove the the barcode in the list.}
+
+\item{is_sample_quoted_exp}{A bool value. If the sample parameter is quoted expression or not}
+
+\item{...}{Additional arguments}
+
+\item{barcodeObj_x}{A BarcodeObj}
+
+\item{barcodeObj_y}{A BarcodeObj}
+
+\item{white_list}{A character vector. The barcode reference list.}
 }
 \value{
 A BarcodeObj
@@ -49,7 +59,7 @@ bc_subset(bc_obj, barcode = c("AACCTT", "AACCTT"))
 bc_obj[c("AGAG", "AAAG"), ]
 
 # Select by meta data
-bc_meta(bc_obj)$phenotype = c("l", "b")
+bc_meta(bc_obj)$phenotype <- c("l", "b")
 bc_meta(bc_obj)
 bc_subset(bc_obj, phenotype == "l")
 
@@ -67,7 +77,7 @@ bc_subset(bc_obj, sample = c("sample1_rep1", "sample1_rep2"), barcode = c("AACCT
 bc_obj["AGAG", "test1"] + bc_obj["AAAG", "test1"]
 
 # Join two samples with overlap barcodes
-bc_obj_join = bc_obj["AGAG", "test1"] + bc_obj["AGAG", "test1"]
+bc_obj_join <- bc_obj["AGAG", "test1"] + bc_obj["AGAG", "test1"]
 bc_obj_join
 # The same barcode will merged after applying bc_cure()
 bc_cure(bc_obj_join)

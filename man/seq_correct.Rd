@@ -2,25 +2,33 @@
 % Please edit documentation in R/RcppExports.R
 \name{seq_correct}
 \alias{seq_correct}
-\title{Sequence clustering}
+\title{Sequence clustering
+
+This function will merge the UMIs by using the 
+hammer distance. If two UMIs have hammer distance
+no more than 1, only the UMI with more reads
+will be kept.
+
+This function will return the corrected UMI list.}
 \usage{
 seq_correct(seq, count, count_threshold, hammer_dist_threshold)
 }
 \arguments{
+\item{seq}{A string vector}
+
 \item{count}{An integer vector with the same order and length of UMI}
 
 \item{count_threshold}{An integer the maximum barcodes number}
 
 \item{hammer_dist_threshold}{An integer the hammer distance threshold}
-
-\item{umi}{An String vector with UMI}
 }
 \description{
+Sequence clustering
+
 This function will merge the UMIs by using the 
 hammer distance. If two UMIs have hammer distance
 no more than 1, only the UMI with more reads
 will be kept.
-}
-\details{
+
 This function will return the corrected UMI list.
 }

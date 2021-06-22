@@ -4,7 +4,7 @@
 \alias{bc_barcodes}
 \title{Get barcode sequences}
 \usage{
-bc_barcodes(barcodeObj, unlist = T)
+bc_barcodes(barcodeObj, unlist = TRUE)
 }
 \arguments{
 \item{barcodeObj}{A BarcodeObj.}

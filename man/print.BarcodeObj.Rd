@@ -4,7 +4,12 @@
 \alias{print.BarcodeObj}
 \title{Print the summary of BarcodeObj}
 \usage{
-\method{print}{BarcodeObj}(barcodeObj)
+\method{print}{BarcodeObj}(x, ...)
+}
+\arguments{
+\item{x}{A BarcodeObj}
+
+\item{...}{Additional arguments}
 }
 \description{
 Print the summary of BarcodeObj
