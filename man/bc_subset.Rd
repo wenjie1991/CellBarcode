@@ -27,11 +27,11 @@ bc_subset(
 \arguments{
 \item{barcodeObj}{A BarcodeObj}
 
-\item{sample}{A vector of integer or string, select the barcode subset from BarcodeObj}
+\item{sample}{A vector or an expression, select the sample subset from BarcodeObj}
 
-\item{barcode}{A vector or an expression, select the sample subset from BarcodeObj}
+\item{barcode}{A vector of integer or string, select the barcode subset from BarcodeObj}
 
-\item{black_list}{A character vector. Remove the the barcode in the list.}
+\item{black_list}{A character vector. Remove the listed barcodes.}
 
 \item{is_sample_quoted_exp}{A bool value. If the sample parameter is quoted expression or not}
 
@@ -41,7 +41,7 @@ bc_subset(
 
 \item{barcodeObj_y}{A BarcodeObj}
 
-\item{white_list}{A character vector. The barcode reference list.}
+\item{white_list}{A character vector. Only keep the listed barcodes.}
 }
 \value{
 A BarcodeObj
@@ -79,8 +79,8 @@ bc_obj["AGAG", "test1"] + bc_obj["AAAG", "test1"]
 # Join two samples with overlap barcodes
 bc_obj_join <- bc_obj["AGAG", "test1"] + bc_obj["AGAG", "test1"]
 bc_obj_join
-# The same barcode will merged after applying bc_cure()
-bc_cure(bc_obj_join)
+# The same barcode will merged after applying bc_cure_depth()
+bc_cure_depth(bc_obj_join)
 
 # Remove barcodes
 bc_obj
@@ -89,4 +89,5 @@ bc_obj - "AAAG"
 # Select barcode in white list
 bc_obj
 bc_obj * "AAAG"
+###
 }

@@ -25,19 +25,21 @@ bc_filterSeq <- function(x, ...) UseMethod("bc_filterSeq")
 #' @rdname bc_filterSeq
 #' @export
 bc_filterSeq.ShortReadQ <- function(x, min_average_quality = 30, min_read_length = 0, N_threshold = 0, ...) {
-  goodq <- srFilter(function(x) { apply(methods::as(quality(x), "matrix"), 1, mean, na.rm=TRUE) >= min_average_quality }, name="GoodQualityBases")
-  goodlength <- srFilter(function(x) { width(ShortRead::sread(x)) >= min_read_length}, name="GoodReadLength")
-  goodN <- nFilter(threshold = N_threshold)
-  goodFinal <- compose(goodlength, goodq, goodN)
+  goodq <- ShortRead::srFilter(function(x) { 
+    apply(methods::as(Biostrings::quality(x), "matrix"), 1, mean, na.rm=TRUE) >= min_average_quality 
+  }, name="GoodQualityBases")
+  goodlength <- ShortRead::srFilter(function(x) { width(ShortRead::sread(x)) >= min_read_length}, name="GoodReadLength")
+  goodN <- ShortRead::nFilter(threshold = N_threshold)
+  goodFinal <- ShortRead::compose(goodlength, goodq, goodN)
   x[goodFinal(x)]
 }
 
 #' @rdname bc_filterSeq
 #' @export
 bc_filterSeq.DNAStringSet <- function(x, min_read_length = 0, N_threshold = 0, ...) {
-  goodlength <- srFilter(function(x) { width(x) >= min_read_length}, name="GoodReadLength")
-  goodN <- nFilter(threshold = N_threshold)
-  goodFinal <- compose(goodlength, goodN)
+  goodlength <- ShortRead::srFilter(function(x) { width(x) >= min_read_length}, name="GoodReadLength")
+  goodN <- ShortRead::nFilter(threshold = N_threshold)
+  goodFinal <- ShortRead::compose(goodlength, goodN)
   x[goodFinal(x)]
 }
 
@@ -46,7 +48,7 @@ bc_filterSeq.DNAStringSet <- function(x, min_read_length = 0, N_threshold = 0, .
 bc_filterSeq.data.frame <- function(x, min_read_length = 0, N_threshold = 0, ...) {
   sequences <- x$seq
   freq <- x$freq
-  x <- DNAStringSet(rep(sequences, freq))
+  x <- Biostrings::DNAStringSet(rep(sequences, freq))
 
   bc_filterSeq(x, min_read_length = min_read_length, N_threshold = N_threshold)
 }
@@ -64,7 +66,7 @@ bc_filterSeq.character <- function(x, min_average_quality = 30, min_read_length 
 #' @export
 bc_filterSeq.integer <- function(x, min_read_length = 0, N_threshold = 0, ...) {
   # TODO: Use Rle?
-  x <- DNAStringSet(rep(names(x), x))
+  x <- Biostrings::DNAStringSet(rep(names(x), x))
   bc_filterSeq(x, min_read_length = min_read_length, N_threshold = N_threshold)
 }
 

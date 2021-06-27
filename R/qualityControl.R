@@ -1,8 +1,8 @@
 get_base_quality_per_cycle <- function(bstringset) {
   # Output: data.table Cycle, Mean, Median, P5, P95
   quality_m <- bstringset
-  quality_encode <- encoding(quality_m)
-  m <- alphabetByCycle(quality_m)[-1, ]
+  quality_encode <- ShortRead::encoding(quality_m)
+  m <- ShortRead::alphabetByCycle(quality_m)[-1, ]
   quality_v <- quality_encode[rownames(m)]
 
   y <- lapply(1:ncol(m), function(i) {
@@ -20,7 +20,7 @@ get_base_quality_per_cycle <- function(bstringset) {
 
 get_base_freq_per_cycle <- function(dnastringset) {
   # Output: data.table Cycle, Count, Base
-  base_m <- alphabetByCycle(dnastringset)
+  base_m <- ShortRead::alphabetByCycle(dnastringset)
   base_m <- t(base_m[c("A", "C", "G", "T"), ])
   base_m <- data.table(Cycle = seq(1:nrow(base_m)), base_m)
   as.data.frame(data.table::melt(base_m, id.vars = "Cycle", measure.vars = c("A", "C", "G", "T"), value.name = "Count", variable.name = "Base"))
@@ -83,7 +83,7 @@ bc_seqQC.data.frame <- function(x, ...) {
   ## convert data.frame to DNAStringSet
   sequences <- x$seq
   freq <- x$freq
-  x <- DNAStringSet(rep(sequences, freq))
+  x <- Biostrings::DNAStringSet(rep(sequences, freq))
 
   output <- ShortRead::tables(x)
   output$base_freq_per_cycle <- get_base_freq_per_cycle(x)
@@ -94,7 +94,7 @@ bc_seqQC.data.frame <- function(x, ...) {
 #' @rdname bc_seqQC
 #' @export
 bc_seqQC.integer <- function(x, ...) {
-  x <- DNAStringSet(rep(names(x), x))
+  x <- Biostrings::DNAStringSet(rep(names(x), x))
 
   output <- ShortRead::tables(x)
   output$base_freq_per_cycle <- get_base_freq_per_cycle(x)

@@ -17,6 +17,10 @@ Print the summary of BarcodeObj
 \examples{
 data(bc_obj)
 
-format(bc_obj)
+# print BarcodeObj
 print(bc_obj)
+###
+}
+\seealso{
+[Bc::format.BarcodeObj] format BarcodeObj for pretty print
 }

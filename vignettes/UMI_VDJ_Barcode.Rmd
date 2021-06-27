@@ -1,15 +1,20 @@
 ---
-title: "UMI_VDJ_Barcode"
-output: BiocStyle::html_document
-toc_float: true
+title: "Analyzing UMI Barcode with Bc"
+author: "Wenjie Sun"
+package: Bc
+output: 
+  BiocStyle::html_document
 vignette: >
-  %\VignetteIndexEntry{UMI_VDJ_Barcode}
+  %\VignetteIndexEntry{UMI_Barcode}
   %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+  %\VignetteEncoding{UTF-8}  
 ---
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
+  message = FALSE,
+  error = FALSE,
+  warn = FALSE,
   collapse = TRUE,
   comment = "#>"
 )
@@ -19,52 +24,133 @@ knitr::opts_chunk$set(
 library(data.table)
 library(ggplot2)
 library(Bc)
-test_data_set <- "../inst/extdata/Meghan_batch1_test/"
 ```
 
 # Introduction
 
-TBD
+What's this package used for?
+> DNA barcode (synonyms?) is powerful tool for clonal tracing study. This package provides a toolbox for DNA barcode analysis. 
 
-$ Installation
+What types of barcode can this package handle?
+> The package can handle all kinds of barcodes, as long as the barcode have a pattern can be matched by regular expression, and the barcode is withine a single reads. And it can handle barcode with flexible length, and barcode with UMI (unique molecular identifier).
+> Actually, this tool also can be used for preprocssing of amplicon data analysis such as CRISPR gRNA screening, immue repotoire sequencing and meta genome data.
 
-```{r eval=F}
+What the package can do?
+> The package provides functions for 1). Sequence quality control and filtering, 2). Extract barcodes (and UMI) from seqeunce, 3). sample and barcode management with metadata, 4). Barcode filtering.
+
+# Installation
+
+Install from Bioconducotr.
+
+```{r installation Bioconducotr, eval=F}
+if(!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("Bc")
 ```
 
+Install the devel version from github.
 
-# Convention
+```{r installation devel}
+# TODO:
+```
 
-All of the new functions `invented` in this packages has `bc_` as initiation.
-It facilitate the syntax auto-complement function in IDE such as RStudio. After
-typing `bc_` you can get a suggested function list, and pick the one you
-needed. We want to free you from remembering all the function names. Because we
-believe you are not gonna to use the package everyday, it is better to let the
-IDEs to remember the function name for you. We makes it easier to take
-advantage of IDE's auto-complement function.
+# A basic workflow
 
-However, there are some S3 functions, we believe every R user should be
-familiar with them, such as `plot`, `print`. We use the convention
-name, because you do not need to remember much more.
+```{r basic_workflow}
+library(Bc)
+library(magrittr)
+
+# The example data is the mix of MEF lines with known barcodes
+# 2000 reads for each file have been sampled for this test dataset
+# TODO: Citation of the paper:
+example_data <- system.file("extdata", "mef_test_data", package = "Bc")
+fq_files <- dir(example_data, "gz", full=T)
+
+# prepare metadata
+metadata <- stringr::str_split_fixed(basename(fq_files), "_", 10)[, c(4, 6)]
+metadata <- data.frame(metadata)
+sample_name <- apply(metadata, 1, paste, collapse = "_")
+colnames(metadata) = c("cell_number", "replication")
+rownames(metadata) = sample_name
+metadata
+
+# extract UMI barcode with regular expression
+bc_obj <- bc_extract(
+  fq_files,
+  pattern = "(.{12})CTCGAGGTCATCGAAGTATCAAG(.+)TAGCAAGCTCGAGAGTAGACCTACT", 
+  pattern_type = c("UMI" = 1, "barcode" = 2),
+  sample_name = sample_name,
+  metadata = metadata
+)
+bc_obj
+
+# sample subset operation, select technical repeats 'mixa'
+bc_sub = bc_obj[, replication == "mixa"]
+bc_sub 
+
+# filter the barcode, UMI barcode amplicon > 1 & umi counts > 1
+bc_sub <- bc_cure_umi(bc_sub, depth = 1) %>% bc_cure_depth(depth = 1)
+
+# select barcodes with a white list
+bc_sub[c("AAGTCCAGTACTATCGTACTA", "AAGTCCAGTACTGTAGCTACTA"), ]
+
+# export the barcode counts to data.frame
+bc_2df(bc_sub)
+
+# export the barcode counts to matrix
+bc_2matrix(bc_sub)
+```
+
+# About function naming
+
+Most of the functions in this packages have names with `bc_` as initiation. We hope it can facilitate the syntax auto-complement function of IDE (integrated development toolkit) or IDE like tools such as RStudio, R-NVIM (in VIM), and ESS (in Emacs). By typing `bc_` you can have a list of suggested functions, then you can pick the function you needed from the list.
+
+# About the test data set
+
+The test data set in this package can be accessed by
+
+```{r}
+system.file("extdata", "mef_test_data", package="Bc")
+```
+
+The data are from Jos et. al (TODO: citation). There are 7 MEF (mouse embryo fiboblast) lines with different DNA barcodes. Those barcodes are in vivo inducible VDJ barcodes. These MEF lines were mixed in a ratio of 1:2:4:8:16:32:64.
+
+| sequence                          | clone size 2^x |
+| ---                               | ---            |
+| AAGTCCAGTTCTACTATCGTAGCTACTA      | 1              |
+| AAGTCCAGTATCGTTACGCTACTA          | 2              |
+| AAGTCCAGTCTACTATCGTTACGACAGCTACTA | 3              |
+| AAGTCCAGTTCTACTATCGTTACGAGCTACTA  | 4              |
+| AAGTCCATCGTAGCTACTA               | 5              |
+| AAGTCCAGTACTGTAGCTACTA            | 6              |
+| AAGTCCAGTACTATCGTACTA             | 7              |
+
+Then, 5 pools of 196 to 50000 cells are prepared from the MEF lines mixture. For each pool 2 technical replicates (NGS libraries) are prepared and sequenced, finally result in 10 samples. 
+
+| sample name | cell number | replication |
+| ---         | ---         | ---         |
+| 195_mixa    | 195         | mixa        |
+| 195_mixb    | 195         | mixb        |
+| 781_mixa    | 781         | mixa        |
+| 781_mixb    | 781         | mixb        |
+| 3125_mixa   | 3125        | mixa        |
+| 3125_mixb   | 3125        | mixb        |
+| 12500_mixa  | 12500       | mixa        |
+| 12500_mixb  | 12500       | mixb        |
+| 50000_mixa  | 50000       | mixa        |
+| 50000_mixb  | 50000       | mixb        |
+
+The original FASTQ files are relatively huge, only 2000 reads for each sample have been randomly sampled as test set here.
+
+```{r smaples}
+example_data <- system.file("extdata", "mef_test_data", package = "Bc")
+fq_files <- dir(example_data, "fastq.gz", full=T)
+```
 
 # FastQ reads quality control
 
-We used the UMI VDJ barcode data used as demo. The file is in big size. To
-reduce the package size, we need to sample part of it in the future. A total of
-four samples were used as demo here, two technical replicates of Embryo day 12
-induced VDJ recombination in luminal and two technical replicates in basal
-cells.
 
-```{r smaples}
-fq_files <- dir(test_data_set, "gz", full=T)
-sample_names <- c("E12_lum_a", "E12_lum_b", "E12_bas_a", "E12_bas_b")
-fq_files
-```
-
-We can use the `bc_seqQC` function to directly check the sequencing quality of
-fastq files. The input here is a series of fastq files, and the result is a
-`BarcodeQcSet` object. If the input is a single fastq file, then the result of
-`bc_seqQC` will be a `BarcodeQC` object. Here we get the QC results for 4
-samples. 
+`bc_seqQC` function is for checking the sequencing quality. The output is a `BarcodeQcSet` object, when multiple samples as input; otherwise a `BarcodeQC` object will be returned. In addition, `bc_seqQC` also can handle the `ShortReadQ`, `DNAStringSet` and other data types.
 
 ```{r quality_control_1}
 qc_noFilter <- bc_seqQC(fq_files)
@@ -72,25 +158,15 @@ names(qc_noFilter[[1]])
 class(qc_noFilter)
 ```
 
-Now, We can call the plot function on `BarcodeQcSet` object to produce the
-summarized QC information. In the output, there are two figures. The left one
-shows the proportion of ATCG bases for each sequencing cycle for each sample,
-and the other shows mean sequencing quality of each cycle. 
+`plot` function can be invoke with a `BarcodeQcSet` as argument, and the output is QC summary. There are two fields: one shows the ratio of ATCG bases by each sequencing cycle with each sample in row, and another one shows average sequencing quality index of each cycle. 
+
+For the test set, the first 12 bases are UMI, which are random. Followed by the constant region of barocde, which have specific base pair for each sequencing cycle.
 
 ```{r qc_figure_set1}
 plot(qc_noFilter) 
 ```
 
-The `BarcodeQcSet` object can be divided. We can obtain the QC result for one
-of the fastq files, the `BarcodeQc` object by index number or sample name. The
-plot function is called to summarize the QC results. In the result, there are
-three figures. The top left one shows the sequencing depth distribution of 
-amplicons, the top right figure shows the percentage of ATCG bases in each sequencing cycle 
-the sample, and the last one shows the sequencing quality distribution of each
-sequencing cycle.
-
-From the results of sequencing cycle ATCG ratio, it is obvious to identify the
-random UMI sequences around 30 bp. 
+We can choose one of the `BarcodeQc` in the `BarcodeQcSet` object. In the output, there are three fields. The top left one shows the amplicons sequencing depth distribution, the top right figure shows the "ATCG" bases ratio by each sequencing cycle, and the last one shows the sequencing quality by sequencing cycle.
 
 ```{r qc_figure_single1}
 class(qc_noFilter[[1]])
@@ -99,241 +175,167 @@ plot(qc_noFilter[[1]])
 
 ## Filter low quality reads
 
-The `bc_filterSeq` function can read fastq files, and it can also handle
-sequencing reads in `ShortReadQ`, `DNAStringSet` and `data.frame`.
+`bc_filterSeq` read in the sequence data and apply filter, then return a `ShortReadQ` object which contains the filtered sequences. 
 
-The current available filter parameters are: base average sequencing quality
-(`min_average_quality`) and read segment length(`min_read_length`).
+The `bc_filterSeq` function can read fastq files, and it can also handle sequencing reads in `ShortReadQ`, `DNAStringSet` and `data.frame`.
 
-In the following example, a threshold of 30 is used for the base average
-quality and 60 for the sequencing read length.
-
-In this example, our input data is in fastq format. The `bc_filterSeq` will
-read the fastq file and apply filter. The output is a `ShortReadQ` object. 
-
+The currently available filter parameters are: 
+- min_average_quality: base average sequencing quality
+- min_read_length: read segment length
+ 
 ```{r filter_low_quality_seq}
 # TODO: output the filtering percentage
 # TODO: Trimming
-fq_filter <- bc_filterSeq(fq_files, min_average_quality = 30, min_read_length = 60, sample_name = sample_names)
+fq_filter <- bc_filterSeq(fq_files, min_average_quality = 30, min_read_length = 60, sample_name = sample_name)
 fq_filter
-```
-
-By performing a quality check on the newly obtained `ShortReadQ` data, the
-quality of the data after filtering is checked again. 
-
-```{r Quality_control_2}
-qc_withFilte <- bc_seqQC(fq_filter)
-plot(qc_withFilte) 
-plot(qc_withFilte[[1]]) 
+plot(bc_seqQC(fq_filter))
 ```
 
 # Parse reads to get barcode
 
-Parsing the barcode in sequencing reads is one of the core applications of this
-package. Our package applied the regular expression based parser to identify
-barcodes in reads. You need to tell parsing function `extractBc` the structure
-of your amplicon.
+One of the core applications of this package is parsing the sequences to get the barcode (and UMI). Our package utilized the regular expression to identify barcodes (and UMI) from sequence. It needs to tell `bc_extract` the structure of your input sequences.
 
-There are three parameters that are necessary, they are the sequence data
-(`x`), the sequence pattern in regular expression (`pattern`) , and the pattern
-match type (`pattern_type`).
+These 3 arguments are necessary, they are:
+- x: the sequence data, it can be in fastq, `ShortReadQ`, `DNAStringSet` or `data.frame` format.
+- pattern: the sequence pattern regular expression.
+- pattern_type: pattern description.
 
-The sequence data can be in fastq, `ShortReadQ`, `DNAStringSet` or `data.frame`
-format. This file contains the sequences to be parsed.
+The `pattern` argument is the regular expression, it tells the function where is the barcode (or UMI). We capture the barcode (or UMI) by `()` in the backbone. For the sequence captured by `()`, the `pattern_type` argument tells which is the UMI or the barcode. In the example 
 
-## With UMI
-
-The regular expression tells the function if the read has barcode (and UMI).
-For base pair, we can use A, T, C, G string to indicate sequence, and use `.`
-as wildcard (joker) to indicate any base pair. We can tell the number of
-repeating of the base pair by using `{n}`. For example, if we have 7 `A`, we
-can write `A{7}`. In the following example, `.{16}` means there are 16 variant
-base pairs. What's more, we can use `+` to indicate at least 1 repeat, and `*`
-for 0 to multi repeats.
-
-We use `()` to identify the barcode (UMI) from backbone. For those parts
-identified by `()`, the `pattern_type` argument tells which parts is UMI and
-barcode.
-
-In the following example, the regular expression
-`(.{16})CCTCGAGGTCATCGAAGTATCAAG(.+)TAGCAAGCTCGAGAGTAGACCTACT` means:
-
-1. The sequence starts with 16 base pairs of random sequence, which is UMI
-   because it is the firstly `()` "trapped" as `UMI = 1`.
-
-2. Then, there are constant sequence: `CCTCGAGGTCATCGAAGTATCAAG`.
-
-3. After the above constant sequence, there are random sequence with variant
-   length. it is the barcode sequence which is trapped by second `()`, and is
-   defined by `barcode = 2`.
-
-4. In the tail of the sequence, there should be a constant sequence
-   `TAGCAAGCTC`.
-
-The `bc_extract` will extract the sequences wrapped by `()`, and saved them as
-barcode or UMI according to their ranks according to the inform provided by
-`pattern_type`.
-
-The `bc_extract` function returns a `BarcodeObj` object. The printing information 
-tells the information been kept in the `BarcodeObj`. 
-
-The `BarcodeObj` is a `List` under the hood. In the list, there is a `$messyBc` item. 
-And the `$messyBc` is a list too, in the item, there are 4 samples. Those sample names are printed together with how many unique sequences (tags) identified.
-
-```{r extract_barcode_with_UMI}
-# pattern <- "([ACGT]{16})CCTCGAGGTCATCGAAGTATCAAG([ACGT]+)TAGCAAGCTCGAGAGTAGACCTACT"
-pattern <- "([ACGT]{16})CCTCGAGGTCATCGAAGTATCAAG([ACGT]+)TAGCAAGCTC"
-bc_obj_umi <- bc_extract(fq_filter, sample_name = sample_names, pattern = pattern, maxLDist = 0, pattern_type = c(UMI = 1, barcode = 2))
-class(bc_obj_umi)
-bc_obj_umi
+```{r}
+pattern <- "([ACGT]{12})CTCGAGGTCATCGAAGTATCAAG([ACGT]+)TAGCAAGCTC"
+pattern_type <- c("UMI" = 1, "barcode" = 2)
 ```
 
-You can use `$` operator to look into one of the sample. There are five
-columns:
+1. The sequence starts with 12 base pairs of random sequence, which is UMI. It is the firstly captured by `()` in `pattern` argument, and correspoing to `UMI = 1` in `pattern_type` argument.
+2. Then, there is a constant sequence: `CCTCGAGGTCATCGAAGTATCAAG`.
+3. Followed the constant region, there is flexible random sequence. It is the barcode which is trapped by second `()`, and it is defined by `barcode = 2` in `pattern_type` argument.
+4. In the end of the sequence, it is a constant sequence `TAGCAAGCTC`.
+
+In the UMI pattern `[ACGT]{12}`, the `[ACGT]` means it can be one of the "A", "C", "G" and "T", and the `{12}` means there are 12 `[ACGT]`. In the barcode pattern `[ACGT]+`, the `+` denotes that there is at least one of the `[ACGT]`.
+
+The `bc_extract` function returns a `BarcodeObj` object if the input is a list or a vector of Fastq files, and it returns a `data.frame` if input is one sample. In the later case the `data.frame` has 5 columns:
 
 1. reads_seq: sequence of the reads before parsing.
-
 2. match_seq: the sequence among read matched by pattern.
-
-3. umi_seq: UMI sequence.
-
+3. umi_seq (optional): UMI sequence, applicable when there is UMI in `pattern` and `pattern_type` argument.
 4. barcode_seq: barcode sequence.
-
 5. count: reads number.
 
-The `match_seq` is part of `reads_seq`. The `umi_seq` and `barcode_seq` are
-part of `match_seq`.
+The `match_seq` is part of `reads_seq`. The `umi_seq` and `barcode_seq` are part of `match_seq`. Be attention that, the `reads_seq` is the unique id for each row. The `match_seq`, `umi_seq` or `barcode_seq` can be duplicated, due to the potential variation in the region outside of `match_seq`. Please keep this in mind when you use data in `$messyBc`
+to perform the analysis.
 
-Here the `reads_seq` is the unique id for each row. The `match_seq`, `umi_seq`
-or `barcode_seq` can be duplicated, due to the variation in the region outside
-of `match_seq`. This should be take care, if you want to use data in `$messyBc`
-to perform your own analysis.
+The `BarcodeObj` is a `List` under the hood. The `bc_extract` will create `messyBc` and `metadata` in the list. And the `messyBc` is a list too, within which each element is a `data.framee` corresponds to a sample. The `data.frame` has 5 columns 1). `reads_seq`, 2). `match_seq`, 3). `umi_seq`, 4). `barcode_seq` and 5). `count`, which have been discribed above 
 
-```{r}
-bc_obj_umi$messyBc$E12_lum_a
-```
+## Process sequencing without UMI 
 
-Besides, we provide a serials operator to handle the data for `BarcodeObj` object. 
-You could easily selected one or several samples by their names.
-Here, we choose "E12_lum_a" and "E12_lum_b" for the following analysis.
-
-```{r}
-bc_obj_umi[, c("E12_bas_a", "E12_bas_b")]
-names(bc_obj_umi$messyBc)
-
-bc_meta(bc_obj_umi, "cell_type") <- c("lum", "lum", "bas", "bas")
-bc_meta(bc_obj_umi)$rep <- c(1, 2, 1, 2)
-bc_meta(bc_obj_umi)
-
-bc_obj_umi[, cell_type == "lum"]
-bc_subset(bc_obj_umi, sample <- cell_type == "lum")
-
-bc_obj_umi <- bc_obj_umi[, c("E12_lum_a", "E12_lum_b")]
-```
-
-The `bc_extract` will give you all the barcodes irregardless of if it is artificial or not.
-The `bc_cure` function is used to do the filtering and identify the true barcodes.
-
-The options used here:
-
-1. `with_umi`: To use UMI information or not. 
-   In this case, we have UMI parsed, if we choose `False`, the analysis will not take UMI information into account.
-
-2. `isUniqueUMI`: To apply the assumption that UMI is unique or not.
-
-3. `doFish`: To "fish" the UMI-barcode tags with depth lower than threshold or not.
-
-4. `depth_threshold`: Depth threshold for UMI-barcode tags.
-
-The `bc_cure` also could do the sequencing clustering by editing distance for correcting PCR/Sequencing errors.
-Which is not shown here.
-
-(diagram for how bc_cure process data here)
-
-```{r correct_barcodde_with_UMI}
-bc_obj_umi <- bc_cure(bc_obj_umi, with_umi = T, isUniqueUMI = T, doFish = T, depth_threshold = 3)
-bc_meta(bc_obj_umi)
-bc_obj_umi
-```
-
-If the `depth_threshold` is increased, the identified barcodes number decreases.
-
-```{r}
-bc_obj_umi <- bc_cure(bc_obj_umi, with_umi = T, isUniqueUMI = T, doFish = T, depth_threshold = 5)
-bc_obj_umi
-bc_2dt(bc_obj_umi)
-bc_obj_umi
-```
-
-The `doFish` option does not change the barcode been identified, but the UMI count is increased when `doFish` was applied.
-Because those UMI-barcode tags under depth threshold will be counted by "fish".
-
-If no `doFish` applied.
-
-```{r}
-## TODO: sort the result by count or not [option]
-bc_obj_umi <- bc_cure(bc_obj_umi, with_umi = T, isUniqueUMI = T, doFish = F, depth_threshold = 5)
-bc_obj_umi$cleanBc$E12_lum_a
-```
-
-Tags counts increased by "fishing".
-
-```{r}
-bc_obj_umi <- bc_cure(bc_obj_umi, with_umi = T, isUniqueUMI = T, doFish = T, depth_threshold = 5)
-bc_obj_umi$cleanBc$E12_lum_a
-```
-
-## Without UMI 
+In the following example, only barcode is extracted.
 
 ```{r extract_barcode_no_UMI}
 pattern <- "CGAAGTATCAAG(.+)TAGCAAGCTCGAGAGTAGACCTACT"
-bc_obj <- bc_extract(fq_filter[1:2], sample_name = sample_names[1:2], pattern = pattern, maxLDist = 0, pattern_type = c(barcode = 1))
+bc_obj <- bc_extract(fq_filter, sample_name = sample_name, pattern = pattern, pattern_type = c(barcode = 1))
 bc_obj
 bc_obj$messyBc[[1]] 
 ```
 
-No UMI used here, among the options explained above, only `depth_threshold` works.
+## Sequencing with UMI
 
-```{r correct_barcode_no_UMI}
-bc_obj <- bc_cure(bc_obj, depth_threshold = 10)
-bc_obj
-bc_obj <- bc_cure(bc_obj, depth_threshold = 100)
-bc_obj
-bc_obj <- bc_cure(bc_obj, depth_threshold = 500)
-bc_obj
+In the following example, both UMI and barcode are extracted.
+
+```{r extract_barcode_with_UMI}
+pattern <- "([ACGT]{12})CTCGAGGTCATCGAAGTATCAAG([ACGT]+)TAGCAAGCTC"
+bc_obj_umi <- bc_extract(fq_filter, sample_name = sample_name, pattern = pattern, maxLDist = 0, pattern_type = c(UMI = 1, barcode = 2))
+class(bc_obj_umi)
+bc_obj_umi
+```
+
+# Data managemeent of `BarcodeObj`
+
+
+Besides, we provide a serials operator to handle the data for `BarcodeObj` object. 
+You could easily selected one or several samples by their names, indexes or metadata.
+
+```{r}
+# Select sample by `$` operation.
+head(bc_obj_umi$messyBc[["781_mixb"]])
+
+# Select sample by sample names
+bc_obj_umi = bc_obj_umi[, c("781_mixa", "781_mixb")]
+bc_names(bc_obj_umi)
+
+# set metadata
+bc_meta(bc_obj_umi)$rep <- c("a", "b")
+bc_meta(bc_obj_umi)
+
+# select sample by metadata
+bc_obj_umi[, rep == "a"]
+bc_subset(bc_obj_umi, sample = rep == "a")
+```
+
+# Barcode filtering
+
+The `bc_extract` will give you all the barcodes found in the sequences. Some of the identified barcodes may come from PCR or sequencing errors. The `bc_cure_*` functions perform the filtering for identifying true barcode. The `bc_cure_*` functions create or update `cleanBc` element in `BarcodeObj`. The `cleanBc` element contains 2 columns
+  - barcode_seq: barcode sequence
+  - counts: reads depth or UMI count
+
+In the `bc_cure_*` function family, there are:
+
+- `bc_cure_umi` it process `messyBc` element, do the filtering based on the UMI-barcode tag depth, the available arguments, 
+  - depth: the threshold of UMI-barcode depth.
+  - doFish: if true, "fish" the true UMI-barcode tags with depth lower than threshold. The consequence of "fish" will not increse the identified barcodes number, but the UMI counts will increased due to including the low depth UMI-barcode tags.
+  - isUniqueUMI: a UMI can related to several barcodes, do you believe the UMI is absolute unique? If yes, then the most abundent UMI-barcode will be picked for a specific UMI, and sub-abundent barcodes with the same UMI are obsolete.
+- `bc_cure_cluster` do the clustering to merge the barcode with sub-abundent depth (or UMI counts) to the most abundent ones, it needs the `cleanBc` element and will update it.
+  - distance: the distance threshold to triger the merge.
+  - barcode_n: max barcode number, when reach this number the clustering will stopped and the rest barcodes are obsolete.
+  - dist_method: the distance algorithm, currently only "hammer" available.
+  - merge_method: the distance algorithm, only "greedy" available currently.
+- `bc_cure_depth` perform filtering by the sequence depth or UMI counts.
+  - depth: the threshold of sequence depth or UMI counts
+  - isUpdate: if true the bc_cure will perfom the filter on the `cleanBc` element and update it, otherwise the `messyBc` will be used and update the `cleanBc`.
+ 
+```{r correct_barcodde_with_UMI}
+# Filter the barcode with UMI-barcode tags > 1, and treat UMI as absolute unique and do "fish"
+bc_obj_umi <- bc_cure_umi(bc_obj_umi, depth = 1, isUniqueUMI = T, doFish = T)
+# Apply the UMI count filter, keep barcode > 3 UMI
+bc_obj_umi <- bc_cure_depth(bc_obj_umi, depth = 3)
+bc_meta(bc_obj_umi)
+bc_obj_umi
+bc_2matrix(bc_obj_umi)
 ```
 
 # Miscellaneous
 
-We provides some functions to manage the data in `BarcodeObj`.
-We showed the `[]` to choose sample before.
+We provides functions to transform the barcode information in `BarcodeObj` to more general R data types.
 
-In the following example, you can use:
-
-## `bc_2names`
-
-To get sample name list.
-```{r}
-bc_names(bc_obj)
-```
-
-
-## `bc_2df`
-
-To get barcode reault in `data.frame` format.
+## To get sample name list.
 
 ```{r}
-bc_2df(bc_obj)
+bc_names(bc_obj_umi)
 ```
 
-## `bc_2matrix`
+## `BarcodeObj` to `data.frame`
 
+The `cleanBc` will be used, the columns in the output:
+  - barcode_seq: barcode sequence
+  - sample_name
+  - count: reads or UMI count
+ 
+```{r}
+bc_2df(bc_obj_umi)
+```
 
-To get barcode reault in `matrix` format, with barcode in row and sample in column.
+Or if you prefer `data.table`
 
+```{r}
+bc_2dt(bc_obj_umi)
+```
+
+## BarcodeObj to matrix
+
+The `cleanBc` will be used, the output is reads count or UMI count matrix, with barcode in row and sample in column.
 
 ```{r misc}
-bc_2matrix(bc_obj)
+bc_2matrix(bc_obj_umi)
 ```
 
 ## Combination
@@ -341,53 +343,11 @@ bc_2matrix(bc_obj)
 You can combined several operation together to accomplish more complex
 operation.
 
-In the following examples, specific barcode is selected for one sample, then
-get the result in matrix format.
+In the following examples, sample barcode is selected in one sample, then
+get the result in `data.frame` format.
 
 ```{r}
-bc_2matrix(bc_obj[bc_barcodes(bc_obj)[1:5], "E12_lum_b"])
-```
-
-# Verify VDJ barcodes (need to remove)
-
-We provides `bc_splitVDJ` to parse the VDJ barcode.
-The input is the sequence. 
-
-(The VDJ barcode verify assumption...)
-
-```{r check_VDJ_sequence, eval=F}
-candidate_bc <- bc_barcodes(bc_obj, unlist = T)
-svdj <- bc_splitVDJ(candidate_bc)
-ok_seq <- rownames(svdj$add.del.ok)
-head(ok_seq)
-
-bc_obj <- bc_obj[ok_seq, ]
-bc_obj
-
-candidate_bc <- bc_barcodes(bc_obj_umi)
-svdj <- bc_splitVDJ(candidate_bc)
-names(svdj)
-ok_seq <- rownames(svdj$add.del.ok)
-head(ok_seq)
-
-bc_obj_umi <- bc_obj_umi * ok_seq
-bc_obj_umi
-```
-
-# Check the correctness of result
-
-TODO: compare result w/o UMI
-
-```{r compare_bc_previous_res}
-d <- data.table::fread(paste0(test_data_set, "/cleaned_A6_9622_lum_E12_a.txt"))
-
-## Bc analysis with umi V.S. Anne-Marie pipeline
-d_plot <- merge(bc_obj_umi$cleanBc[[1]], d, by.x = "barcode_seq", by.y = "var", all = T)
-qplot(x = count, y = nmol.fish, data = d_plot, xlim = c(0, NA), ylim = c(0, NA)) + geom_abline(slope = 1, color = 'red', alpha = 0.5)
-
-## Bc analysis without umi V.S. Anne-Marie pipeline
-d_plot <- merge(bc_obj$cleanBc[[1]], d, by.x = "barcode_seq", by.y = "var", all = T)
-qplot(x = count, y = nmol.fish, data = d_plot, xlim = c(0, NA), ylim = c(0, NA))
+bc_2df(bc_obj_umi[bc_barcodes(bc_obj_umi)[1], "781_mixa"])
 ```
 
 # Session Info
@@ -395,4 +355,3 @@ qplot(x = count, y = nmol.fish, data = d_plot, xlim = c(0, NA), ylim = c(0, NA))
 ```{r}
 sessionInfo()
 ```
-

@@ -29,10 +29,10 @@ bc_meta(bc_obj)
 bc_meta(bc_obj)$phenotype <- c("l", "b")
 bc_meta(bc_obj, key = "sample_type") <- c("l", "b")
 bc_meta(bc_obj)
-meta_data <- data.frame(
+metadata <- data.frame(
   sample_name <- c("test1", "test2"),
   phenotype <- c("l", "b")
   )
-bc_meta(bc_obj) <- meta_data
+bc_meta(bc_obj) <- metadata
 bc_meta
 }

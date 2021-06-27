@@ -3,12 +3,12 @@
     Code
       print(bc_obj)
     Output
-      Bonjour le monde. This is a baby barcode Object.
+      Bonjour le monde, This is a BarcodeObj.
       ----------
       It contains: 
-          messyBc  meta_data  cleanBc
+          messyBc  metadata  cleanBc
       ----------
-      $meta_data: 2 meta data field(s) available
+      $metadata: 2 meta data field(s) available
           sample_name  id
       ----------
       $messyBc: 2 Samples for raw barcodes

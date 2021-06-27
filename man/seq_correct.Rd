@@ -2,14 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{seq_correct}
 \alias{seq_correct}
-\title{Sequence clustering
-
-This function will merge the UMIs by using the 
-hammer distance. If two UMIs have hammer distance
-no more than 1, only the UMI with more reads
-will be kept.
-
-This function will return the corrected UMI list.}
+\title{Sequence clustering}
 \usage{
 seq_correct(seq, count, count_threshold, hammer_dist_threshold)
 }
@@ -23,12 +16,11 @@ seq_correct(seq, count, count_threshold, hammer_dist_threshold)
 \item{hammer_dist_threshold}{An integer the hammer distance threshold}
 }
 \description{
-Sequence clustering
-
 This function will merge the UMIs by using the 
 hammer distance. If two UMIs have hammer distance
 no more than 1, only the UMI with more reads
 will be kept.
-
+}
+\details{
 This function will return the corrected UMI list.
 }

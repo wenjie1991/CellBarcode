@@ -1,4 +1,4 @@
-library(ShortRead)
+# library(ShortRead)
 
 fq_file <- system.file("extdata", "simple.fq", package="Bc")
 sr <- readFastq(fq_file)

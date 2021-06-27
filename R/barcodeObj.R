@@ -1,24 +1,26 @@
 check_sample_name <- function(barcodeObj) {
-  meta_name <- rownames(barcodeObj$meta_data)
+  meta_name <- rownames(barcodeObj$metadata)
   if (all(meta_name != names(barcodeObj$messyBc))) stop("The messyBc sample names are not consistent with metadta")
   if (!is.null(barcodeObj$cleanBc)) {
     if (all(meta_name != names(barcodeObj$cleanBc))) stop("The cleanBc sample names are not consistent with metadta")
   }
 }
 
-
 #' Subset operation of BarcodeObj object
 #'
 #' @param barcodeObj A BarcodeObj
-#' @param sample A vector of integer or string, select the barcode subset from BarcodeObj
-#' @param barcode A vector or an expression, select the sample subset from BarcodeObj
-#' @param black_list A character vector. Remove the the barcode in the list.
-#' @param white_list A character vector. The barcode reference list.
-#' @param is_sample_quoted_exp A bool value. If the sample parameter is quoted expression or not
+#' @param barcode A vector of integer or string, select the barcode subset from BarcodeObj
+#' @param sample A vector or an expression, select the sample subset from BarcodeObj
+#' @param black_list A character vector. Remove the listed barcodes.
+#' @param white_list A character vector. Only keep the listed barcodes.
 #' @param barcodeObj_x A BarcodeObj
 #' @param barcodeObj_y A BarcodeObj
+#' @param is_sample_quoted_exp A bool value. If the sample parameter is quoted expression or not
 #' @param ... Additional arguments
 #' @return A BarcodeObj
+#'
+#' @details
+#'
 #'
 #' @examples
 #' data(bc_obj)
@@ -50,8 +52,8 @@ check_sample_name <- function(barcodeObj) {
 #' # Join two samples with overlap barcodes
 #' bc_obj_join <- bc_obj["AGAG", "test1"] + bc_obj["AGAG", "test1"]
 #' bc_obj_join
-#' # The same barcode will merged after applying bc_cure()
-#' bc_cure(bc_obj_join)
+#' # The same barcode will merged after applying bc_cure_depth()
+#' bc_cure_depth(bc_obj_join)
 #'
 #' # Remove barcodes
 #' bc_obj
@@ -60,13 +62,14 @@ check_sample_name <- function(barcodeObj) {
 #' # Select barcode in white list
 #' bc_obj
 #' bc_obj * "AAAG"
+#' ###
 #' @export bc_subset
 #' @rdname bc_subset
 bc_subset <- function(barcodeObj, sample = NULL, barcode = NULL, black_list = NULL, is_sample_quoted_exp = FALSE) {
 
   reads_eq <- NULL # due to NOTE in check
 
-  meta_data <- barcodeObj$meta_data
+  metadata <- barcodeObj$metadata
   if (is_sample_quoted_exp) {
     sample_call <- sample
   } else {
@@ -96,15 +99,15 @@ bc_subset <- function(barcodeObj, sample = NULL, barcode = NULL, black_list = NU
   if (!is.null(sample_call)) {
     check_sample_name(barcodeObj)
 
-    sample_i <- eval(sample_call, meta_data, parent.frame())
+    sample_i <- eval(sample_call, metadata, parent.frame())
 
-    barcodeObj$meta_data <- meta_data[sample_i, , drop=FALSE]
+    barcodeObj$metadata <- metadata[sample_i, , drop=FALSE]
 
     if (!is.null(barcodeObj$messyBc)) {
-      barcodeObj$messyBc <-  barcodeObj$messyBc[rownames(barcodeObj$meta_data)]
+      barcodeObj$messyBc <-  barcodeObj$messyBc[rownames(barcodeObj$metadata)]
     }
     if (!is.null(barcodeObj$cleanBc)) {
-      barcodeObj$cleanBc <- barcodeObj$cleanBc[rownames(barcodeObj$meta_data)]
+      barcodeObj$cleanBc <- barcodeObj$cleanBc[rownames(barcodeObj$metadata)]
     }
   }
   return(barcodeObj)
@@ -127,25 +130,25 @@ bc_subset <- function(barcodeObj, sample = NULL, barcode = NULL, black_list = NU
   x <- barcodeObj_x
   y <- barcodeObj_y
 
-  meta_data_x <- x$meta_data
-  meta_data_y <- y$meta_data
+  metadata_x <- x$metadata
+  metadata_y <- y$metadata
 
-  meta_data_xy <- merge(meta_data_x, meta_data_y, by = "sample_name", all = TRUE)
-  rownames(meta_data_xy) <- meta_data_xy$sample_name
+  metadata_xy <- merge(metadata_x, metadata_y, by = "sample_name", all = TRUE)
+  rownames(metadata_xy) <- metadata_xy$sample_name
 
-  x$messyBc <- lapply(rownames(meta_data_xy), function(sample_name) {
+  x$messyBc <- lapply(rownames(metadata_xy), function(sample_name) {
     rbind(x$messyBc[[sample_name]], y$messyBc[[sample_name]])
   })
-  names(x$messyBc) <- meta_data_xy$sample_name
+  names(x$messyBc) <- metadata_xy$sample_name
 
   if (!is.null(x$cleanBc) & !is.null(y$cleanBc)) {
 
-    x$cleanBc <- lapply(rownames(meta_data_xy), function(sample_name) {
+    x$cleanBc <- lapply(rownames(metadata_xy), function(sample_name) {
       rbind(x$cleanBc[[sample_name]], y$cleanBc[[sample_name]])
     })
-    names(x$cleanBc) <- meta_data_xy$sample_name
+    names(x$cleanBc) <- metadata_xy$sample_name
   }
-  x$meta_data <- meta_data_xy
+  x$metadata <- metadata_xy
   x
 }
 
@@ -204,22 +207,22 @@ bc_barcodes <- function(barcodeObj, unlist = TRUE) {
 #' @export
 bc_names <- function(barcodeObj) {
   check_sample_name(barcodeObj)
-  rownames(barcodeObj$meta_data)
+  rownames(barcodeObj$metadata)
 }
 
 #' @rdname bc_names
 #' @export
 "bc_names<-" <- function(barcodeObj, value) {
   check_sample_name(barcodeObj)
-  if (length(value) != nrow(barcodeObj$meta_data)) stop("The sample names do not have correct length.")
+  if (length(value) != nrow(barcodeObj$metadata)) stop("The sample names do not have correct length.")
   if (!is.null(barcodeObj$messyBc)) {
     names(barcodeObj$messyBc) <- value
   } 
   if (!is.null(barcodeObj$cleanBc)) {
     names(barcodeObj$cleanBc) <- value
   }
-  rownames(barcodeObj$meta_data) <- value
-  barcodeObj$meta_data$sample_name <- value
+  rownames(barcodeObj$metadata) <- value
+  barcodeObj$metadata$sample_name <- value
   barcodeObj
 }
 
@@ -236,16 +239,16 @@ bc_names <- function(barcodeObj) {
 #' bc_meta(bc_obj)$phenotype <- c("l", "b")
 #' bc_meta(bc_obj, key = "sample_type") <- c("l", "b")
 #' bc_meta(bc_obj)
-#' meta_data <- data.frame(
+#' metadata <- data.frame(
 #'   sample_name <- c("test1", "test2"),
 #'   phenotype <- c("l", "b")
 #'   )
-#' bc_meta(bc_obj) <- meta_data
+#' bc_meta(bc_obj) <- metadata
 #' bc_meta
 #' @export
 bc_meta <- function(barcodeObj) {
   check_sample_name(barcodeObj)
-  barcodeObj$meta_data
+  barcodeObj$metadata
 }
 
 #' @rdname bc_meta
@@ -253,11 +256,11 @@ bc_meta <- function(barcodeObj) {
 "bc_meta<-" <- function(barcodeObj, key = NULL, value) {
   check_sample_name(barcodeObj)
   if (is.null(key)) {
-    if (nrow(value) != nrow(barcodeObj$meta_data)) stop("The given meta data does not hvae correct length.")
-    barcodeObj$meta_data <- value
+    if (nrow(value) != nrow(barcodeObj$metadata)) stop("The given meta data does not hvae correct length.")
+    barcodeObj$metadata <- value
   } else {
-    if (length(value) != nrow(barcodeObj$meta_data)) stop("The given meta data does not hvae correct length.")
-    barcodeObj$meta_data[[key]] <- value
+    if (length(value) != nrow(barcodeObj$metadata)) stop("The given meta data does not hvae correct length.")
+    barcodeObj$metadata[[key]] <- value
   }
   barcodeObj
 }
@@ -270,7 +273,7 @@ bc_meta <- function(barcodeObj) {
 #' @examples
 #' data(bc_obj)
 #'
-#' bc_obj <- bc_cure(bc_obj)
+#' bc_obj <- bc_cure_depth(bc_obj)
 #'
 #' bc_2df(bc_obj)
 #' bc_2dt(bc_obj)
@@ -313,10 +316,10 @@ summary_BarcodeObj <- function(barcodeObj) {
 
   summary_res <- list()
   summary_res$messyBc_barcode_n <- lapply(barcodeObj$messyBc, nrow)
-  names(summary_res$messyBc_barcode_n) <- rownames(barcodeObj$meta_data)
+  names(summary_res$messyBc_barcode_n) <- rownames(barcodeObj$metadata)
   if (!is.null(barcodeObj$cleanBc)) {
     summary_res$cleanBc_barcode_n <- lapply(barcodeObj$cleanBc, nrow)
-    names(summary_res$cleanBc_barcode_n) <- rownames(barcodeObj$meta_data)
+    names(summary_res$cleanBc_barcode_n) <- rownames(barcodeObj$metadata)
   }
 
   summary_res
@@ -329,9 +332,10 @@ summary_BarcodeObj <- function(barcodeObj) {
 #'
 #' @examples
 #' data(bc_obj)
-#'
+#' # format BarcodeObj for pretty print
 #' format(bc_obj)
-#' print(bc_obj)
+#' ###
+#' @seealso [Bc::print.BarcodeObj]
 #' @export
 format.BarcodeObj <- function(x, ...) {
 
@@ -345,18 +349,18 @@ format.BarcodeObj <- function(x, ...) {
     stringr::str_glue("    In sample ${sample_name} there are: {n} Tags")
   }) %>% unlist %>% paste(collapse = "\n")
 
-  meta_data_info <- paste(names(x$meta_data), collapse = "  ")
-  meta_data_n <- length(names(x$meta_data))
+  metadata_info <- paste(names(x$metadata), collapse = "  ")
+  metadata_n <- length(names(x$metadata))
 
   
   res <- stringr::str_glue(
-"Bonjour le monde. This is a baby barcode Object.
+"Bonjour le monde, This is a BarcodeObj.
 ----------
 It contains: 
     {subjects}
 ----------
-$meta_data: {meta_data_n} meta data field(s) available
-    {meta_data_info}
+$metadata: {metadata_n} meta data field(s) available
+    {metadata_info}
 ----------
 $messyBc: {messyBc_n} Samples for raw barcodes
 {messyBc_info}")
@@ -386,31 +390,11 @@ $cleanBc: {cleanBc_n} Samples for cleaned barcodes
 #' @examples
 #' data(bc_obj)
 #'
-#' format(bc_obj)
+#' # print BarcodeObj
 #' print(bc_obj)
+#' ###
+#' @seealso [Bc::format.BarcodeObj] format BarcodeObj for pretty print
 #' @export
 print.BarcodeObj <- function(x, ...) {
   cat(format(x), "\n")
-  #   cat("Bonjour le monde. This is a baby barcode Object.\n----------\n")
-  #   cat("It contains:\n")
-  ## The items in the list
-  #   cat(names(barcodeObj), collapse = "  ", "\n----------\n")
-  #   if (!is.null(barcodeObj$messyBc)) {
-  ## How many samples in messyBc item
-  #     cat("$messyBc:", length(barcodeObj$messyBc), "Samples for uncleaned barcodes\n")
-  #     for (i in names(barcodeObj$messyBc)) {
-  ## The number of barcode in each sample
-  #       cat("    In sample", paste0("$", i), "there are:", nrow(barcodeObj$messyBc[[i]]), "Tags\n")
-  #     }
-  #     cat("\n")
-  #   }
-  #   if (!is.null(barcodeObj$cleanBc)) {
-  ## How many samples in cleanBc iterm
-  #     cat("$cleanBc: ", length(barcodeObj$cleanBc), "Samples for cleaned barcodes\n")
-  #     for (i in names(barcodeObj$cleanBc)) {
-  ## The number of barcode in each sample
-  #       cat("    In sample", paste0("$", i), "there are:", nrow(barcodeObj$cleanBc[[i]]), "barcodes\n")
-  #     }
-  #     cat("\n")
-  #   }
 }

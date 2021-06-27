@@ -49,7 +49,7 @@ bc_extract(...)
   file,
   pattern = "",
   sample_name = basename(file),
-  meta_data = NULL,
+  metadata = NULL,
   maxLDist = 0,
   pattern_type = c(barcode = 1),
   costs = list(sub = 1, ins = 99, del = 99),
@@ -72,7 +72,7 @@ bc_extract(...)
   x,
   pattern = "",
   sample_name = NULL,
-  meta_data = NULL,
+  metadata = NULL,
   maxLDist = 0,
   pattern_type = c(barcode = 1),
   costs = list(sub = 1, ins = 99, del = 99),
@@ -99,7 +99,7 @@ bc_extract(...)
 
 \item{file}{A character vector, Fastq file name.}
 
-\item{meta_data}{A data.frame with rownames of sample_name, the column is the meta data to keep the characteristics of the samples.}
+\item{metadata}{A data.frame with rownames of sample_name, the column is the meta data to keep the characteristics of the samples.}
 }
 \value{
 If x is a file location vector with more than 1 items or x is a list, the output will be a BarcodeObj. Otherwise a data.frame will be returned.
@@ -159,5 +159,4 @@ d1 <- data.frame(
 pattern <- "([ACTG]{3})TCGATCGATCGA([ACTG]+)ATCGATCGATC"
 (bc_obj <- bc_extract(list(test = d1), pattern, sample_name=c("test"), 
   pattern_type=c(UMI=1, barcode=2)))
-(bc_obj <- bc_cure(bc_obj, depth=0, doFish=FALSE, with_umi=TRUE, umi_depth=5, isUniqueUMI=TRUE))
 }

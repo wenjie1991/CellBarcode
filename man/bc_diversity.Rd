@@ -25,6 +25,6 @@ Calculate barcode diversity
 \examples{
 data(bc_obj)
 
-bc_obj <- bc_cure(bc_obj)
+bc_obj <- bc_cure_depth(bc_obj)
 bc_diversity(bc_obj)
 }

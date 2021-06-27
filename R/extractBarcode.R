@@ -1,16 +1,38 @@
 #' Extract barcode from reads
+#' 
+#' This function extracts the barcodes and (or) UMI from the seqeunces.
+#' `pattern` and `pattern_type` argument is necessary, which provide the barcode and UMI pattern and location within the sequences.
 #'
 #' @param x file location, ShortReadQ, DNAStringSet, data.frame, integer or list of above data types. 
 #' @param file A character vector, Fastq file name.
 #' @param pattern A string. The regular expression with capture to match the barcode which capture pattern
 #' @param sample_name A string vector. When x is list or file directions, this parameter provides the sample names. If the sample_name is not given, then the list names of the x will be used, or the file base name will be used as sample name.
-#' @param meta_data A data.frame with rownames of sample_name, the column is the meta data to keep the characteristics of the samples.
+#' @param metadata A data.frame with rownames of sample_name, the column is the meta data to keep the characteristics of the samples.
 #' @param maxLDist A integer. The mismatch threshold for barcode matching
 #' @param pattern_type A vector. It defines the barcode (and UMI) capture pattern
 #' @param costs A list. Define the weight for each mismatch events while matching the barcode using pattern, with names of sub(substitution), ins(insertion), del(deletion). The default value is list(sub = 1, ins = 99, del = 99).
 #' @param ordered A bool value. if the value is true, then the return barcodes (tages) are ordered by the reads counts.
 #' @param ... Additional arguments
-#' @return If x is a file location vector with more than 1 items or x is a list, the output will be a BarcodeObj. Otherwise a data.frame will be returned.
+#' @details
+#' The `pattern` argument is a regular expression, the capture operation `()` shows the barcode or UMI. `pattern_type` argument is the annotation of the capture pattern, shows which captured patteern is UMI or the barcode. In the example:
+#' ([ACTG]{3})TCGATCGATCGA([ACTG]+)ATCGATCGATC
+#' |--- starts with 3 base pairs UMI
+#'            |--- constant sequence in the backbone
+#'                        |--- flexible barcode seqeunces.
+#'                                |--- 3' constant sequence
+#' 
+#' In the UMI pattern `[ACGT]{3}`, the `[ACGT]` means it can be one of the "A", "C", "G" and "T", and the `{3}` means there are 12 `[ACGT]`. In the barcode pattern `[ACGT]+`, the `+` denotes that there is at least one of the `[ACGT]`.
+#' 
+#' @return 
+#' This function returns a `BarcodeObj` object if the input is a list or a vector of Fastq files, otherwise it returns a `data.frame`. In the later case the `data.frame` has 5 columns:
+#'   1. reads_seq: sequence of the reads before parsing.
+#'   2. match_seq: the sequence among read matched by pattern.
+#'   3. umi_seq (optional): UMI sequence, applicable when there is UMI in `pattern` and `pattern_type` argument.
+#'   4. barcode_seq: barcode sequence.
+#'   5. count: reads number.
+#' 
+#' @details In the output, the `match_seq` is part of `reads_seq`. The `umi_seq` and `barcode_seq` are part of `match_seq`. Be attention that, the `reads_seq` is the unique id for each row. The `match_seq`, `umi_seq` or `barcode_seq` can be duplicated, due to the potential variation in the region outside of `match_seq`. Please keep this in mind when you use data in `$messyBc`.
+#'
 #' @examples
 #' fq_file <- system.file("extdata", "simple.fq", package="Bc")
 #'
@@ -63,7 +85,6 @@
 #' pattern <- "([ACTG]{3})TCGATCGATCGA([ACTG]+)ATCGATCGATC"
 #' (bc_obj <- bc_extract(list(test = d1), pattern, sample_name=c("test"), 
 #'   pattern_type=c(UMI=1, barcode=2)))
-#' (bc_obj <- bc_cure(bc_obj, depth=0, doFish=FALSE, with_umi=TRUE, umi_depth=5, isUniqueUMI=TRUE))
 #' @export
 bc_extract <- function(...) UseMethod("bc_extract")
 
@@ -108,14 +129,14 @@ bc_extract.DNAStringSet <- function(x, pattern = "", sample_name = NULL, maxLDis
 bc_extract.data.frame <- function(x, pattern = "", sample_name = NULL, maxLDist = 0, pattern_type = c(barcode = 1), costs = list(sub = 1, ins = 99, del = 99), ordered = TRUE, ...) {
   sequences <- x$seq
   freq <- x$freq
-  x <- DNAStringSet(rep(sequences, freq))
+  x <- Biostrings::DNAStringSet(rep(sequences, freq))
 
   bc_extract(x, pattern = pattern, maxLDist = maxLDist, pattern_type = pattern_type, costs = costs, ordered = ordered)
 }
 
 #' @rdname bc_extract
 #' @export
-bc_extract.character <- function(file, pattern = "", sample_name = basename(file), meta_data = NULL, maxLDist = 0, pattern_type = c(barcode = 1), costs = list(sub = 1, ins = 99, del = 99), ordered = TRUE, ...) {
+bc_extract.character <- function(file, pattern = "", sample_name = basename(file), metadata = NULL, maxLDist = 0, pattern_type = c(barcode = 1), costs = list(sub = 1, ins = 99, del = 99), ordered = TRUE, ...) {
   if (length(file) > 1) {
     if (is.null(sample_name)) {
       sample_name <- names(file)
@@ -123,9 +144,9 @@ bc_extract.character <- function(file, pattern = "", sample_name = basename(file
     if (is.null(sample_name)) {
       sample_name <- 1:length(file)
     }
-    if (is.null(meta_data)) {
-      meta_data <- data.frame(sample_name = sample_name)
-      rownames(meta_data) <- sample_name
+    if (is.null(metadata)) {
+      metadata <- data.frame(sample_name = sample_name)
+      rownames(metadata) <- sample_name
     }
 
     messyBc <- lapply(1:length(file), function(i) {
@@ -133,7 +154,7 @@ bc_extract.character <- function(file, pattern = "", sample_name = basename(file
     })
 
     names(messyBc) <- sample_name
-    output <- list(messyBc = messyBc, meta_data = meta_data)
+    output <- list(messyBc = messyBc, metadata = metadata)
     class(output) <- "BarcodeObj"
     return(output)
   } else {
@@ -145,33 +166,33 @@ bc_extract.character <- function(file, pattern = "", sample_name = basename(file
 #' @export
 bc_extract.integer <- function(x, pattern = "", sample_name = NULL, maxLDist = 0, pattern_type = c(barcode = 1), costs = list(sub = 1, ins = 99, del = 99), ordered = TRUE, ...) {
   # TODO: Table result
-  x <- DNAStringSet(rep(names(x), x))
+  x <- Biostrings::DNAStringSet(rep(names(x), x))
 
   bc_extract(x, pattern = pattern, maxLDist = maxLDist, pattern_type = pattern_type, costs = costs, ordered = ordered)
 }
 
 #' @rdname bc_extract
 #' @export
-bc_extract.list <- function(x, pattern = "", sample_name = NULL, meta_data = NULL, maxLDist = 0, pattern_type = c(barcode = 1), costs = list(sub = 1, ins = 99, del = 99), ordered = TRUE, ...) {
+bc_extract.list <- function(x, pattern = "", sample_name = NULL, metadata = NULL, maxLDist = 0, pattern_type = c(barcode = 1), costs = list(sub = 1, ins = 99, del = 99), ordered = TRUE, ...) {
   if (is.null(sample_name)) {
     sample_name <- names(x)
   }
   if (is.null(sample_name)) {
     sample_name <- 1:length(x)
   }
-  if (is.null(meta_data)) {
-    meta_data <- data.frame(sample_name = sample_name)
-    rownames(meta_data) <- sample_name
+  if (is.null(metadata)) {
+    metadata <- data.frame(sample_name = sample_name)
+    rownames(metadata) <- sample_name
   } else {
-    meta_data$sample_name <- rownames(sample_name)
+    metadata$sample_name <- rownames(sample_name)
   }
 
-  parallel::mclapply(1:length(x), function(i) {
+  lapply(1:length(x), function(i) {
     bc_extract(x[[i]], pattern = pattern, sample_name = sample_name[i], maxLDist = maxLDist, pattern_type = pattern_type, costs = costs, ordered = ordered)
   }) -> messyBc
 
   names(messyBc) <- sample_name
-  output <- list(messyBc = messyBc, meta_data = meta_data)
+  output <- list(messyBc = messyBc, metadata = metadata)
   class(output) <- "BarcodeObj"
   output
 }

@@ -1,17 +1,37 @@
-#' Calculate barcode diversity
+#' barcode diversity
 #' 
+#' This function calculates several barcode diversity metrics using the cleanBc element in BarcodeObj.
+#'
 #' @param barcodeObj A BarcodeObj
 #' @param plot A bool, if draw the lorenz curve and barcode distribution curve
 #' @return A data.frame with following columns
-#'   total_reads: total resds number
-#'   shannon_index: Shannon information
-#'   equitability_index: Equitability index
-#'   bit_index: Shannon bit information
-#'   complexity: e^shannon_index
+#'   - total_reads: total resds number
+#'   - uniq_barcode: how many barcodes in the dataset, shows the richness of the barcode
+#'   - shannon_index: Shannon's diversity index or Shannon–Wiener index
+#'   - equitability_index: Shannon's equitability
+#'   - bit_index: Shannon bit information
+#' @details
+#' The diveristy index used to evaluate the diversity of thee barcodes, taking the aspects of richness, evenness.
+#' ## Richness
+#' The unique barcodes number evaluates the richness `R` of barcodes in the barcodes.
+#'
+#' ## Shannon index
+#' Shannon diversity index is weighteed geometric mean of the proportional abundances of barcodes.
+#' $$ H' = -\sum_{i=1}^{R}p_ilnp_i $$
+#'
+#' ## Equitability index
+#' Shannon equitability `E_H` characterize the evenness of thee barcodes, it is a value between 0 and 1, with 1 being complete evenness.
+#' $$ E_H = H' / H'_{max} = H / ln(R) $$
+#'
+#' ## Bit
+#' Shannon entropy `H`, with a units of bit, measure the informaton of the barcodes in the dataset
+#' $$ H = -\sum_{i=1}^{R}p_ilog_2p_i $$
+#'
+#'
 #' @examples
 #' data(bc_obj)
 #'
-#' bc_obj <- bc_cure(bc_obj)
+#' bc_obj <- bc_cure_depth(bc_obj)
 #' bc_diversity(bc_obj)
 #' @export
 bc_diversity <- function(barcodeObj, plot = TRUE) {
@@ -27,7 +47,7 @@ bc_diversity <- function(barcodeObj, plot = TRUE) {
 
   # x is BarcodeObj
   if (!("cleanBc" %in% names(barcodeObj))) {
-    stop("Please run bc_cure() first.")
+    stop("Please run bc_cure_*() first.")
     # d <- lapply(barcodeObj$messyBc, function(barcodeObj) { barcodeObj[, .(count = sum(count)), by = barcode_seq] })
     # names(d) <- names(barcodeObj$messyBc)
   }
@@ -48,7 +68,6 @@ bc_diversity <- function(barcodeObj, plot = TRUE) {
     , shannon_index = calc_shannon_index(count)
     , equitability_index = calc_equitability_index(count)
     , bit_index = calc_bit_info(count)
-    , complexity = calc_correct_barcode_number(count)
     ), by = "sample_name"] %>% as.data.frame
 }
 

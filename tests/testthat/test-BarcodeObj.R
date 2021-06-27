@@ -42,7 +42,7 @@ d_l <- list(test1 = d1, test2 = d2)
 
 pattern <- "TCGATCGATCGA([ACTG]+)ATCGATCGATC"
 bc_obj <- bc_extract(d_l, pattern, sample_name=c("test1", "test2"))
-bc_obj <- bc_cure(bc_obj, depth=5)
+bc_obj <- bc_cure_depth(bc_obj, depth=5, isUpdate = FALSE)
 
 
 test_that("data type transformation", {
@@ -87,11 +87,12 @@ test_that("subset operation", {
     data.frame(sample_name = "test1", barcode_seq = c("AGAG", "AAAG"), count = c(104, 50)))
 
   expect_equal(
-    bc_2df(bc_cure(bc_obj["AGAG", "test1"] + bc_obj["AGAG", "test1"])), 
+    bc_2df(bc_cure_depth(bc_obj["AGAG", "test1"] + bc_obj["AGAG", "test1"])), 
     data.frame(sample_name = "test1", barcode_seq = c("AGAG"), count = c(208)))
 
   expect_equal(
-    bc_2df(bc_obj[, "test1"] - "ACAAG"), 
+    bc_2df(bc_obj[, "test1"] - "ACAAG")
+    , 
     data.frame(sample_name = "test1", barcode_seq = c("AGAG", "AAAG", "AGAAG"), count = c(104, 50, 14)))
 
   expect_equal(
