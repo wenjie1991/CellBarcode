@@ -5,5 +5,12 @@
 \alias{Bc}
 \title{Bc.}
 \description{
-A package performs DNA Barcode analysis. The package can handle all kinds of barcodes, as long as the barcode have a pattern can be matched by regular expression, and the barcode is withine a single reads. And it can handle barcode with flexible length, and barcode with UMI (unique molecular identifier). This tool also can perform preprocssing of amplicon data analysis such as CRISPR gRNA screening, immue repotoire sequencing and meta genome data.
+A package performs DNA Barcode analysis. The package can handle all kinds of
+barcodes, as long as the barcode withine a single reads have a pattern can be
+matched by regular expression. And it can handle barcode with flexible
+length, and with or without UMI (unique molecular identifier).
+}
+\details{
+This tool also can be used for preprocssing of amplicon data analysis such as
+CRISPR gRNA screening, immue repotoire sequencing and meta genome data.
 }

@@ -1,14 +1,14 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-//' Hammer Distance
+//' Hamming Distance
 //' 
-//' This function return hammer distance between two string.
+//' This function return hamming distance between two string.
 //' If the two string do not have the same length, it will
 //' return 999.
 //'
 //' @param s1, s2 two string
-int hammer_dist(std::string s1, std::string s2) {
+int hamm_dist(std::string s1, std::string s2) {
   if (s1.length() != s2.length()) {
     return 999;
   }
@@ -29,7 +29,7 @@ bool sortbycount(const std::pair<std::string, int> &a, const std::pair<std::stri
 //' Sequence clustering
 //' 
 //' This function will merge the UMIs by using the 
-//' hammer distance. If two UMIs have hammer distance
+//' hamming distance. If two UMIs have hamming distance
 //' no more than 1, only the UMI with more reads
 //' will be kept.
 //' 
@@ -38,9 +38,9 @@ bool sortbycount(const std::pair<std::string, int> &a, const std::pair<std::stri
 //' @param seq A string vector
 //' @param count An integer vector with the same order and length of UMI
 //' @param count_threshold An integer the maximum barcodes number
-//' @param hammer_dist_threshold An integer the hammer distance threshold
+//' @param hamm_dist_threshold An integer the hamming distance threshold
 // [[Rcpp::export]]
-List seq_correct(std::vector<std::string> seq, IntegerVector count, int count_threshold, int hammer_dist_threshold) {
+List seq_correct(std::vector<std::string> seq, IntegerVector count, int count_threshold, int hamm_dist_threshold) {
 
   // candidates: all the nodes are candidates
   std::vector<std::pair<std::string, int>> cand;
@@ -102,7 +102,7 @@ List seq_correct(std::vector<std::string> seq, IntegerVector count, int count_th
       // find out if tiptoe connect to branch
       std::vector<std::pair<std::string, int>>::iterator it = cand.begin();
       while (it != tiptoe) {
-        h_dist = hammer_dist(it->first, tiptoe->first);
+        h_dist = hamm_dist(it->first, tiptoe->first);
         // record the min_dist
         if (h_dist < min_dist) {
           min_dist = h_dist;
@@ -115,7 +115,7 @@ List seq_correct(std::vector<std::string> seq, IntegerVector count, int count_th
         it++;
       }
 
-      if (min_dist <= hammer_dist_threshold) {
+      if (min_dist <= hamm_dist_threshold) {
         // add the tiptoe to the branch node
         min_it->second += tiptoe->second;
         //std::cout<<min_it->second<<std::endl;
@@ -181,7 +181,7 @@ List seq_correct(std::vector<std::string> seq, IntegerVector count, int count_th
   //     
   //     int size = umi.size();
   //     for (int i=0; i<size; i++) {
-  //         int h_distance = hammer_dist(umi_current, umi[i]);
+  //         int h_distance = hamm_dist(umi_current, umi[i]);
   //         if (h_distance == 1) {
   //             umi.erase(umi.begin() + i);
   //             count.erase(count.begin() + i);

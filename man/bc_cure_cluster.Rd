@@ -7,7 +7,7 @@
 bc_cure_cluster(
   barcodeObj,
   distance = 1,
-  dist_method = "hammer",
+  dist_method = "hamm",
   merge_method = "greedy",
   barcode_n = 10000
 )
@@ -15,16 +15,26 @@ bc_cure_cluster(
 \arguments{
 \item{barcodeObj}{A BarcodeObj}
 
-\item{distance}{Integer, the editing distance threshold if two sequence is similar enough to be merged}
+\item{distance}{Integer, the editing distance threshold if two sequence is
+similar enough to be merged}
 
-\item{dist_method}{A String, currently it only be "hammer". The hammering distance is used to evaluate the similarity between two barcodes.}
+\item{dist_method}{A String, currently it only be "hamm". The hamming
+distance is used to evaluate the similarity between two barcodes.}
 
-\item{merge_method}{A String, currently only "greedy" is available. Comparing the least abundent barcode to the most abundent ones, merge the least abundent to the most abundent ones.}
+\item{merge_method}{A String, currently only "greedy" is available. Comparing
+the least abundent barcode to the most abundent ones, merge the least
+abundent to the most abundent ones.}
 
-\item{barcode_n}{Integer, the max sequences number should be. When the most abundent barcodes are satisfied this number the merging finished, and all the rest sub-abundent sequences are removed.}
+\item{barcode_n}{Integer, the max sequences number should be. When the most
+abundent barcodes are satisfied this number the merging finished, and all the
+rest sub-abundent sequences are removed.}
+}
+\value{
+A BarcodeObj
 }
 \description{
-This function do the clustering to merge the barcodes with similar sequence. This function only appliable to the BarcodeObj with cleanBc element.
+This function performs the clustering to merge the barcodes with similar sequence.
+This function only appliable to the BarcodeObj with cleanBc element.
 }
 \examples{
 data(bc_obj)
@@ -56,8 +66,8 @@ bc_obj <- bc_extract(list(test = d1), pattern, sample_name=c("test"),
 (bc_cured <- bc_cure_depth(bc_obj, depth=5))
 bc_2matrix(bc_cured)
 
-# Do the clustering, integre the less abundent barcodes to the more abundent one by hammering 
-# distance <= 1
+# Do the clustering, integre the less abundent barcodes to the more abundent
+# one by hamming distance <= 1 
 bc_cure_cluster(bc_cured, distance = 1)
 
 # Use UMI information to filter the barcode <= 5 UMI-barcode tags

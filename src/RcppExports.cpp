@@ -6,16 +6,16 @@
 using namespace Rcpp;
 
 // seq_correct
-List seq_correct(std::vector<std::string> seq, IntegerVector count, int count_threshold, int hammer_dist_threshold);
-RcppExport SEXP _Bc_seq_correct(SEXP seqSEXP, SEXP countSEXP, SEXP count_thresholdSEXP, SEXP hammer_dist_thresholdSEXP) {
+List seq_correct(std::vector<std::string> seq, IntegerVector count, int count_threshold, int hamm_dist_threshold);
+RcppExport SEXP _Bc_seq_correct(SEXP seqSEXP, SEXP countSEXP, SEXP count_thresholdSEXP, SEXP hamm_dist_thresholdSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::vector<std::string> >::type seq(seqSEXP);
     Rcpp::traits::input_parameter< IntegerVector >::type count(countSEXP);
     Rcpp::traits::input_parameter< int >::type count_threshold(count_thresholdSEXP);
-    Rcpp::traits::input_parameter< int >::type hammer_dist_threshold(hammer_dist_thresholdSEXP);
-    rcpp_result_gen = Rcpp::wrap(seq_correct(seq, count, count_threshold, hammer_dist_threshold));
+    Rcpp::traits::input_parameter< int >::type hamm_dist_threshold(hamm_dist_thresholdSEXP);
+    rcpp_result_gen = Rcpp::wrap(seq_correct(seq, count, count_threshold, hamm_dist_threshold));
     return rcpp_result_gen;
 END_RCPP
 }

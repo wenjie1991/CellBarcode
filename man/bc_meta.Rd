@@ -3,7 +3,7 @@
 \name{bc_meta}
 \alias{bc_meta}
 \alias{bc_meta<-}
-\title{Get meta data}
+\title{Access metadata in BarcodeObj}
 \usage{
 bc_meta(barcodeObj)
 
@@ -20,19 +20,29 @@ bc_meta(barcodeObj, key = NULL) <- value
 A BarcodeObj
 }
 \description{
-Get meta data
+Access metadata in BarcodeObj
 }
 \examples{
 data(bc_obj)
 
+# get the metadata data.frame
 bc_meta(bc_obj)
+
+# assign value to metadata by $ operation
 bc_meta(bc_obj)$phenotype <- c("l", "b")
+
+# assign value to metasta by key argument
 bc_meta(bc_obj, key = "sample_type") <- c("l", "b")
+
+# show the updated metadata
 bc_meta(bc_obj)
+
+# assign a new data.frame as metadata
 metadata <- data.frame(
   sample_name <- c("test1", "test2"),
   phenotype <- c("l", "b")
   )
+rownames(metadata) = bc_names(bc_obj)
 bc_meta(bc_obj) <- metadata
-bc_meta
+###
 }

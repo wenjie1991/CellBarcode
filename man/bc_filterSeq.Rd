@@ -45,32 +45,44 @@ bc_filterSeq(x, ...)
 )
 }
 \arguments{
-\item{x}{file location, ShortReadQ, DNAStringSet, data.frame, integer vector or list of above data type.}
+\item{x}{file location, ShortReadQ, DNAStringSet, data.frame, integer vector
+or list of above data type.}
 
 \item{...}{Additional arguments}
 
-\item{min_average_quality}{A number, sequence with average base smaller than the value are filtered.}
+\item{min_average_quality}{A number, sequence with average base smaller than
+the value are filtered.}
 
-\item{min_read_length}{A integer, sequence with length shorter than the value are filtered.}
+\item{min_read_length}{A integer, sequence with length shorter than the value
+are filtered.}
 
-\item{N_threshold}{A integer, sequence with reads number less that the value are filtered.}
+\item{N_threshold}{A integer, sequence with reads number less that the value
+are filtered.}
 
-\item{sample_name}{A string vector, applicable when a list is used as input, it provides new sample_name for the output list.}
+\item{sample_name}{A string vector, applicable when a list is used as input,
+it provides new sample_name for the output list.}
 }
 \value{
-Sequences pass the filter criterial
+A ShortReadQ or DNAStringSet object with sequences passed the filters
 }
 \description{
-Filter the reads by the QC threshold
+Apply sequence quality filter to remove low quality sequence.
 }
 \examples{
 library(ShortRead)
 
 fq_file <- system.file("extdata", "simple.fq", package="Bc")
-sr <- readFastq(fq_file)
+# Read fastq files get ShortReadQ object
+sr <- readFastq(fq_file[1])
+# get DNAStringSet object
 ds <- sr@sread
 
+# apply filter to fastq files
 bc_filterSeq(fq_file)
+# apply filter to ShortReadQ
 bc_filterSeq(sr)
+# apply filter to DNAStringSet
 bc_filterSeq(ds)
+
+###
 }

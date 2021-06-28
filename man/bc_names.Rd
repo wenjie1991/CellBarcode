@@ -3,7 +3,7 @@
 \name{bc_names}
 \alias{bc_names}
 \alias{bc_names<-}
-\title{Get sample names}
+\title{Access sample names in BarcodeObj}
 \usage{
 bc_names(barcodeObj)
 
@@ -18,7 +18,7 @@ bc_names(barcodeObj) <- value
 A character vector
 }
 \description{
-Get sample names
+Access sample names in BarcodeObj
 }
 \examples{
 data(bc_obj)

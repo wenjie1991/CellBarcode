@@ -1,31 +1,38 @@
 #' barcode diversity
 #' 
-#' This function calculates several barcode diversity metrics using the cleanBc element in BarcodeObj.
+#' This function calculates several barcode diversity metrics using the cleanBc
+#' element in BarcodeObj.
 #'
 #' @param barcodeObj A BarcodeObj
 #' @param plot A bool, if draw the lorenz curve and barcode distribution curve
 #' @return A data.frame with following columns
 #'   - total_reads: total resds number
-#'   - uniq_barcode: how many barcodes in the dataset, shows the richness of the barcode
+#'   - uniq_barcode: how many barcodes in the dataset, shows the richness of the
+#'   barcode
 #'   - shannon_index: Shannon's diversity index or Shannon–Wiener index
 #'   - equitability_index: Shannon's equitability
 #'   - bit_index: Shannon bit information
 #' @details
-#' The diveristy index used to evaluate the diversity of thee barcodes, taking the aspects of richness, evenness.
+#' The diveristy index used to evaluate the diversity of thee barcodes, taking
+#' the aspects of richness, evenness.
 #' ## Richness
-#' The unique barcodes number evaluates the richness `R` of barcodes in the barcodes.
+#' The unique barcodes number evaluates the richness `R` of barcodes in the
+#' barcodes.
 #'
 #' ## Shannon index
-#' Shannon diversity index is weighteed geometric mean of the proportional abundances of barcodes.
-#' $$ H' = -\sum_{i=1}^{R}p_ilnp_i $$
+#' Shannon diversity index is weighteed geometric mean of the proportional
+#' abundances of barcodes.
+#' \deqn{ H' = - \sum_{i=1}^{R}p_ilnp_i }
 #'
 #' ## Equitability index
-#' Shannon equitability `E_H` characterize the evenness of thee barcodes, it is a value between 0 and 1, with 1 being complete evenness.
-#' $$ E_H = H' / H'_{max} = H / ln(R) $$
+#' Shannon equitability `E_H` characterize the evenness of thee barcodes, it is
+#' a value between 0 and 1, with 1 being complete evenness.
+#' \deqn{ E_H = H' / H'_{max} = H / ln(R) }
 #'
 #' ## Bit
-#' Shannon entropy `H`, with a units of bit, measure the informaton of the barcodes in the dataset
-#' $$ H = -\sum_{i=1}^{R}p_ilog_2p_i $$
+#' Shannon entropy `H`, with a units of bit, measure the informaton of the
+#' barcodes in the dataset
+#' \deqn{ H = - \sum_{i=1}^{R}p_ilog_2p_i }
 #'
 #'
 #' @examples
@@ -48,8 +55,6 @@ bc_diversity <- function(barcodeObj, plot = TRUE) {
   # x is BarcodeObj
   if (!("cleanBc" %in% names(barcodeObj))) {
     stop("Please run bc_cure_*() first.")
-    # d <- lapply(barcodeObj$messyBc, function(barcodeObj) { barcodeObj[, .(count = sum(count)), by = barcode_seq] })
-    # names(d) <- names(barcodeObj$messyBc)
   }
 
   d <- barcodeObj$cleanBc
@@ -75,8 +80,15 @@ plot_lorenz_curve <- function(x) {
   p_cum <- sample_name <- NULL
 
   # x is data.table with columns: count, barcode_seq, sample_name
-  d <- x[, .(p_cum = cumsum(sort(count / sum(count), decreasing = TRUE)), x = 1:length(count)), by = sample_name]
-  g <- ggplot(d) + aes(x = x, y = p_cum, color = sample_name, fill = sample_name) + geom_line() + geom_abline(slope = 1 / max(d$x), alpha = 0.3, color = 'black') + theme_bw()
+  d <- x[, .(
+    p_cum = cumsum(sort(count / sum(count), decreasing = TRUE)),
+    x = 1:length(count)), by = sample_name]
+
+  g <- ggplot(d) + 
+    aes(x = x, y = p_cum, color = sample_name, fill = sample_name) + 
+    geom_line() + 
+    geom_abline(slope = 1 / max(d$x), alpha = 0.3, color = 'black') + theme_bw()
+
   g <- g + labs(x = "Barcodes", y = "Cumulative reads per sample", color = "Sample")
   g
 }

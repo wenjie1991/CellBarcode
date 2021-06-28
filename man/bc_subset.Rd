@@ -27,13 +27,16 @@ bc_subset(
 \arguments{
 \item{barcodeObj}{A BarcodeObj}
 
-\item{sample}{A vector or an expression, select the sample subset from BarcodeObj}
+\item{sample}{A vector or an expression, select the sample subset from
+BarcodeObj}
 
-\item{barcode}{A vector of integer or string, select the barcode subset from BarcodeObj}
+\item{barcode}{A vector of integer or string, select the barcode subset from
+BarcodeObj}
 
 \item{black_list}{A character vector. Remove the listed barcodes.}
 
-\item{is_sample_quoted_exp}{A bool value. If the sample parameter is quoted expression or not}
+\item{is_sample_quoted_exp}{A bool value. If the sample parameter is quoted
+expression or not}
 
 \item{...}{Additional arguments}
 
@@ -47,7 +50,17 @@ bc_subset(
 A BarcodeObj
 }
 \description{
-Subset operation of BarcodeObj object
+The subset operators perform the sample and barcode management with
+BarcodeObj.
+}
+\details{
+`bc_subset` and `[]` used for selecting samples barcodes.
+
+`+` used for combining two BarcodesObj
+
+`-` used for removing barcodes in a black_list from BarcodesObj
+
+`*` used for selecting barcodes in a white_list from BarcodesObj
 }
 \examples{
 data(bc_obj)
@@ -71,7 +84,10 @@ bc_obj[, c("test1", "test2")]
 bc_subset(bc_obj, sample = "sample1_rep1", barcode = c("AACCTT", "AACCTT"))
 
 # Apply black list
-bc_subset(bc_obj, sample = c("sample1_rep1", "sample1_rep2"), barcode = c("AACCTT"))
+bc_subset(
+  bc_obj, 
+  sample = c("sample1_rep1", "sample1_rep2"), 
+  barcode = c("AACCTT"))
 
 # Join two samples with different barcode sets
 bc_obj["AGAG", "test1"] + bc_obj["AAAG", "test1"]

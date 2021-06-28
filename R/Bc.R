@@ -39,7 +39,13 @@
 
 #' Bc.
 #'
-#' A package performs DNA Barcode analysis. The package can handle all kinds of barcodes, as long as the barcode have a pattern can be matched by regular expression, and the barcode is withine a single reads. And it can handle barcode with flexible length, and barcode with UMI (unique molecular identifier). This tool also can perform preprocssing of amplicon data analysis such as CRISPR gRNA screening, immue repotoire sequencing and meta genome data.
+#' A package performs DNA Barcode analysis. The package can handle all kinds of
+#' barcodes, as long as the barcode withine a single reads have a pattern can be
+#' matched by regular expression. And it can handle barcode with flexible
+#' length, and with or without UMI (unique molecular identifier). 
+#'
+#' This tool also can be used for preprocssing of amplicon data analysis such as
+#' CRISPR gRNA screening, immue repotoire sequencing and meta genome data.
 #'
 #' @name Bc
 #' @docType package
@@ -47,6 +53,7 @@
 #' @importFrom data.table data.table rbindlist
 #' @importFrom Biostrings readDNAStringSet
 #' @import ShortRead
+#' @import Rcpp
 #' @import ggplot2
 #' @useDynLib Bc
 NULL
@@ -60,8 +67,10 @@ NULL
 #' @keywords dataset
 #' @usage data(bc_obj)
 #'
-#' @details This is a BarcodeObj with raw barcode, derived from
-#' ```{r eval=F}
+#' @details 
+#' This is a BarcodeObj derived from dummy data.
+#'
+#' @examples
 #' d1 = data.frame(
 #'   seq = c(
 #'     "ACTTCGATCGATCGAAAAGATCGATCGATC",
@@ -100,11 +109,16 @@ NULL
 #'   )
 #' 
 #' pattern = "TCGATCGATCGA([ACTG]+)ATCGATCGATC"
-#' bc_obj = bc_extract(list(test1 = d1, test2 = d2), pattern, sample_name=c("test1", "test2"))
+#' bc_obj = bc_extract(
+#'   list(test1 = d1, test2 = d2), 
+#'   pattern, sample_name=c("test1", "test2"))
+#'
 #' bc_obj = bc_cure_depth(bc_obj, depth=5)
-#' save(bc_obj, file = "./data/bc_obj.RData")
+#'
+#' # save the dummy data
+#' # save(bc_obj, file = "./data/bc_obj.RData")
+#'
 #' ###
-#' ```
 NULL
 
 . <- list()

@@ -2,15 +2,26 @@
 % Please edit documentation in R/extractBarcode.R
 \name{bc_extract}
 \alias{bc_extract}
+\alias{bc_extract.data.frame}
 \alias{bc_extract.ShortReadQ}
 \alias{bc_extract.DNAStringSet}
-\alias{bc_extract.data.frame}
-\alias{bc_extract.character}
 \alias{bc_extract.integer}
+\alias{bc_extract.character}
 \alias{bc_extract.list}
 \title{Extract barcode from reads}
 \usage{
 bc_extract(...)
+
+\method{bc_extract}{data.frame}(
+  x,
+  pattern = "",
+  sample_name = NULL,
+  maxLDist = 0,
+  pattern_type = c(barcode = 1),
+  costs = list(sub = 1, ins = 99, del = 99),
+  ordered = TRUE,
+  ...
+)
 
 \method{bc_extract}{ShortReadQ}(
   x,
@@ -34,7 +45,7 @@ bc_extract(...)
   ...
 )
 
-\method{bc_extract}{data.frame}(
+\method{bc_extract}{integer}(
   x,
   pattern = "",
   sample_name = NULL,
@@ -57,17 +68,6 @@ bc_extract(...)
   ...
 )
 
-\method{bc_extract}{integer}(
-  x,
-  pattern = "",
-  sample_name = NULL,
-  maxLDist = 0,
-  pattern_type = c(barcode = 1),
-  costs = list(sub = 1, ins = 99, del = 99),
-  ordered = TRUE,
-  ...
-)
-
 \method{bc_extract}{list}(
   x,
   pattern = "",
@@ -83,29 +83,72 @@ bc_extract(...)
 \arguments{
 \item{...}{Additional arguments}
 
-\item{x}{file location, ShortReadQ, DNAStringSet, data.frame, integer or list of above data types.}
+\item{x}{file location, ShortReadQ, DNAStringSet, data.frame, integer or list
+of above data types.}
 
-\item{pattern}{A string. The regular expression with capture to match the barcode which capture pattern}
+\item{pattern}{A string. The regular expression with capture to match the
+barcode which capture pattern}
 
-\item{sample_name}{A string vector. When x is list or file directions, this parameter provides the sample names. If the sample_name is not given, then the list names of the x will be used, or the file base name will be used as sample name.}
+\item{sample_name}{A string vector. When x is list or file directions, this
+parameter provides the sample names. If the sample_name is not given, then
+the list names of the x will be used, or the file base name will be used as
+sample name.}
 
 \item{maxLDist}{A integer. The mismatch threshold for barcode matching}
 
-\item{pattern_type}{A vector. It defines the barcode (and UMI) capture pattern}
+\item{pattern_type}{A vector. It defines the barcode (and UMI) capture
+pattern}
 
-\item{costs}{A list. Define the weight for each mismatch events while matching the barcode using pattern, with names of sub(substitution), ins(insertion), del(deletion). The default value is list(sub = 1, ins = 99, del = 99).}
+\item{costs}{A list. Define the weight for each mismatch events while
+matching the barcode using pattern, with names of sub(substitution),
+ins(insertion), del(deletion). The default value is list(sub = 1, ins = 99,
+del = 99).}
 
-\item{ordered}{A bool value. if the value is true, then the return barcodes (tages) are ordered by the reads counts.}
+\item{ordered}{A bool value. if the value is true, then the return barcodes
+(tages) are ordered by the reads counts.}
 
 \item{file}{A character vector, Fastq file name.}
 
-\item{metadata}{A data.frame with rownames of sample_name, the column is the meta data to keep the characteristics of the samples.}
+\item{metadata}{A data.frame with rownames of sample_name, the column is the
+meta data to keep the characteristics of the samples.}
 }
 \value{
-If x is a file location vector with more than 1 items or x is a list, the output will be a BarcodeObj. Otherwise a data.frame will be returned.
+This function returns a `BarcodeObj` object if the input is a list or a
+vector of Fastq files, otherwise it returns a `data.frame`. In the later case
+the `data.frame` has 5 columns:
+  1. reads_seq: sequence of the reads before parsing.
+  2. match_seq: the sequence among read matched by pattern.
+  3. umi_seq (optional): UMI sequence, applicable when there is UMI in
+     `pattern` and `pattern_type` argument.
+  4. barcode_seq: barcode sequence.
+  5. count: reads number.
 }
 \description{
-Extract barcode from reads
+This function extracts the barcodes and (or) UMI from the seqeunces.
+`pattern` and `pattern_type` argument is necessary, which provide the barcode
+and UMI pattern and location within the sequences.
+}
+\details{
+The `pattern` argument is a regular expression, the capture operation `()`
+shows the barcode or UMI. `pattern_type` argument is the annotation of the
+capture pattern, shows which captured patteern is UMI or the barcode. In the
+example:
+([ACTG]{3})TCGATCGATCGA([ACTG]+)ATCGATCGATC
+|--- starts with 3 base pairs UMI
+           |--- constant sequence in the backbone
+                       |--- flexible barcode seqeunces.
+                               |--- 3' constant sequence
+
+In the UMI pattern `[ACGT]{3}`, the `[ACGT]` means it can be one of the "A",
+"C", "G" and "T", and the `{3}` means there are 12 `[ACGT]`. In the barcode
+pattern `[ACGT]+`, the `+` denotes that there is at least one of the
+`[ACGT]`.
+
+In the output, the `match_seq` is part of `reads_seq`. The `umi_seq`
+and `barcode_seq` are part of `match_seq`. Be attention that, the `reads_seq`
+is the unique id for each row. The `match_seq`, `umi_seq` or `barcode_seq`
+can be duplicated, due to the potential variation in the region outside of
+`match_seq`. Please keep this in mind when you use data in `$messyBc`.
 }
 \examples{
 fq_file <- system.file("extdata", "simple.fq", package="Bc")
@@ -156,7 +199,13 @@ d1 <- data.frame(
     30, 60, 9, 10, 14, 5, 10, 30, 6, 4 , 6
     )
   ) 
+# barcode backbone with UMI and barcode
 pattern <- "([ACTG]{3})TCGATCGATCGA([ACTG]+)ATCGATCGATC"
-(bc_obj <- bc_extract(list(test = d1), pattern, sample_name=c("test"), 
-  pattern_type=c(UMI=1, barcode=2)))
+bc_extract(
+  list(test = d1), 
+  pattern, 
+  sample_name=c("test"), 
+  pattern_type=c(UMI=1, barcode=2))
+
+###
 }

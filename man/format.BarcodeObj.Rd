@@ -16,6 +16,7 @@ Format the summary of BarcodeObj
 }
 \examples{
 data(bc_obj)
+
 # format BarcodeObj for pretty print
 format(bc_obj)
 ###

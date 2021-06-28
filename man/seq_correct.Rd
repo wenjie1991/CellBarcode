@@ -4,7 +4,7 @@
 \alias{seq_correct}
 \title{Sequence clustering}
 \usage{
-seq_correct(seq, count, count_threshold, hammer_dist_threshold)
+seq_correct(seq, count, count_threshold, hamm_dist_threshold)
 }
 \arguments{
 \item{seq}{A string vector}
@@ -13,11 +13,11 @@ seq_correct(seq, count, count_threshold, hammer_dist_threshold)
 
 \item{count_threshold}{An integer the maximum barcodes number}
 
-\item{hammer_dist_threshold}{An integer the hammer distance threshold}
+\item{hamm_dist_threshold}{An integer the hamming distance threshold}
 }
 \description{
 This function will merge the UMIs by using the 
-hammer distance. If two UMIs have hammer distance
+hamming distance. If two UMIs have hamming distance
 no more than 1, only the UMI with more reads
 will be kept.
 }

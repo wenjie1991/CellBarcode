@@ -11,8 +11,9 @@ data(bc_obj)
 Dataset contains a BarcodeObj
 }
 \details{
-This is a BarcodeObj with raw barcode, derived from
-```{r eval=F}
+This is a BarcodeObj derived from dummy data.
+}
+\examples{
 d1 = data.frame(
   seq = c(
     "ACTTCGATCGATCGAAAAGATCGATCGATC",
@@ -51,10 +52,15 @@ d2 = data.frame(
   )
 
 pattern = "TCGATCGATCGA([ACTG]+)ATCGATCGATC"
-bc_obj = bc_extract(list(test1 = d1, test2 = d2), pattern, sample_name=c("test1", "test2"))
+bc_obj = bc_extract(
+  list(test1 = d1, test2 = d2), 
+  pattern, sample_name=c("test1", "test2"))
+
 bc_obj = bc_cure_depth(bc_obj, depth=5)
-save(bc_obj, file = "./data/bc_obj.RData")
+
+# save the dummy data
+# save(bc_obj, file = "./data/bc_obj.RData")
+
 ###
-```
 }
 \keyword{dataset}

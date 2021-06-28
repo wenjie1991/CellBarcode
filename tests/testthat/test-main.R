@@ -27,7 +27,7 @@ test_that("Senerio1: Backbone no error, Depth cutoff > 5", {
 })
 
 
-test_that("Senerio1.1: Backbone no error, Depth cutoff > 5, hammer dist 1", {
+test_that("Senerio1.1: Backbone no error, Depth cutoff > 5, hamming dist 1", {
   pattern <- "TCGATCGATCGA([ACTG]+)ATCGATCGATC"
   bc_obj <- bc_extract(list(test = d1), pattern, sample_name=c("test"))
   bc_obj <- bc_cure_cluster(bc_cure_depth(bc_obj, depth=5), distance = 1)

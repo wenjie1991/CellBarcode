@@ -9,15 +9,31 @@ bc_cure_umi(barcodeObj, depth = 2, doFish = FALSE, isUniqueUMI = FALSE)
 \arguments{
 \item{barcodeObj}{A BarcodeObj}
 
-\item{depth}{Numeric, the UMI-sequence tags counts threshold. Only the barcode with UMI-barcode larger than the threshold are considered potential true barcodes.}
+\item{depth}{Numeric, the UMI-sequence tags counts threshold. Only the
+barcode with UMI-barcode larger than the threshold are considered potential
+true barcodes.}
 
-\item{doFish}{Bool value, the "fishing" process is re-counting the UMI with potential true barcodes, and including those UMI-barcodes tags which are not satisfied depth threshold.}
+\item{doFish}{Bool value, the "fishing" process is re-counting the UMI with
+potential true barcodes, and including those UMI-barcodes tags which are not
+satisfied depth threshold.}
 
-\item{isUniqueUMI}{Bool value, In the case that a UMI are with several barcodes. If you believe that the UMI is absolute unique, then only the dominant sequence is chosen for each UMI.}
+\item{isUniqueUMI}{Bool value, In the case that a UMI are with several
+barcodes. If you believe that the UMI is absolute unique, then only the
+dominant sequence is chosen for each UMI.}
+}
+\value{
+A BarcodeObj
 }
 \description{
-When the UMI is used and extracted by bc_extract, this function applys the filtering on the UMI-barcode tags.
-This function read in data in messyBc element and create a cleanBc element in BarcodeObj.
+When the UMI is used and extracted by bc_extract, this function applies the
+filtering on the UMI-barcode tags.  This function read in data in messyBc
+element and create a cleanBc element in BarcodeObj.
+}
+\details{
+The priority of potential steps are:
+  1. (optional) Find dominant sequence in each UMI.
+  2. UMI-barcode depth filtering.
+  3. (optional) Fising the UMI with low UMI-barcode depth.
 }
 \examples{
 data(bc_obj)
@@ -49,8 +65,8 @@ bc_obj <- bc_extract(list(test = d1), pattern, sample_name=c("test"),
 (bc_cured <- bc_cure_depth(bc_obj, depth=5))
 bc_2matrix(bc_cured)
 
-# Do the clustering, integre the less abundent barcodes to the more abundent one by hammering 
-# distance <= 1
+# Do the clustering, integre the less abundent barcodes to the more abundent
+# one by hamming  distance <= 1 
 bc_cure_cluster(bc_cured, distance = 1)
 
 # Use UMI information to filter the barcode <= 5 UMI-barcode tags
