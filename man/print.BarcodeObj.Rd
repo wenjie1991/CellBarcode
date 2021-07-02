@@ -22,5 +22,5 @@ print(bc_obj)
 ###
 }
 \seealso{
-[Bc::format.BarcodeObj] format BarcodeObj for pretty print
+\code{\link[Bc::format.BarcodeObj]{Bc::format.BarcodeObj}}
 }

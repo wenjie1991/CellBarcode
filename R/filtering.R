@@ -1,34 +1,35 @@
 # TODO: Trimming the sequence file remove adaptor
 
-#' Filter the reads by the QC threshold
+#' Filter the sequences by quality
 #' 
-#' Apply sequence quality filter to remove low quality sequence.
+#' Apply quality filters to remove low quality sequence.
 #'
-#' @param x file location, ShortReadQ, DNAStringSet, data.frame, integer vector
-#' or list of above data type.
-#' @param min_average_quality A number, sequence with average base smaller than
-#' the value are filtered.
-#' @param min_read_length A integer, sequence with length shorter than the value
-#' are filtered.
-#' @param N_threshold A integer, sequence with reads number less that the value
-#' are filtered.
-#' @param sample_name A string vector, applicable when a list is used as input,
-#' it provides new sample_name for the output list.
+#' @param x A single or a list of Fastq file, ShortReadQ, DNAStringSet,
+#' data.frame, integer vector.
+#' @param min_average_quality A single or a vector of numeric, indicating the
+#' threshold of the minimum average base quality of a sequence. 
+#' @param min_read_length A single or a vector of integer, specifying the length
+#' threshold of a sequence. 
+#' @param N_threshold A single or a vector of integer, specifying the maximum
+#' \code{N} in a sequence.
+#' @param sample_name A string vector, rename the samples.
 #' @param ... Additional arguments
 #' @return A ShortReadQ or DNAStringSet object with sequences passed the filters
 #' @examples
 #' library(ShortRead)
 #' 
 #' fq_file <- system.file("extdata", "simple.fq", package="Bc")
-#' # Read fastq files get ShortReadQ object
-#' sr <- readFastq(fq_file[1])
-#' # get DNAStringSet object
-#' ds <- sr@sread
-#' 
+#'
 #' # apply filter to fastq files
 #' bc_filterSeq(fq_file)
+#'
+#' # Read fastq files get ShortReadQ object
+#' sr <- readFastq(fq_file[1])
 #' # apply filter to ShortReadQ
 #' bc_filterSeq(sr)
+#'
+#' # get DNAStringSet object
+#' ds <- sr@sread
 #' # apply filter to DNAStringSet
 #' bc_filterSeq(ds)
 #'

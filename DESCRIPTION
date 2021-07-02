@@ -1,11 +1,22 @@
 Package: Bc
 Type: Package
-Title: Genetic Barcode Analysis toolkit
-Version: 0.1.0
-Authors@R: person("Wenjie", "Sun", email = "sunwjie@gmail.com", role = c("aut", "cre"))
+Title: DNA Barcode Analysis toolkit
+Version: 0.1.1
+Authors@R: c(person("Wenjie", "Sun", email = "sunwjie@gmail.com", role = c("aut", "cre")),
+  person("Anne-Marie", "Lyne", role = c("aut")),
+  person("Leila", "Perie", role = c("aut")))
+Authors: Wenjie Sun<sunwjie@gmail.com>
+  Anne-Marie Lyne<Annie-Lyne@curie.fr>
+  Leila Perie<leila.perie@curie.fr>
 Maintainer: Wenjie Sun<sunwjie@gmail.com>
-Description: This package provides functions for amplicon NGS data analysis and management. The package is originally designed for preprocessing genetic barcode lineage tracing data, however,  the preprocssing of CRISPR gRNA screening, immue repotoire sequencing and meta genome data also can benifit from it.
-    The functions included in the package quality control of sequencing data, target sequence extraction, sequence identification as well as data management.
+Description: 
+  This package performs DNA Barcode analysis. The package can handle all kinds
+  of DNA barcodes, as long as the barcode withine a single reads and has a
+  pattern that can be matched by regular expression. This package can handle
+  barcode with flexible length, with or without UMI (unique molecular
+  identifier). This tool also can be used for preprocssing of amplicon data
+  analysis such as CRISPR gRNA screening, immue repotoire sequencing and meta
+  genome data.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -19,14 +30,12 @@ Imports:
     ggplot2,
     stringr,
     magrittr,
-    network,
     readr,
     ShortRead,
     Biostrings,
     egg,
     utils,
     S4Vectors,
-    seqinr
 LinkingTo: Rcpp
 RoxygenNote: 7.1.1
 Suggests: 
@@ -35,7 +44,7 @@ Suggests:
     knitr,
     rmarkdown
 biocViews: Software
-URL: ""
-Video: ""
+URL: "TBD"
+Video: "TBD"
 Config/testthat/edition: 3
 VignetteBuilder: knitr

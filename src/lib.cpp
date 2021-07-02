@@ -25,7 +25,6 @@ bool sortbycount(const std::pair<std::string, int> &a, const std::pair<std::stri
   return a.second > b.second;
 }
 
-
 //' Sequence clustering
 //' 
 //' This function will merge the UMIs by using the 

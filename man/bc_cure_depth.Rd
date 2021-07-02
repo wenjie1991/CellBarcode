@@ -2,25 +2,25 @@
 % Please edit documentation in R/correctBarcode.R
 \name{bc_cure_depth}
 \alias{bc_cure_depth}
-\title{Filter barcode by count}
+\title{Filter barcodes by count}
 \usage{
 bc_cure_depth(barcodeObj, depth = 0, isUpdate = TRUE)
 }
 \arguments{
-\item{barcodeObj}{A BarcodeObj}
+\item{barcodeObj}{A BarcodeObj.}
 
-\item{depth}{Numeric, only a sequence with counts larger than the threshold
-will be kept.}
+\item{depth}{A single or vector of numeric, specifying the threshold
+of the threshold of minimum count for a sequence to kept.}
 
-\item{isUpdate}{Bool. The function will use cleanBc if it exists, when it's
-false, the messyBc will be used instead cleanBc to perform the filtering. In
-the case that no cleanBc is available, messyBc is used.}
+\item{isUpdate}{A bool, if TRUE, the cleanBc element in BarcodeObj will
+be used, otherwise the messyBc element will be used. In the case that no
+cleanBc is available, messyBc will always be used.}
 }
 \value{
-A BarcodeObj
+A BarcodeObj with cleanBc update.
 }
 \description{
-The function applies the filter on the reads count or the UMI counts.
+The function filter barcodes by applying the filter on the reads count or the UMI count.
 }
 \examples{
 data(bc_obj)
@@ -52,12 +52,9 @@ bc_obj <- bc_extract(list(test = d1), pattern, sample_name=c("test"),
 (bc_cured <- bc_cure_depth(bc_obj, depth=5))
 bc_2matrix(bc_cured)
 
-# Do the clustering, integre the less abundent barcodes to the more abundent
-# one by hamming distance <= 1
-bc_cure_cluster(bc_cured, distance = 1)
-
 # Use UMI information to filter the barcode <= 5 UMI-barcode tags
 bc_umi_cured <- bc_cure_umi(bc_obj, depth =0, doFish=TRUE, isUniqueUMI=TRUE)
 bc_cure_depth(bc_umi_cured, depth = 5)
-##
+
+### 
 }

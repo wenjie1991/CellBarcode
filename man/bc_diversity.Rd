@@ -2,53 +2,57 @@
 % Please edit documentation in R/describeBarcode.R
 \name{bc_diversity}
 \alias{bc_diversity}
-\title{barcode diversity}
+\title{Evaluate barcode diversity}
 \usage{
 bc_diversity(barcodeObj, plot = TRUE)
 }
 \arguments{
-\item{barcodeObj}{A BarcodeObj}
+\item{barcodeObj}{A BarcodeObj.}
 
-\item{plot}{A bool, if draw the lorenz curve and barcode distribution curve}
+\item{plot}{A bool, if TRUE, draw the lorenz curve and barcode distribution
+curve.}
 }
 \value{
-A data.frame with following columns
-  - total_reads: total resds number
-  - uniq_barcode: how many barcodes in the dataset, shows the richness of the
-  barcode
-  - shannon_index: Shannon's diversity index or Shannon–Wiener index
-  - equitability_index: Shannon's equitability
-  - bit_index: Shannon bit information
+A data.frame with following columns:
+\itemize{
+  \item total_reads: total resds number.
+  \item uniq_barcode: how many barcodes in the dataset, shows the richness of
+  the barcode.
+  \item shannon_index: Shannon's diversity index or Shannon–Wiener index.
+  \item equitability_index: Shannon's equitability.
+  \item bit_index: Shannon bit information.
+}
 }
 \description{
 This function calculates several barcode diversity metrics using the cleanBc
 element in BarcodeObj.
 }
 \details{
-The diveristy index used to evaluate the diversity of thee barcodes, taking
-the aspects of richness, evenness.
-## Richness
-The unique barcodes number evaluates the richness `R` of barcodes in the
-barcodes.
+Followings are the metrics used for evaluating the barcode diversity:
 
-## Shannon index
-Shannon diversity index is weighteed geometric mean of the proportional
-abundances of barcodes.
+\emph{Richness}: The unique barcodes number evaluates the richness \eqn{R} of
+barcodes in the barcodes.
+
+\emph{Shannon index}: Shannon diversity index is weighteed geometric mean of
+the proportional abundances of barcodes.
 \deqn{ H' = - \sum_{i=1}^{R}p_ilnp_i }
 
-## Equitability index
-Shannon equitability `E_H` characterize the evenness of thee barcodes, it is
-a value between 0 and 1, with 1 being complete evenness.
+\emph{Equitability index}: Shannon equitability \eqn{E_H} characterize the
+evenness of thee barcodes, it is a value between 0 and 1, with 1 being
+complete evenness.
 \deqn{ E_H = H' / H'_{max} = H / ln(R) }
 
-## Bit
-Shannon entropy `H`, with a units of bit, measure the informaton of the
+\emph{Bit}:
+Shannon entropy \eqn{H}, with a units of bit, measure the informaton of the
 barcodes in the dataset
 \deqn{ H = - \sum_{i=1}^{R}p_ilog_2p_i }
 }
 \examples{
 data(bc_obj)
 
+# filter barcode by depth
 bc_obj <- bc_cure_depth(bc_obj)
+
+# evaluate barcode diversity
 bc_diversity(bc_obj)
 }

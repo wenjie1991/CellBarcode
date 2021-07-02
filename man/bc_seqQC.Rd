@@ -33,22 +33,25 @@ bc_seqQC(...)
 \arguments{
 \item{...}{Additional arguments}
 
-\item{x}{A string. ShortReadQ Obj, DNAStringSet Obj, data.frame or integer
-vector}
+\item{x}{A single or list of Fastq file, ShortReadQ Obj, DNAStringSet Obj,
+data.frame or named integer vector.}
 
 \item{file}{A string. Fastq file name}
 
-\item{sample_name}{A string vector. Rename the samples}
+\item{sample_name}{A string vector with the length of sample number, rename
+the samples.}
 }
 \value{
 A barcodeQc or barcodeQcSet class. 
 The barcodeQc is list with two elements, 
-  base_quality_per_cycle: data.frame with row of sequence basepair location,
-  the columns are the basepair sequencing quality summary
-  base_freq_per_cycle: data.frame with three columns, Cycle: the sequence
-  basepair location (NGS sequencing cycle); Base: DNA base; Count: reads
-  count.
-The barcodeQcSet is list of barcodeQc
+\itemize{
+  \item base_quality_per_cycle: data.frame with row of sequence basepair
+  location, the columns are the basepair sequencing quality summary
+  \item base_freq_per_cycle: data.frame with three columns, \emph{Cycle}: the
+  sequence basepair location (NGS sequencing cycle); \emph{Base}: DNA base;
+  \emph{Count}: reads count.
+}
+The barcodeQcSet is list of barcodeQc.
 }
 \description{
 Perform quality control
@@ -57,7 +60,7 @@ Perform quality control
 library(ShortRead)
 # fastq file
 fq_file <- system.file("extdata", "simple.fq", package="Bc")
-bc_seqQC(fq_file)
+bc_seqQc(fq_file)
 
 # ShortReadQ
 sr <- readFastq(fq_file[1])

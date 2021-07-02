@@ -3,14 +3,13 @@
 \docType{package}
 \name{Bc}
 \alias{Bc}
-\title{Bc.}
+\title{DNA Barcode Analysis toolkit}
 \description{
-A package performs DNA Barcode analysis. The package can handle all kinds of
-barcodes, as long as the barcode withine a single reads have a pattern can be
-matched by regular expression. And it can handle barcode with flexible
-length, and with or without UMI (unique molecular identifier).
-}
-\details{
-This tool also can be used for preprocssing of amplicon data analysis such as
-CRISPR gRNA screening, immue repotoire sequencing and meta genome data.
+This package performs DNA Barcode analysis. The package can handle all kinds
+of DNA barcodes, as long as the barcode withine a single reads and has a
+pattern that can be matched by regular expression. This package can handle
+barcode with flexible length, with or without UMI (unique molecular
+identifier). This tool also can be used for preprocssing of amplicon data
+analysis such as CRISPR gRNA screening, immue repotoire sequencing and meta
+genome data.
 }

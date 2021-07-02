@@ -37,15 +37,15 @@
 # create function to identify the cutoff point
 # evaluate the sequencing depth (saturation of the sequene)
 
-#' Bc.
+#' DNA Barcode Analysis toolkit
 #'
-#' A package performs DNA Barcode analysis. The package can handle all kinds of
-#' barcodes, as long as the barcode withine a single reads have a pattern can be
-#' matched by regular expression. And it can handle barcode with flexible
-#' length, and with or without UMI (unique molecular identifier). 
-#'
-#' This tool also can be used for preprocssing of amplicon data analysis such as
-#' CRISPR gRNA screening, immue repotoire sequencing and meta genome data.
+#' This package performs DNA Barcode analysis. The package can handle all kinds
+#' of DNA barcodes, as long as the barcode withine a single reads and has a
+#' pattern that can be matched by regular expression. This package can handle
+#' barcode with flexible length, with or without UMI (unique molecular
+#' identifier). This tool also can be used for preprocssing of amplicon data
+#' analysis such as CRISPR gRNA screening, immue repotoire sequencing and meta
+#' genome data.
 #'
 #' @name Bc
 #' @docType package
@@ -70,7 +70,7 @@ NULL
 #' @details 
 #' This is a BarcodeObj derived from dummy data.
 #'
-#' @examples
+#' \preformatted{
 #' d1 = data.frame(
 #'   seq = c(
 #'     "ACTTCGATCGATCGAAAAGATCGATCGATC",
@@ -117,8 +117,8 @@ NULL
 #'
 #' # save the dummy data
 #' # save(bc_obj, file = "./data/bc_obj.RData")
-#'
 #' ###
+#' }
 NULL
 
 . <- list()

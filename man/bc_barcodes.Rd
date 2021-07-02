@@ -10,23 +10,24 @@ bc_barcodes(barcodeObj, unlist = TRUE)
 \item{barcodeObj}{A BarcodeObj.}
 
 \item{unlist}{A bool value, if TRUE, then the function will return a vector
-of unique barcodes from all samples; otherwise a list will be returned, each
+of unique barcodes in all samples; otherwise a list will be returned, each
 element is corresponding to a sample.}
 }
 \value{
-A character vector or a list
+A character vector or a list.
 }
 \description{
-This function retrieve the barcode sequences from cleanBc element in
+This function retrieves the barcode sequences from cleanBc element in
 BarcodeObj.
 }
 \examples{
 data(bc_obj)
 
-# get unique barcode vector from all samples
+# get unique barcode vector
 bc_barcodes(bc_obj)
 
-# get barcode for each sample in a list
+# get barcode for each sample
 bc_barcodes(bc_obj, unlist = FALSE)
+
 ###
 }

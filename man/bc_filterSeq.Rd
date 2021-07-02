@@ -8,7 +8,7 @@
 \alias{bc_filterSeq.character}
 \alias{bc_filterSeq.integer}
 \alias{bc_filterSeq.list}
-\title{Filter the reads by the QC threshold}
+\title{Filter the sequences by quality}
 \usage{
 bc_filterSeq(x, ...)
 
@@ -45,42 +45,43 @@ bc_filterSeq(x, ...)
 )
 }
 \arguments{
-\item{x}{file location, ShortReadQ, DNAStringSet, data.frame, integer vector
-or list of above data type.}
+\item{x}{A single or a list of Fastq file, ShortReadQ, DNAStringSet,
+data.frame, integer vector.}
 
 \item{...}{Additional arguments}
 
-\item{min_average_quality}{A number, sequence with average base smaller than
-the value are filtered.}
+\item{min_average_quality}{A single or a vector of numeric, indicating the
+threshold of the minimum average base quality of a sequence.}
 
-\item{min_read_length}{A integer, sequence with length shorter than the value
-are filtered.}
+\item{min_read_length}{A single or a vector of integer, specifying the length
+threshold of a sequence.}
 
-\item{N_threshold}{A integer, sequence with reads number less that the value
-are filtered.}
+\item{N_threshold}{A single or a vector of integer, specifying the maximum
+\code{N} in a sequence.}
 
-\item{sample_name}{A string vector, applicable when a list is used as input,
-it provides new sample_name for the output list.}
+\item{sample_name}{A string vector, rename the samples.}
 }
 \value{
 A ShortReadQ or DNAStringSet object with sequences passed the filters
 }
 \description{
-Apply sequence quality filter to remove low quality sequence.
+Apply quality filters to remove low quality sequence.
 }
 \examples{
 library(ShortRead)
 
 fq_file <- system.file("extdata", "simple.fq", package="Bc")
-# Read fastq files get ShortReadQ object
-sr <- readFastq(fq_file[1])
-# get DNAStringSet object
-ds <- sr@sread
 
 # apply filter to fastq files
 bc_filterSeq(fq_file)
+
+# Read fastq files get ShortReadQ object
+sr <- readFastq(fq_file[1])
 # apply filter to ShortReadQ
 bc_filterSeq(sr)
+
+# get DNAStringSet object
+ds <- sr@sread
 # apply filter to DNAStringSet
 bc_filterSeq(ds)
 

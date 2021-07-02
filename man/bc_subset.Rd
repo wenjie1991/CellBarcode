@@ -6,7 +6,7 @@
 \alias{+.BarcodeObj}
 \alias{-.BarcodeObj}
 \alias{*.BarcodeObj}
-\title{Subset operation of BarcodeObj object}
+\title{Manage barcodes or samples in a BarcodeObj}
 \usage{
 bc_subset(
   barcodeObj,
@@ -27,16 +27,16 @@ bc_subset(
 \arguments{
 \item{barcodeObj}{A BarcodeObj}
 
-\item{sample}{A vector or an expression, select the sample subset from
-BarcodeObj}
+\item{sample}{A vector or an expression, specifying the samples in the
+subsets. And in the expression, the metadata can be used as variable.}
 
-\item{barcode}{A vector of integer or string, select the barcode subset from
-BarcodeObj}
+\item{barcode}{A vector of integer or string, indicating the selected
+barcode.}
 
-\item{black_list}{A character vector. Remove the listed barcodes.}
+\item{black_list}{A character vector. Remove the barcodes in the black list.}
 
-\item{is_sample_quoted_exp}{A bool value. If the sample parameter is quoted
-expression or not}
+\item{is_sample_quoted_exp}{A bool value. If TRUE, indicating the
+expression in \emph{sample} argument is quoted.}
 
 \item{...}{Additional arguments}
 
@@ -44,23 +44,22 @@ expression or not}
 
 \item{barcodeObj_y}{A BarcodeObj}
 
-\item{white_list}{A character vector. Only keep the listed barcodes.}
+\item{white_list}{A character vector. Only barcodes in the white list kept.}
 }
 \value{
 A BarcodeObj
 }
 \description{
-The subset operators perform the sample and barcode management with
-BarcodeObj.
+Get a subsets of or join BarcodesObj.
 }
 \details{
 `bc_subset` and `[]` used for selecting samples barcodes.
 
-`+` used for combining two BarcodesObj
+`+` used for combining two BarcodesObj.
 
-`-` used for removing barcodes in a black_list from BarcodesObj
+`-` used for removing barcodes in a black_list.
 
-`*` used for selecting barcodes in a white_list from BarcodesObj
+`*` used for selecting barcodes in a white_list.
 }
 \examples{
 data(bc_obj)
@@ -71,7 +70,7 @@ bc_obj
 bc_subset(bc_obj, barcode = c("AACCTT", "AACCTT"))
 bc_obj[c("AGAG", "AAAG"), ]
 
-# Select by meta data
+# Select samples by meta data
 bc_meta(bc_obj)$phenotype <- c("l", "b")
 bc_meta(bc_obj)
 bc_subset(bc_obj, phenotype == "l")
@@ -83,7 +82,7 @@ bc_obj[, "test1"]
 bc_obj[, c("test1", "test2")]
 bc_subset(bc_obj, sample = "sample1_rep1", barcode = c("AACCTT", "AACCTT"))
 
-# Apply black list
+# Apply barcodes black list
 bc_subset(
   bc_obj, 
   sample = c("sample1_rep1", "sample1_rep2"), 
@@ -102,7 +101,7 @@ bc_cure_depth(bc_obj_join)
 bc_obj
 bc_obj - "AAAG"
 
-# Select barcode in white list
+# Select barcodes in white list
 bc_obj
 bc_obj * "AAAG"
 ###

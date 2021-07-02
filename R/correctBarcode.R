@@ -1,17 +1,17 @@
 # TODO: Remove barcode reads distribution graph with log x-axis
 # Correlation between two samples w/o distribution information
 
-#' Filter barcode by count
+#' Filter barcodes by count
 #'
-#' The function applies the filter on the reads count or the UMI counts.
+#' The function filter barcodes by applying the filter on the reads count or the UMI count.
 #'
-#' @param barcodeObj A BarcodeObj
-#' @param depth Numeric, only a sequence with counts larger than the threshold
-#' will be kept.
-#' @param isUpdate Bool. The function will use cleanBc if it exists, when it's
-#' false, the messyBc will be used instead cleanBc to perform the filtering. In
-#' the case that no cleanBc is available, messyBc is used.
-#' @return A BarcodeObj
+#' @param barcodeObj A BarcodeObj.
+#' @param depth A single or vector of numeric, specifying the threshold
+#' of the threshold of minimum count for a sequence to kept.
+#' @param isUpdate A bool, if TRUE, the cleanBc element in BarcodeObj will
+#' be used, otherwise the messyBc element will be used. In the case that no
+#' cleanBc is available, messyBc will always be used.
+#' @return A BarcodeObj with cleanBc update.
 #'
 #' @examples
 #' data(bc_obj)
@@ -43,14 +43,11 @@
 #' (bc_cured <- bc_cure_depth(bc_obj, depth=5))
 #' bc_2matrix(bc_cured)
 #' 
-#' # Do the clustering, integre the less abundent barcodes to the more abundent
-#' # one by hamming distance <= 1
-#' bc_cure_cluster(bc_cured, distance = 1)
-#'
 #' # Use UMI information to filter the barcode <= 5 UMI-barcode tags
 #' bc_umi_cured <- bc_cure_umi(bc_obj, depth =0, doFish=TRUE, isUniqueUMI=TRUE)
 #' bc_cure_depth(bc_umi_cured, depth = 5)
-#' ##
+#'
+#' ### 
 #' @export
 bc_cure_depth <- function(
   barcodeObj
@@ -87,21 +84,23 @@ bc_cure_depth <- function(
 
 #' Merge barcodes by editing distance
 #'
-#' This function performs the clustering to merge the barcodes with similar sequence.
-#' This function only appliable to the BarcodeObj with cleanBc element.
+#' This function performs the clustering to merge the barcodes with similar
+#' sequence. This function is only appliable to the BarcodeObj with a cleanBc
+#' element.
 #'
-#' @param barcodeObj A BarcodeObj
-#' @param distance Integer, the editing distance threshold if two sequence is
-#' similar enough to be merged
-#' @param dist_method A String, currently it only be "hamm". The hamming
-#' distance is used to evaluate the similarity between two barcodes.
-#' @param merge_method A String, currently only "greedy" is available. Comparing
-#' the least abundent barcode to the most abundent ones, merge the least
-#' abundent to the most abundent ones.
-#' @param barcode_n Integer, the max sequences number should be. When the most
-#' abundent barcodes are satisfied this number the merging finished, and all the
-#' rest sub-abundent sequences are removed. 
-#' @return A BarcodeObj
+#' @param barcodeObj A BarcodeObj.
+#' @param distance A sigle or a vector of integer, specifying he editing
+#' distance threshold if two sequence is similar enough to be merged.
+#' @param dist_method A  character string specifying the distance algorithm used
+#' to evaluate the barcodes similarity. Currently it only be "hamm".
+#' @param merge_method A character string specifying the algorithm used to
+#' perform the clustering merging of two barcodes. Currently only "greedy" is
+#' available, the least abundent barcode to the most abundent ones, merge the
+#' least abundent to the most abundent ones.
+#' @param barcode_n A single or vector of integer, specifying the max sequences
+#' number should be. When the most abundent barcodes are satisfied this number
+#' the merging finished, and all the rest sub-abundent sequences are removed. 
+#' @return A BarcodeObj with cleanBc element updated.
 #' @examples
 #' data(bc_obj)
 #'
@@ -130,16 +129,12 @@ bc_cure_depth <- function(
 #'
 #' # Remove barcodes with depth <= 5
 #' (bc_cured <- bc_cure_depth(bc_obj, depth=5))
-#' bc_2matrix(bc_cured)
 #' 
-#' # Do the clustering, integre the less abundent barcodes to the more abundent
+#' # Do the clustering, merge the less abundent barcodes to the more abundent
 #' # one by hamming distance <= 1 
 #' bc_cure_cluster(bc_cured, distance = 1)
-#'
-#' # Use UMI information to filter the barcode <= 5 UMI-barcode tags
-#' bc_umi_cured <- bc_cure_umi(bc_obj, depth =0, doFish=TRUE, isUniqueUMI=TRUE)
-#' bc_cure_depth(bc_umi_cured, depth = 5)
-#'
+#' 
+#' ###
 #' @export
 bc_cure_cluster <- function(
   barcodeObj
@@ -201,27 +196,30 @@ bc_cure_cluster <- function(
   barcodeObj
 }
 
-#' Filter on UMI-barcode 
+#' Filter on UMI-barcode tags
 #'
-#' When the UMI is used and extracted by bc_extract, this function applies the
-#' filtering on the UMI-barcode tags.  This function read in data in messyBc
-#' element and create a cleanBc element in BarcodeObj.
+#' When the UMI is used and identified by bc_extract, this function applies
+#' the filtering on the UMI-barcode tags.  This function read in data in
+#' messyBc element and create a cleanBc element in BarcodeObj.
 #'
 #' @param barcodeObj A BarcodeObj
-#' @param depth Numeric, the UMI-sequence tags counts threshold. Only the
-#' barcode with UMI-barcode larger than the threshold are considered potential
-#' true barcodes.
-#' @param doFish Bool value, the "fishing" process is re-counting the UMI with
-#' potential true barcodes, and including those UMI-barcodes tags which are not
+#' @param depth A single or a vector of numeric, specifying the UMI-sequence
+#' tags counts threshold. Only the barcode with UMI-barcode larger than the
+#' threshold are considered barcodes.
+#' @param doFish A single or a vector of bool value, if TRUE, the "fishing"
+#' process will be applied to re-counting the UMI with  barcodes, which are not
 #' satisfied depth threshold.
-#' @param isUniqueUMI Bool value, In the case that a UMI are with several
-#' barcodes. If you believe that the UMI is absolute unique, then only the
-#' dominant sequence is chosen for each UMI.
+#' @param isUniqueUMI A single or a vector of bool value. In the case that a UMI
+#' relates to several barcodes. If you believe that the UMI is absolute unique,
+#' then only the dominant sequence is chosen for each UMI.
 #' @return A BarcodeObj
-#' @details The priority of potential steps are:
-#'   1. (optional) Find dominant sequence in each UMI.
-#'   2. UMI-barcode depth filtering.
-#'   3. (optional) Fising the UMI with low UMI-barcode depth.
+#' @details When invoke this function, the order of each steps are:
+#' \enumerate{
+#'   \item (optional) Find dominant sequence in each UMI.
+#'   \item UMI-barcode depth filtering.
+#'   \item (optional) Fising the UMI with low UMI-barcode depth.
+#' }
+#'
 #' @examples
 #' data(bc_obj)
 #'
@@ -247,14 +245,6 @@ bc_cure_cluster <- function(
 #' pattern <- "([ACTG]{3})TCGATCGATCGA([ACTG]+)ATCGATCGATC"
 #' bc_obj <- bc_extract(list(test = d1), pattern, sample_name=c("test"), 
 #'   pattern_type=c(UMI=1, barcode=2))
-#'
-#' # Remove barcodes with depth <= 5
-#' (bc_cured <- bc_cure_depth(bc_obj, depth=5))
-#' bc_2matrix(bc_cured)
-#' 
-#' # Do the clustering, integre the less abundent barcodes to the more abundent
-#' # one by hamming  distance <= 1 
-#' bc_cure_cluster(bc_cured, distance = 1)
 #'
 #' # Use UMI information to filter the barcode <= 5 UMI-barcode tags
 #' bc_umi_cured <- bc_cure_umi(bc_obj, depth =0, doFish=TRUE, isUniqueUMI=TRUE)

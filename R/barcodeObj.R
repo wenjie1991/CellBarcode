@@ -13,33 +13,32 @@ check_sample_name <- function(barcodeObj) {
   }
 }
 
-#' Subset operation of BarcodeObj object
+#' Manage barcodes or samples in a BarcodeObj
 #'
-#' The subset operators perform the sample and barcode management with
-#' BarcodeObj.
+#' Get a subsets of or join BarcodesObj.
 #'
 #' @param barcodeObj A BarcodeObj
-#' @param barcode A vector of integer or string, select the barcode subset from
-#' BarcodeObj
-#' @param sample A vector or an expression, select the sample subset from
-#' BarcodeObj
-#' @param black_list A character vector. Remove the listed barcodes.
-#' @param white_list A character vector. Only keep the listed barcodes.
+#' @param barcode A vector of integer or string, indicating the selected
+#' barcode.
+#' @param sample A vector or an expression, specifying the samples in the
+#' subsets. And in the expression, the metadata can be used as variable. 
+#' @param black_list A character vector. Remove the barcodes in the black list.
+#' @param white_list A character vector. Only barcodes in the white list kept.
 #' @param barcodeObj_x A BarcodeObj
 #' @param barcodeObj_y A BarcodeObj
-#' @param is_sample_quoted_exp A bool value. If the sample parameter is quoted
-#' expression or not
+#' @param is_sample_quoted_exp A bool value. If TRUE, indicating the
+#' expression in \emph{sample} argument is quoted.
 #' @param ... Additional arguments
 #' @return A BarcodeObj
 #'
 #' @details
 #' `bc_subset` and `[]` used for selecting samples barcodes.
 #'
-#' `+` used for combining two BarcodesObj
+#' `+` used for combining two BarcodesObj.
 #'
-#' `-` used for removing barcodes in a black_list from BarcodesObj
+#' `-` used for removing barcodes in a black_list.
 #'
-#' `*` used for selecting barcodes in a white_list from BarcodesObj
+#' `*` used for selecting barcodes in a white_list.
 #'
 #' @examples
 #' data(bc_obj)
@@ -50,7 +49,7 @@ check_sample_name <- function(barcodeObj) {
 #' bc_subset(bc_obj, barcode = c("AACCTT", "AACCTT"))
 #' bc_obj[c("AGAG", "AAAG"), ]
 #'
-#' # Select by meta data
+#' # Select samples by meta data
 #' bc_meta(bc_obj)$phenotype <- c("l", "b")
 #' bc_meta(bc_obj)
 #' bc_subset(bc_obj, phenotype == "l")
@@ -62,7 +61,7 @@ check_sample_name <- function(barcodeObj) {
 #' bc_obj[, c("test1", "test2")]
 #' bc_subset(bc_obj, sample = "sample1_rep1", barcode = c("AACCTT", "AACCTT"))
 #' 
-#' # Apply black list
+#' # Apply barcodes black list
 #' bc_subset(
 #'   bc_obj, 
 #'   sample = c("sample1_rep1", "sample1_rep2"), 
@@ -81,7 +80,7 @@ check_sample_name <- function(barcodeObj) {
 #' bc_obj
 #' bc_obj - "AAAG"
 #' 
-#' # Select barcode in white list
+#' # Select barcodes in white list
 #' bc_obj
 #' bc_obj * "AAAG"
 #' ###
@@ -228,22 +227,23 @@ bc_subset <- function(
 
 #' Get barcode sequences
 #' 
-#' This function retrieve the barcode sequences from cleanBc element in
+#' This function retrieves the barcode sequences from cleanBc element in
 #' BarcodeObj.
 #'
 #' @param barcodeObj A BarcodeObj.
 #' @param unlist A bool value, if TRUE, then the function will return a vector
-#' of unique barcodes from all samples; otherwise a list will be returned, each
+#' of unique barcodes in all samples; otherwise a list will be returned, each
 #' element is corresponding to a sample.
-#' @return A character vector or a list
+#' @return A character vector or a list.
 #' @examples
 #' data(bc_obj)
 #'
-#' # get unique barcode vector from all samples
+#' # get unique barcode vector
 #' bc_barcodes(bc_obj)
 #' 
-#' # get barcode for each sample in a list
+#' # get barcode for each sample
 #' bc_barcodes(bc_obj, unlist = FALSE)
+#'
 #' ###
 #' @export
 bc_barcodes <- function(barcodeObj, unlist = TRUE) {
@@ -261,10 +261,13 @@ bc_barcodes <- function(barcodeObj, unlist = TRUE) {
   }
 }
 
-#' Access sample names in BarcodeObj
+#' Sample names in BarcodeObj
 #'
-#' @param barcodeObj A BarcodeObj
-#' @param value A string vector, the new sample names
+#' Function to get or set sample name.
+#'
+#' @param barcodeObj A BarcodeObj.
+#' @param value A string vector with the length of the samle number. The new
+#' sample names.
 #' @return A character vector
 #' @examples
 #' data(bc_obj)
@@ -305,12 +308,17 @@ bc_names <- function(barcodeObj) {
   barcodeObj
 }
 
-#' Access metadata in BarcodeObj
+#' Metadata in Barcode
+#' 
+#' Function to get or set metadata in BarcodeObj.
 #'
-#' @param barcodeObj A BarcodeObj
-#' @param key A string, the meta data record name
-#' @param value A string vector, the meta data record value
-#' @return A BarcodeObj
+#' @param barcodeObj A BarcodeObj.
+#' @param key A string, the meta data record name.
+#' @param value A string vector with the length of sample number in the
+#' BarcodeObj, or a data.frame with the length of the sample number, the new
+#' meta data record value.  If a data.frame is given, the rownames of the
+#' data.frame should be the sample names.
+#' @return A data.frame
 #' @examples
 #' data(bc_obj)
 #' 
@@ -373,24 +381,33 @@ bc_meta <- function(barcodeObj) {
 
 
 #' Transform BarcodeObj into other data type
-#' 
-#' @param barcodeObj A BarcodeObj
-#' @return data.frame
+#'
+#' Transform BarcodeObj into `data.frame`, `data.table` and matrix.
+#'
+#' @param barcodeObj A BarcodeObj.
+#' @return A data.frame, with two columns of `barcode_seq` and `count`.
 #' @examples
 #' data(bc_obj)
 #'
 #' bc_obj <- bc_cure_depth(bc_obj)
-#'
+#' 
+#' # get data.frame
 #' bc_2df(bc_obj)
+#'
+#' # get data.table
 #' bc_2dt(bc_obj)
+#'
+#' # get matrix
 #' bc_2matrix(bc_obj)
+#'
+#' ###
 #' @export
 bc_2df <- function(barcodeObj) {
   bc_2dt(barcodeObj) %>% as.data.frame
 }
 
 #' @rdname bc_2df
-#' @return data.table
+#' @return A data.table, with two columns of `barcode_seq` and `count`.
 #' @export
 bc_2dt <- function(barcodeObj) {
   # TODO: enable messyBc?
@@ -442,7 +459,9 @@ count_BarcodeObj <- function(barcodeObj) {
   summary_res
 }
 
-#' Format the summary of BarcodeObj
+#' Format BarcodeObj
+#'
+#' Format the summary of BarcodeObj for pretty print.
 #'
 #' @param x A BarcodeObj
 #' @param ... Additional arguments
@@ -452,8 +471,9 @@ count_BarcodeObj <- function(barcodeObj) {
 #'
 #' # format BarcodeObj for pretty print
 #' format(bc_obj)
+#'
 #' ###
-#' @seealso [Bc::print.BarcodeObj]
+#' @seealso \code{\link[Bc::print.BarcodeObj]{Bc::print.BarcodeObj}}
 #' @export
 format.BarcodeObj <- function(x, ...) {
 
@@ -524,7 +544,7 @@ $cleanBc: {cleanBc_n} Samples for cleaned barcodes
 #' # print BarcodeObj
 #' print(bc_obj)
 #' ###
-#' @seealso [Bc::format.BarcodeObj] format BarcodeObj for pretty print
+#' @seealso \code{\link[Bc::format.BarcodeObj]{Bc::format.BarcodeObj}}
 #' @export
 print.BarcodeObj <- function(x, ...) {
   cat(format(x), "\n")
