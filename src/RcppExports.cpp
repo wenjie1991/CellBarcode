@@ -6,22 +6,26 @@
 using namespace Rcpp;
 
 // seq_correct
-List seq_correct(std::vector<std::string> seq, IntegerVector count, int count_threshold, int hamm_dist_threshold);
-RcppExport SEXP _Bc_seq_correct(SEXP seqSEXP, SEXP countSEXP, SEXP count_thresholdSEXP, SEXP hamm_dist_thresholdSEXP) {
+List seq_correct(std::vector<std::string> seq, IntegerVector count, int count_threshold, int dist_threshold, int dist_method, int insert_cost, int delete_cost, int replace_cost);
+RcppExport SEXP _Bc_seq_correct(SEXP seqSEXP, SEXP countSEXP, SEXP count_thresholdSEXP, SEXP dist_thresholdSEXP, SEXP dist_methodSEXP, SEXP insert_costSEXP, SEXP delete_costSEXP, SEXP replace_costSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::vector<std::string> >::type seq(seqSEXP);
     Rcpp::traits::input_parameter< IntegerVector >::type count(countSEXP);
     Rcpp::traits::input_parameter< int >::type count_threshold(count_thresholdSEXP);
-    Rcpp::traits::input_parameter< int >::type hamm_dist_threshold(hamm_dist_thresholdSEXP);
-    rcpp_result_gen = Rcpp::wrap(seq_correct(seq, count, count_threshold, hamm_dist_threshold));
+    Rcpp::traits::input_parameter< int >::type dist_threshold(dist_thresholdSEXP);
+    Rcpp::traits::input_parameter< int >::type dist_method(dist_methodSEXP);
+    Rcpp::traits::input_parameter< int >::type insert_cost(insert_costSEXP);
+    Rcpp::traits::input_parameter< int >::type delete_cost(delete_costSEXP);
+    Rcpp::traits::input_parameter< int >::type replace_cost(replace_costSEXP);
+    rcpp_result_gen = Rcpp::wrap(seq_correct(seq, count, count_threshold, dist_threshold, dist_method, insert_cost, delete_cost, replace_cost));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_Bc_seq_correct", (DL_FUNC) &_Bc_seq_correct, 4},
+    {"_Bc_seq_correct", (DL_FUNC) &_Bc_seq_correct, 8},
     {NULL, NULL, 0}
 };
 

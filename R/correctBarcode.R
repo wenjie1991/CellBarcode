@@ -92,7 +92,8 @@ bc_cure_depth <- function(
 #' @param distance A sigle or a vector of integer, specifying he editing
 #' distance threshold if two sequence is similar enough to be merged.
 #' @param dist_method A  character string specifying the distance algorithm used
-#' to evaluate the barcodes similarity. Currently it only be "hamm".
+#' to evaluate the barcodes similarity. It can be "hamm" for Hamming distance or
+#' "leven" for Levenshtein distance.
 #' @param merge_method A character string specifying the algorithm used to
 #' perform the clustering merging of two barcodes. Currently only "greedy" is
 #' available, the least abundent barcode to the most abundent ones, merge the
@@ -100,6 +101,10 @@ bc_cure_depth <- function(
 #' @param barcode_n A single or vector of integer, specifying the max sequences
 #' number should be. When the most abundent barcodes are satisfied this number
 #' the merging finished, and all the rest sub-abundent sequences are removed. 
+#' @param dist_costs A list, the costs of the events when calculate distance
+#' between to barcode sequences, applicable when Levenshtein distance is 
+#' applied. The names of vector can be of "insert", "delete" and 
+#' "replace". The default cost is 1.
 #' @return A BarcodeObj with cleanBc element updated.
 #' @examples
 #' data(bc_obj)
@@ -134,6 +139,10 @@ bc_cure_depth <- function(
 #' # one by hamming distance <= 1 
 #' bc_cure_cluster(bc_cured, distance = 1)
 #' 
+#' # Levenshtein distance <= 1
+#' bc_cure_cluster(bc_cured, distance = 2, dist_method = "leven",
+#'   dist_costs = list("insert" = 2, "replace" = 1, "delete" = 2))
+#' 
 #' ###
 #' @export
 bc_cure_cluster <- function(
@@ -142,6 +151,7 @@ bc_cure_cluster <- function(
   , dist_method = "hamm"
   , merge_method = "greedy"
   , barcode_n = 10000
+  , dist_costs = list("replace" = 1, "insert" = 1, "delete" = 1)
   ) {
   # TODO: Add more clustering methods
 
@@ -165,7 +175,8 @@ bc_cure_cluster <- function(
           seq_v, 
           count_v, 
           parameter_df[i, "barcode_n"], 
-          parameter_df[i, "distance"]
+          parameter_df[i, "distance"],
+          1
         )
       }
     )
@@ -188,6 +199,41 @@ bc_cure_cluster <- function(
     names(cleanBc) <- rownames(barcodeObj$metadata)
     # TODO: The cleanProc data structure
     #     names(cleanProc) <- rownames(barcodeObj$metadata)
+  } else if (dist_method == "leven" & merge_method == "greedy") {
+
+    insert_costs = ifelse(is.null(dist_costs$insert), 1, dist_costs$insert)
+    delete_costs = ifelse(is.null(dist_costs$delete), 1, dist_costs$delete)
+    replace_costs = ifelse(is.null(dist_costs$replace), 1, dist_costs$replace)
+
+    correct_out <- lapply(1:length(cleanBc),
+      function(i) {
+        d <- cleanBc[[i]]
+        seq_v <- d$barcode_seq
+        count_v <- d$count
+
+        # run levenshtein clustering
+        seq_correct(
+          seq_v, 
+          count_v, 
+          parameter_df[i, "barcode_n"], 
+          parameter_df[i, "distance"],
+          2,
+          insert_costs,
+          delete_costs,
+          replace_costs
+        )
+      }
+    )
+
+    ## Prepare output
+    cleanBc <- lapply(correct_out,
+      function(d) {
+        ##  The result is default ordered
+        data.frame(d$seq_freq[order(d$seq_freq$count, decreasing = TRUE), ])
+      }
+    )
+
+    names(cleanBc) <- rownames(barcodeObj$metadata)
   } else {
     stop("dist_method or merge_method is not valid.")
   }

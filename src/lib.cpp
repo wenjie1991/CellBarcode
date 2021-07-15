@@ -1,5 +1,48 @@
 #include <Rcpp.h>
+#include <algorithm>
+#include <vector>
 using namespace Rcpp;
+
+//' Levenshtein distance
+//'
+//' This function return Levenshtein distance between two string.
+//' source: https://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance#C++
+int generalized_levenshtein_distance(
+    const std::string source, 
+    const std::string target,
+    int insert_cost = 1,
+    int delete_cost = 1,
+    int replace_cost = 1) {
+
+  if (source.size() > target.size()) {
+    return generalized_levenshtein_distance(target, source, delete_cost, insert_cost, replace_cost);
+  }
+
+  int min_size = source.size(), max_size = target.size();
+  std::vector<int> lev_dist(min_size + 1);
+
+  lev_dist[0] = 0;
+  for (int i = 1; i <= min_size; ++i) {
+    lev_dist[i] = lev_dist[i - 1] + delete_cost;
+  }
+
+  for (int j = 1; j <= max_size; ++j) {
+    int previous_diagonal = lev_dist[0], previous_diagonal_save;
+    lev_dist[0] += insert_cost;
+
+    for (int i = 1; i <= min_size; ++i) {
+      previous_diagonal_save = lev_dist[i];
+      if (source[i - 1] == target[j - 1]) {
+        lev_dist[i] = previous_diagonal;
+      } else {
+        lev_dist[i] = std::min(std::min(lev_dist[i - 1] + delete_cost, lev_dist[i] + insert_cost), previous_diagonal + replace_cost);
+      }
+      previous_diagonal = previous_diagonal_save;
+    }
+  }
+
+  return lev_dist[min_size];
+}
 
 //' Hamming Distance
 //' 
@@ -39,7 +82,15 @@ bool sortbycount(const std::pair<std::string, int> &a, const std::pair<std::stri
 //' @param count_threshold An integer the maximum barcodes number
 //' @param hamm_dist_threshold An integer the hamming distance threshold
 // [[Rcpp::export]]
-List seq_correct(std::vector<std::string> seq, IntegerVector count, int count_threshold, int hamm_dist_threshold) {
+List seq_correct(
+    std::vector<std::string> seq, 
+    IntegerVector count, 
+    int count_threshold, 
+    int dist_threshold, 
+    int dist_method = 1, 
+    int insert_cost = 1,
+    int delete_cost = 1,
+    int replace_cost = 1) {
 
   // candidates: all the nodes are candidates
   std::vector<std::pair<std::string, int>> cand;
@@ -101,7 +152,11 @@ List seq_correct(std::vector<std::string> seq, IntegerVector count, int count_th
       // find out if tiptoe connect to branch
       std::vector<std::pair<std::string, int>>::iterator it = cand.begin();
       while (it != tiptoe) {
-        h_dist = hamm_dist(it->first, tiptoe->first);
+        if (dist_method == 2) {
+          h_dist = generalized_levenshtein_distance(it->first, tiptoe->first, insert_cost, delete_cost, replace_cost);
+        } else {
+          h_dist = hamm_dist(it->first, tiptoe->first);
+        }
         // record the min_dist
         if (h_dist < min_dist) {
           min_dist = h_dist;
@@ -114,7 +169,7 @@ List seq_correct(std::vector<std::string> seq, IntegerVector count, int count_th
         it++;
       }
 
-      if (min_dist <= hamm_dist_threshold) {
+      if (min_dist <= dist_threshold) {
         // add the tiptoe to the branch node
         min_it->second += tiptoe->second;
         //std::cout<<min_it->second<<std::endl;
