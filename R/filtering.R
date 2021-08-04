@@ -40,113 +40,113 @@ bc_filterSeq <- function(x, ...) UseMethod("bc_filterSeq")
 #' @rdname bc_filterSeq
 #' @export
 bc_filterSeq.ShortReadQ <- function(
-  x, 
-  min_average_quality = 30, 
-  min_read_length = 0,
-  N_threshold = 0, ...) {
+    x, 
+    min_average_quality = 30, 
+    min_read_length = 0,
+    N_threshold = 0, ...) {
 
-  # good base quality filter
-  goodq <- ShortRead::srFilter(function(x) { 
-    apply(methods::as(Biostrings::quality(x), "matrix"), 1, mean, na.rm=TRUE) >= 
-      min_average_quality 
-  }, name="GoodQualityBases")
+    # good base quality filter
+    goodq <- ShortRead::srFilter(function(x) { 
+        apply(methods::as(Biostrings::quality(x), "matrix"), 1, mean, na.rm=TRUE) >= 
+            min_average_quality 
+    }, name="GoodQualityBases")
 
-  # good sequences length filter
-  goodlength <- ShortRead::srFilter(function(x) { width(ShortRead::sread(x)) >= 
-    min_read_length}, name="GoodReadLength")
+    # good sequences length filter
+    goodlength <- ShortRead::srFilter(function(x) { width(ShortRead::sread(x)) >= 
+        min_read_length}, name="GoodReadLength")
 
-  # 'N' nucleic filter
-  goodN <- ShortRead::nFilter(threshold = N_threshold)
+    # 'N' nucleic filter
+    goodN <- ShortRead::nFilter(threshold = N_threshold)
 
-  goodFinal <- ShortRead::compose(goodlength, goodq, goodN)
-  x[goodFinal(x)]
+    goodFinal <- ShortRead::compose(goodlength, goodq, goodN)
+    x[goodFinal(x)]
 }
 
 #' @rdname bc_filterSeq
 #' @export
 bc_filterSeq.DNAStringSet <- function(
-  x,
-  min_read_length = 0,
-  N_threshold = 0, ...) {
+    x,
+    min_read_length = 0,
+    N_threshold = 0, ...) {
 
-  goodlength <- ShortRead::srFilter(function(x) {
-    width(x) >= min_read_length
-  }, name="GoodReadLength")
+    goodlength <- ShortRead::srFilter(function(x) {
+        width(x) >= min_read_length
+    }, name="GoodReadLength")
 
-  goodN <- ShortRead::nFilter(threshold = N_threshold)
-  goodFinal <- ShortRead::compose(goodlength, goodN)
-  x[goodFinal(x)]
+    goodN <- ShortRead::nFilter(threshold = N_threshold)
+    goodFinal <- ShortRead::compose(goodlength, goodN)
+    x[goodFinal(x)]
 }
 
 #' @rdname bc_filterSeq
 #' @export
 bc_filterSeq.data.frame <- function(x,
-  min_read_length = 0,
-  N_threshold = 0, ...) {
+    min_read_length = 0,
+    N_threshold = 0, ...) {
 
-  sequences <- x$seq
-  freq <- x$freq
-  x <- Biostrings::DNAStringSet(rep(sequences, freq))
+    sequences <- x$seq
+    freq <- x$freq
+    x <- Biostrings::DNAStringSet(rep(sequences, freq))
 
-  bc_filterSeq(x, min_read_length = min_read_length, N_threshold = N_threshold)
+    bc_filterSeq(x, min_read_length = min_read_length, N_threshold = N_threshold)
 }
 
 #' @rdname bc_filterSeq
 #' @export
 bc_filterSeq.character <- function(x,
-  min_average_quality = 30,
-  min_read_length = 0,
-  N_threshold = 0,
-  sample_name = basename(x), ...) {
+    min_average_quality = 30,
+    min_read_length = 0,
+    N_threshold = 0,
+    sample_name = basename(x), ...) {
 
-  # TODO: when sample_name length is not right ... 
-  fq_list <- lapply(x, ShortRead::readFastq)
-  names(fq_list) <- sample_name
+    # TODO: when sample_name length is not right ... 
+    fq_list <- lapply(x, ShortRead::readFastq)
+    names(fq_list) <- sample_name
 
-  bc_filterSeq(
-    fq_list,
-    min_average_quality = min_average_quality,
-    min_read_length = min_read_length,
-    N_threshold = N_threshold)
+    bc_filterSeq(
+        fq_list,
+        min_average_quality = min_average_quality,
+        min_read_length = min_read_length,
+        N_threshold = N_threshold)
 }
 
 #' @rdname bc_filterSeq
 #' @export
 bc_filterSeq.integer <- function(x, min_read_length = 0, N_threshold = 0, ...) {
 
-  # TODO: Use Rle?
-  x <- Biostrings::DNAStringSet(rep(names(x), x))
-  bc_filterSeq(x, min_read_length = min_read_length, N_threshold = N_threshold)
+    # TODO: Use Rle?
+    x <- Biostrings::DNAStringSet(rep(names(x), x))
+    bc_filterSeq(x, min_read_length = min_read_length, N_threshold = N_threshold)
 }
 
 #' @rdname bc_filterSeq
 #' @export
 bc_filterSeq.list <- function(
-  x, 
-  min_average_quality = 30,
-  min_read_length = 0,
-  N_threshold = 0,
-  sample_name = names(x), ...) {
+    x, 
+    min_average_quality = 30,
+    min_read_length = 0,
+    N_threshold = 0,
+    sample_name = names(x), ...) {
 
 
-  if (is(x[[1]], "ShortReadQ") | is(x[[1]], "character")) {
-    output <- lapply(
-      x,
-      bc_filterSeq,
-      min_average_quality = min_average_quality,
-      min_read_length = min_read_length,
-      N_threshold = N_threshold)
+    if (is(x[[1]], "ShortReadQ") | is(x[[1]], "character")) {
+        output <- lapply(
+            x,
+            bc_filterSeq,
+            min_average_quality = min_average_quality,
+            min_read_length = min_read_length,
+            N_threshold = N_threshold)
 
-    names(output) <- sample_name
-    output
-  } else {
-    output <- lapply(
-      x,
-      bc_filterSeq,
-      min_read_length = min_read_length,
-      N_threshold = N_threshold)
+        names(output) <- sample_name
+        output
+    } else {
+        output <- lapply(
+            x,
+            bc_filterSeq,
+            min_read_length = min_read_length,
+            N_threshold = N_threshold)
 
-    names(output) <- sample_name
-    output
-  }
+        names(output) <- sample_name
+        output
+    }
 }

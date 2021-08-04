@@ -4,3 +4,6 @@ devtools.R
 ^LICENSE\.md$
 ./data/
 ./vignettes
+.clangd
+./bk/*
+./compile_commands.json

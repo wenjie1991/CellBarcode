@@ -16,8 +16,8 @@
 #' @param metadata A data.frame with each row of a sample, each column is a
 #' meta data record. 
 #' @param maxLDist A integer. The mismatch threshold for barcode matching, when
-#' maxLDist is 0, the \code{\link[stringr::str_match]{stringr::str_match}}  is
-#' invoked, otherwise \code{\link[utils::aregexec]{utils::aregexec}} is invoked.
+#' maxLDist is 0, the \code{\link[stringr]{str_match}}  is
+#' invoked, otherwise \code{\link[utils]{aregexec}} is invoked.
 #' @param pattern_type A vector. It defines the barcode (and UMI) capture
 #' group. See Details.
 #' @param costs A named list, applicable when maxLDist > 0, specifying the
@@ -93,30 +93,30 @@
 #'
 #' # Extract UMI and barcode
 #' d1 <- data.frame(
-#'   seq = c(
-#'     "ACTTCGATCGATCGAAAAGATCGATCGATC",
-#'     "AATTCGATCGATCGAAGAGATCGATCGATC",
-#'     "CCTTCGATCGATCGAAGAAGATCGATCGATC",
-#'     "TTTTCGATCGATCGAAAAGATCGATCGATC",
-#'     "AAATCGATCGATCGAAGAGATCGATCGATC",
-#'     "CCCTCGATCGATCGAAGAAGATCGATCGATC",
-#'     "GGGTCGATCGATCGAAAAGATCGATCGATC",
-#'     "GGATCGATCGATCGAAGAGATCGATCGATC",
-#'     "ACTTCGATCGATCGAACAAGATCGATCGATC",
-#'     "GGTTCGATCGATCGACGAGATCGATCGATC",
-#'     "GCGTCCATCGATCGAAGAAGATCGATCGATC"
-#'     ),
-#'   freq = c(
-#'     30, 60, 9, 10, 14, 5, 10, 30, 6, 4 , 6
+#'     seq = c(
+#'         "ACTTCGATCGATCGAAAAGATCGATCGATC",
+#'         "AATTCGATCGATCGAAGAGATCGATCGATC",
+#'         "CCTTCGATCGATCGAAGAAGATCGATCGATC",
+#'         "TTTTCGATCGATCGAAAAGATCGATCGATC",
+#'         "AAATCGATCGATCGAAGAGATCGATCGATC",
+#'         "CCCTCGATCGATCGAAGAAGATCGATCGATC",
+#'         "GGGTCGATCGATCGAAAAGATCGATCGATC",
+#'         "GGATCGATCGATCGAAGAGATCGATCGATC",
+#'         "ACTTCGATCGATCGAACAAGATCGATCGATC",
+#'         "GGTTCGATCGATCGACGAGATCGATCGATC",
+#'         "GCGTCCATCGATCGAAGAAGATCGATCGATC"
+#'         ),
+#'     freq = c(
+#'         30, 60, 9, 10, 14, 5, 10, 30, 6, 4 , 6
 #'     )
 #'   ) 
 #' # barcode backbone with UMI and barcode
 #' pattern <- "([ACTG]{3})TCGATCGATCGA([ACTG]+)ATCGATCGATC"
 #' bc_extract(
-#'   list(test = d1), 
-#'   pattern, 
-#'   sample_name=c("test"), 
-#'   pattern_type=c(UMI=1, barcode=2))
+#'     list(test = d1), 
+#'     pattern, 
+#'     sample_name=c("test"), 
+#'     pattern_type=c(UMI=1, barcode=2))
 #'
 #' ###
 #' @export
@@ -133,295 +133,295 @@ bc_extract <- function(...) UseMethod("bc_extract")
 #' @rdname bc_extract
 #' @export
 bc_extract.data.frame <- function(
-  x, 
-  pattern = "", 
-  sample_name = NULL, 
-  maxLDist = 0, 
-  pattern_type = c(barcode = 1), 
-  costs = list(sub = 1, ins = 99, del = 99), 
-  ordered = TRUE, ...) {
+    x, 
+    pattern = "", 
+    sample_name = NULL, 
+    maxLDist = 0, 
+    pattern_type = c(barcode = 1), 
+    costs = list(sub = 1, ins = 99, del = 99), 
+    ordered = TRUE, ...) {
 
-  # sequence frequecy
-  reads_freq <- x$freq
-  # sequence
-  reads_seq <- x$seq
+    # sequence frequecy
+    reads_freq <- x$freq
+    # sequence
+    reads_seq <- x$seq
 
-  # if maxLDist > 0, use utils::aregexec to match the barcode else use
-  # stringr::str_match to perform the barcode match. The stringr::str_match is
-  # faster
-  if (maxLDist > 0) {
-    # regular expression match
-    m <- utils::aregexec(
-      pattern, 
-      reads_seq, 
-      fixed = FALSE, 
-      max.distance = maxLDist, 
-      costs = costs
-    )
+    # if maxLDist > 0, use utils::aregexec to match the barcode else use
+    # stringr::str_match to perform the barcode match. The stringr::str_match is
+    # faster
+    if (maxLDist > 0) {
+        # regular expression match
+        m <- utils::aregexec(
+            pattern, 
+            reads_seq, 
+            fixed = FALSE, 
+            max.distance = maxLDist, 
+            costs = costs
+        )
 
-    # captured sequence
-    seq_l <- regmatches(reads_seq, m)
+        # captured sequence
+        seq_l <- regmatches(reads_seq, m)
 
-    # matched sequence
-    seq_v <- plyr::laply(seq_l, function(x) { x[1] })
-    # captured barcode
-    barcode_v <- plyr::laply(seq_l, function(x) { 
-      x[pattern_type["barcode"] + 1] 
-    })
+        # matched sequence
+        seq_v <- plyr::laply(seq_l, function(x) { x[1] })
+        # captured barcode
+        barcode_v <- plyr::laply(seq_l, function(x) { 
+            x[pattern_type["barcode"] + 1] 
+        })
 
-    if ("UMI" %in% names(pattern_type)) {
-      umi_v <- plyr::laply(seq_l, function(x) { x[pattern_type["UMI"] + 1] })
+        if ("UMI" %in% names(pattern_type)) {
+            umi_v <- plyr::laply(seq_l, function(x) { x[pattern_type["UMI"] + 1] })
+        }
+
+    } else {
+        # regular expression match
+        m <- stringr::str_match(reads_seq, pattern)
+
+        # capture sequence
+        seq_v <- m[, 1]
+
+        # matched barcode
+        barcode_v <- m[, pattern_type['barcode'] + 1]
+
+        # matched UMI
+        if ("UMI" %in% names(pattern_type)) {
+            umi_v <- m[, pattern_type['UMI'] + 1]
+        }
     }
 
-  } else {
-    # regular expression match
-    m <- stringr::str_match(reads_seq, pattern)
-
-    # capture sequence
-    seq_v <- m[, 1]
-
-    # matched barcode
-    barcode_v <- m[, pattern_type['barcode'] + 1]
-
-    # matched UMI
+    # captured UMI
     if ("UMI" %in% names(pattern_type)) {
-      umi_v <- m[, pattern_type['UMI'] + 1]
+        d <- data.table(
+            reads_seq = reads_seq, 
+            match_seq = seq_v, 
+            umi_seq = umi_v, 
+            barcode_seq = barcode_v, 
+            count = reads_freq
+        )
+    } else {
+        d <- data.table(
+            reads_seq = reads_seq, 
+            match_seq = seq_v, 
+            barcode_seq = barcode_v, 
+            count = reads_freq
+        )
     }
-  }
 
-  # captured UMI
-  if ("UMI" %in% names(pattern_type)) {
-    d <- data.table(
-      reads_seq = reads_seq, 
-      match_seq = seq_v, 
-      umi_seq = umi_v, 
-      barcode_seq = barcode_v, 
-      count = reads_freq
-    )
-  } else {
-    d <- data.table(
-      reads_seq = reads_seq, 
-      match_seq = seq_v, 
-      barcode_seq = barcode_v, 
-      count = reads_freq
-    )
-  }
-
-  # order the data by counts
-  if (ordered) {
-    d <- d[order(count, decreasing = TRUE)]
-  } 
-  stats::na.omit(d)
+    # order the data by counts
+    if (ordered) {
+        d <- d[order(count, decreasing = TRUE)]
+    } 
+    stats::na.omit(d)
 }
 
 
 #' @rdname bc_extract
 #' @export
 bc_extract.ShortReadQ <- function(
-  x, 
-  pattern = "", 
-  sample_name = NULL, 
-  maxLDist = 0, 
-  pattern_type = c(barcode = 1), 
-  costs = list(sub = 1, ins = 99, del = 99), 
-  ordered = TRUE, ...) {
+    x, 
+    pattern = "", 
+    sample_name = NULL, 
+    maxLDist = 0, 
+    pattern_type = c(barcode = 1), 
+    costs = list(sub = 1, ins = 99, del = 99), 
+    ordered = TRUE, ...) {
 
-  # sequence frequecy
-  reads_freq <- ShortRead::tables(x, n=Inf)$top
+    # sequence frequecy
+    reads_freq <- ShortRead::tables(x, n=Inf)$top
 
-  x = data.frame(
-    freq = as.integer(reads_freq),
-    seq = names(reads_freq)
-  )
+    x = data.frame(
+        freq = as.integer(reads_freq),
+        seq = names(reads_freq)
+    )
 
-  bc_extract(x, 
-    pattern = pattern, 
-    maxLDist = maxLDist, 
-    pattern_type = pattern_type, 
-    costs = costs, 
-    ordered = ordered
-  )
+    bc_extract(x, 
+        pattern = pattern, 
+        maxLDist = maxLDist, 
+        pattern_type = pattern_type, 
+        costs = costs, 
+        ordered = ordered
+    )
 }
 
 
 #' @rdname bc_extract
 #' @export
 bc_extract.DNAStringSet <- function(
-  x, 
-  pattern = "", 
-  sample_name = NULL, 
-  maxLDist = 0, 
-  pattern_type = c(barcode = 1), 
-  costs = list(sub = 1, ins = 99, del = 99), 
-  ordered = TRUE, ...) {
-
-  bc_extract.ShortReadQ(
     x, 
-    pattern = pattern, 
-    sample_name = sample_name, 
-    maxLDist = maxLDist, 
-    pattern_type = pattern_type, 
-    costs = costs, 
-    ordered = ordered
-  )
+    pattern = "", 
+    sample_name = NULL, 
+    maxLDist = 0, 
+    pattern_type = c(barcode = 1), 
+    costs = list(sub = 1, ins = 99, del = 99), 
+    ordered = TRUE, ...) {
+
+    bc_extract.ShortReadQ(
+        x, 
+        pattern = pattern, 
+        sample_name = sample_name, 
+        maxLDist = maxLDist, 
+        pattern_type = pattern_type, 
+        costs = costs, 
+        ordered = ordered
+    )
 }
 
 #' @rdname bc_extract
 #' @export
 bc_extract.integer <- function(
-  x,
-  pattern = "",
-  sample_name = NULL,
-  maxLDist = 0,
-  pattern_type = c(barcode = 1),
-  costs = list(sub = 1, ins = 99, del = 99),
-  ordered = TRUE, ...) {
-
-  x = data.frame(
-    freq = as.integer(x),
-    seq = names(x)
-  )
-
-  bc_extract(
     x,
-    pattern = pattern,
-    maxLDist = maxLDist,
-    pattern_type = pattern_type,
-    costs = costs,
-    ordered = ordered)
+    pattern = "",
+    sample_name = NULL,
+    maxLDist = 0,
+    pattern_type = c(barcode = 1),
+    costs = list(sub = 1, ins = 99, del = 99),
+    ordered = TRUE, ...) {
+
+    x = data.frame(
+        freq = as.integer(x),
+        seq = names(x)
+    )
+
+    bc_extract(
+        x,
+        pattern = pattern,
+        maxLDist = maxLDist,
+        pattern_type = pattern_type,
+        costs = costs,
+        ordered = ordered)
 }
 
 
 #' @rdname bc_extract
 #' @export
 bc_extract.character <- function(file, 
-  pattern = "", 
-  sample_name = basename(file), 
-  metadata = NULL, 
-  maxLDist = 0, 
-  pattern_type = c(barcode = 1), 
-  costs = list(sub = 1, ins = 99, del = 99), 
-  ordered = TRUE, ...) {
+    pattern = "", 
+    sample_name = basename(file), 
+    metadata = NULL, 
+    maxLDist = 0, 
+    pattern_type = c(barcode = 1), 
+    costs = list(sub = 1, ins = 99, del = 99), 
+    ordered = TRUE, ...) {
 
-  # sample_name given
-  # meta_data given
-  #   no sample_name
-  #   no rowname
+    # sample_name given
+    # meta_data given
+    #   no sample_name
+    #   no rowname
 
-  # if more than one fastq file as input
-  if (length(file) > 1) {
+    # if more than one fastq file as input
+    if (length(file) > 1) {
 
-    # use sample_name
-    if (is.null(sample_name)) {
-      if (!is.null(metadata$sample_name)) {
-        # use metadata
-        sample_name = metadata$sample_name
-      } else {
-        # use file name
-        sample_name <- names(file)
-      }
-    }
-    # still no sample_name use length of file
-    if (is.null(sample_name)) {
-      sample_name <- 1:length(file)
-    }
+        # use sample_name
+        if (is.null(sample_name)) {
+            if (!is.null(metadata$sample_name)) {
+                # use metadata
+                sample_name = metadata$sample_name
+            } else {
+                # use file name
+                sample_name <- names(file)
+            }
+        }
+        # still no sample_name use length of file
+        if (is.null(sample_name)) {
+            sample_name <- seq_along(file)
+        }
 
-    if (is.null(metadata)) {
-      metadata <- data.frame(sample_name = sample_name)
-    }
-    if (is.null(metadata$sample_name)) {
-      metadata$sample_name <- sample_name
-    }
-    rownames(metadata) <- sample_name
+        if (is.null(metadata)) {
+            metadata <- data.frame(sample_name = sample_name)
+        }
+        if (is.null(metadata$sample_name)) {
+            metadata$sample_name <- sample_name
+        }
+        rownames(metadata) <- sample_name
 
-    if (length(metadata$sample_name) != length(file))
-      stop("sample_name or metadata does not match sample number.")
+        if (length(metadata$sample_name) != length(file))
+            stop("sample_name or metadata does not match sample number.")
 
 
-    messyBc <- lapply(1:length(file), function(i) {
-      bc_extract(
-        ShortRead::readFastq(file[i]), 
-        sample_name = sample_name[i], 
-        pattern = pattern, 
-        maxLDist = maxLDist, 
-        pattern_type = pattern_type, 
-        costs = costs, 
-        ordered = ordered)
+        messyBc <- lapply(seq_along(file), function(i) {
+            bc_extract(
+                ShortRead::readFastq(file[i]), 
+                sample_name = sample_name[i], 
+                pattern = pattern, 
+                maxLDist = maxLDist, 
+                pattern_type = pattern_type, 
+                costs = costs, 
+                ordered = ordered)
     })
 
-    names(messyBc) <- sample_name
-    output <- list(messyBc = messyBc, metadata = metadata)
-    class(output) <- "BarcodeObj"
-    return(output)
-  } else {
-    # if one fastq file as input
-    bc_extract(
-      ShortRead::readFastq(file), 
-      sample_name = sample_name[i], 
-      pattern = pattern,
-      maxLDist = maxLDist,
-      pattern_type = pattern_type,
-      costs = costs,
-      ordered = ordered)
-  }
+        names(messyBc) <- sample_name
+        output <- list(messyBc = messyBc, metadata = metadata)
+        class(output) <- "BarcodeObj"
+        return(output)
+    } else {
+        # if one fastq file as input
+        bc_extract(
+            ShortRead::readFastq(file), 
+            sample_name = sample_name[i], 
+            pattern = pattern,
+            maxLDist = maxLDist,
+            pattern_type = pattern_type,
+            costs = costs,
+            ordered = ordered)
+    }
 }
 
 
 #' @rdname bc_extract
 #' @export
 bc_extract.list <- function(
-  x,
-  pattern = "",
-  sample_name = NULL,
-  metadata = NULL,
-  maxLDist = 0,
-  pattern_type = c(barcode = 1),
-  costs = list(sub = 1, ins = 99, del = 99),
-  ordered = TRUE, ...) {
+    x,
+    pattern = "",
+    sample_name = NULL,
+    metadata = NULL,
+    maxLDist = 0,
+    pattern_type = c(barcode = 1),
+    costs = list(sub = 1, ins = 99, del = 99),
+    ordered = TRUE, ...) {
 
-  # use sample_name
-  if (is.null(sample_name)) {
-    if (!is.null(metadata)) {
-      # use metadata
-      sample_name = metadata$sample_name
-    } else {
-      # use list name
-      sample_name <- names(x)
+    # use sample_name
+    if (is.null(sample_name)) {
+        if (!is.null(metadata)) {
+            # use metadata
+            sample_name = metadata$sample_name
+        } else {
+            # use list name
+            sample_name <- names(x)
+        }
     }
-  }
 
-  # still no sample_name use length of list
-  if (is.null(sample_name)) {
-    sample_name <- 1:length(x)
-  }
+    # still no sample_name use length of list
+    if (is.null(sample_name)) {
+        sample_name <- seq_along(x)
+    }
 
-  if (is.null(metadata)) {
-    metadata <- data.frame(sample_name = sample_name)
-  }
-  if (is.null(metadata$sample_name)) {
-    metadata$sample_name <- sample_name
-  }
-  rownames(metadata) <- sample_name
-
-
-  if (length(metadata$sample_name) != length(x))
-    stop("sample_name or metadata does not match sample number.")
+    if (is.null(metadata)) {
+        metadata <- data.frame(sample_name = sample_name)
+    }
+    if (is.null(metadata$sample_name)) {
+        metadata$sample_name <- sample_name
+    }
+    rownames(metadata) <- sample_name
 
 
-  lapply(1:length(x), function(i) {
-    bc_extract(
-      x[[i]],
-      pattern = pattern,
-      sample_name = sample_name[i],
-      maxLDist = maxLDist,
-      pattern_type = pattern_type,
-      costs = costs,
-      ordered = ordered)
-  }) -> messyBc
+    if (length(metadata$sample_name) != length(x))
+        stop("sample_name or metadata does not match sample number.")
 
-  names(messyBc) <- sample_name
-  output <- list(messyBc = messyBc, metadata = metadata)
-  class(output) <- "BarcodeObj"
-  output
+
+    lapply(seq_along(x), function(i) {
+        bc_extract(
+            x[[i]],
+            pattern = pattern,
+            sample_name = sample_name[i],
+            maxLDist = maxLDist,
+            pattern_type = pattern_type,
+            costs = costs,
+            ordered = ordered)
+    }) -> messyBc
+
+    names(messyBc) <- sample_name
+    output <- list(messyBc = messyBc, metadata = metadata)
+    class(output) <- "BarcodeObj"
+    output
 }
 

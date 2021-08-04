@@ -42,9 +42,9 @@ bc_meta(bc_obj)
 
 # assign a new data.frame as metadata
 metadata <- data.frame(
-  sample_name <- c("test1", "test2"),
-  phenotype <- c("l", "b")
-  )
+    sample_name <- c("test1", "test2"),
+    phenotype <- c("l", "b")
+    )
 rownames(metadata) = bc_names(bc_obj)
 bc_meta(bc_obj) <- metadata
 ###

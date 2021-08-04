@@ -84,9 +84,9 @@ bc_subset(bc_obj, sample = "sample1_rep1", barcode = c("AACCTT", "AACCTT"))
 
 # Apply barcodes black list
 bc_subset(
-  bc_obj, 
-  sample = c("sample1_rep1", "sample1_rep2"), 
-  barcode = c("AACCTT"))
+bc_obj,
+    sample = c("sample1_rep1", "sample1_rep2"),
+    barcode = c("AACCTT"))
 
 # Join two samples with different barcode sets
 bc_obj["AGAG", "test1"] + bc_obj["AAAG", "test1"]

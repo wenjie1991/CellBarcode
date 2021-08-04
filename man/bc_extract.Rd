@@ -95,8 +95,8 @@ provided, then the list names of the x will be used, or the file name will be
 used.}
 
 \item{maxLDist}{A integer. The mismatch threshold for barcode matching, when
-maxLDist is 0, the \code{\link[stringr::str_match]{stringr::str_match}}  is
-invoked, otherwise \code{\link[utils::aregexec]{utils::aregexec}} is invoked.}
+maxLDist is 0, the \code{\link[stringr]{str_match}}  is
+invoked, otherwise \code{\link[utils]{aregexec}} is invoked.}
 
 \item{pattern_type}{A vector. It defines the barcode (and UMI) capture
 group. See Details.}
@@ -185,30 +185,30 @@ bc_extract(l, pattern = "AAAAA(.*)CCCCC")
 
 # Extract UMI and barcode
 d1 <- data.frame(
-  seq = c(
-    "ACTTCGATCGATCGAAAAGATCGATCGATC",
-    "AATTCGATCGATCGAAGAGATCGATCGATC",
-    "CCTTCGATCGATCGAAGAAGATCGATCGATC",
-    "TTTTCGATCGATCGAAAAGATCGATCGATC",
-    "AAATCGATCGATCGAAGAGATCGATCGATC",
-    "CCCTCGATCGATCGAAGAAGATCGATCGATC",
-    "GGGTCGATCGATCGAAAAGATCGATCGATC",
-    "GGATCGATCGATCGAAGAGATCGATCGATC",
-    "ACTTCGATCGATCGAACAAGATCGATCGATC",
-    "GGTTCGATCGATCGACGAGATCGATCGATC",
-    "GCGTCCATCGATCGAAGAAGATCGATCGATC"
-    ),
-  freq = c(
-    30, 60, 9, 10, 14, 5, 10, 30, 6, 4 , 6
+    seq = c(
+        "ACTTCGATCGATCGAAAAGATCGATCGATC",
+        "AATTCGATCGATCGAAGAGATCGATCGATC",
+        "CCTTCGATCGATCGAAGAAGATCGATCGATC",
+        "TTTTCGATCGATCGAAAAGATCGATCGATC",
+        "AAATCGATCGATCGAAGAGATCGATCGATC",
+        "CCCTCGATCGATCGAAGAAGATCGATCGATC",
+        "GGGTCGATCGATCGAAAAGATCGATCGATC",
+        "GGATCGATCGATCGAAGAGATCGATCGATC",
+        "ACTTCGATCGATCGAACAAGATCGATCGATC",
+        "GGTTCGATCGATCGACGAGATCGATCGATC",
+        "GCGTCCATCGATCGAAGAAGATCGATCGATC"
+        ),
+    freq = c(
+        30, 60, 9, 10, 14, 5, 10, 30, 6, 4 , 6
     )
   ) 
 # barcode backbone with UMI and barcode
 pattern <- "([ACTG]{3})TCGATCGATCGA([ACTG]+)ATCGATCGATC"
 bc_extract(
-  list(test = d1), 
-  pattern, 
-  sample_name=c("test"), 
-  pattern_type=c(UMI=1, barcode=2))
+    list(test = d1), 
+    pattern, 
+    sample_name=c("test"), 
+    pattern_type=c(UMI=1, barcode=2))
 
 ###
 }

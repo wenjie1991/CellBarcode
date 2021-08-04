@@ -60,7 +60,7 @@ Perform quality control
 library(ShortRead)
 # fastq file
 fq_file <- system.file("extdata", "simple.fq", package="Bc")
-bc_seqQc(fq_file)
+bc_seqQC(fq_file)
 
 # ShortReadQ
 sr <- readFastq(fq_file[1])

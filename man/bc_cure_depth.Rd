@@ -20,33 +20,34 @@ cleanBc is available, messyBc will always be used.}
 A BarcodeObj with cleanBc update.
 }
 \description{
-The function filter barcodes by applying the filter on the reads count or the UMI count.
+The function filter barcodes by applying the filter on the reads count or the
+UMI count.
 }
 \examples{
 data(bc_obj)
 
 d1 <- data.frame(
- seq = c(
-   "ACTTCGATCGATCGAAAAGATCGATCGATC",
-   "AATTCGATCGATCGAAGAGATCGATCGATC",
-   "CCTTCGATCGATCGAAGAAGATCGATCGATC",
-   "TTTTCGATCGATCGAAAAGATCGATCGATC",
-   "AAATCGATCGATCGAAGAGATCGATCGATC",
-   "CCCTCGATCGATCGAAGAAGATCGATCGATC",
-   "GGGTCGATCGATCGAAAAGATCGATCGATC",
-   "GGATCGATCGATCGAAGAGATCGATCGATC",
-   "ACTTCGATCGATCGAACAAGATCGATCGATC",
-   "GGTTCGATCGATCGACGAGATCGATCGATC",
-   "GCGTCCATCGATCGAAGAAGATCGATCGATC"
-   ),
- freq = c(
-   30, 60, 9, 10, 14, 5, 10, 30, 6, 4 , 6
-   )
- )
+    seq = c(
+        "ACTTCGATCGATCGAAAAGATCGATCGATC",
+        "AATTCGATCGATCGAAGAGATCGATCGATC",
+        "CCTTCGATCGATCGAAGAAGATCGATCGATC",
+        "TTTTCGATCGATCGAAAAGATCGATCGATC",
+        "AAATCGATCGATCGAAGAGATCGATCGATC",
+        "CCCTCGATCGATCGAAGAAGATCGATCGATC",
+        "GGGTCGATCGATCGAAAAGATCGATCGATC",
+        "GGATCGATCGATCGAAGAGATCGATCGATC",
+        "ACTTCGATCGATCGAACAAGATCGATCGATC",
+        "GGTTCGATCGATCGACGAGATCGATCGATC",
+        "GCGTCCATCGATCGAAGAAGATCGATCGATC"
+        ),
+    freq = c(
+        30, 60, 9, 10, 14, 5, 10, 30, 6, 4 , 6
+        )
+    )
 
 pattern <- "([ACTG]{3})TCGATCGATCGA([ACTG]+)ATCGATCGATC"
 bc_obj <- bc_extract(list(test = d1), pattern, sample_name=c("test"), 
-  pattern_type=c(UMI=1, barcode=2))
+    pattern_type=c(UMI=1, barcode=2))
 
 # Remove barcodes with depth <= 5
 (bc_cured <- bc_cure_depth(bc_obj, depth=5))

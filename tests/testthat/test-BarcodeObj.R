@@ -57,7 +57,7 @@ test_that("data type transformation", {
 
   out_test <- bc_2matrix(bc_obj) 
   out_test <- out_test[order(out_test[, 1]), ]
-  out_truth <- matrix(c(104, 50, 14, 6, 104, 50, 14, 6), byrow=F, ncol=2)
+  out_truth <- matrix(c(104, 50, 14, 6, 104, 50, 14, 6), byrow=FALSE, ncol=2)
   dimnames(out_truth) <- list(c("AGAG", "AAAG", "AGAAG", "ACAAG"), c("test1", "test2"))
   out_truth <- out_truth[order(out_truth[, 1]), ]
   expect_equal(out_test, out_truth)

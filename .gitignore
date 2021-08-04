@@ -34,3 +34,4 @@ devtools.R
 .Rproj.user
 inst/doc
 data
+.clangd

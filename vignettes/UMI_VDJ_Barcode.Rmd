@@ -105,14 +105,14 @@ have been randomly sampled as test set here.
 
 ```{r smaples}
 example_data <- system.file("extdata", "mef_test_data", package = "Bc")
-fq_files <- dir(example_data, "fastq.gz", full=T)
+fq_files <- dir(example_data, "fastq.gz", full=TRUE)
 ```
 
 # Installation
 
 Install from Bioconducotr.
 
-```{r installation Bioconducotr, eval=F}
+```{r installation Bioconducotr, eval=FALSE}
 if(!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 BiocManager::install("Bc")
@@ -134,7 +134,7 @@ library(magrittr)
 # 2000 reads for each file have been sampled for this test dataset
 # TODO: Citation of the paper:
 example_data <- system.file("extdata", "mef_test_data", package = "Bc")
-fq_files <- dir(example_data, "gz", full=T)
+fq_files <- dir(example_data, "gz", full=TRUE)
 
 # prepare metadata
 metadata <- stringr::str_split_fixed(basename(fq_files), "_", 10)[, c(4, 6)]
@@ -404,7 +404,10 @@ In the `bc_cure_*` function family, there are:
 ```{r correct_barcodde_with_UMI}
 # Filter the barcode with UMI-barcode tags > 1, and treat UMI as absolute
 # unique and do "fish"
-bc_obj_umi <- bc_cure_umi(bc_obj_umi, depth = 1, isUniqueUMI = T, doFish = T)
+bc_obj_umi <- bc_cure_umi(
+    bc_obj_umi, depth = 1, 
+    isUniqueUMI = TRUE, 
+    doFish = TRUE)
 # Apply the UMI count filter, keep barcode > 3 UMI
 bc_obj_umi <- bc_cure_depth(bc_obj_umi, depth = 3)
 bc_meta(bc_obj_umi)

@@ -9,7 +9,8 @@ bc_cure_cluster(
   distance = 1,
   dist_method = "hamm",
   merge_method = "greedy",
-  barcode_n = 10000
+  barcode_n = 10000,
+  dist_costs = list(replace = 1, insert = 1, delete = 1)
 )
 }
 \arguments{
@@ -19,7 +20,8 @@ bc_cure_cluster(
 distance threshold if two sequence is similar enough to be merged.}
 
 \item{dist_method}{A  character string specifying the distance algorithm used
-to evaluate the barcodes similarity. Currently it only be "hamm".}
+to evaluate the barcodes similarity. It can be "hamm" for Hamming distance or
+"leven" for Levenshtein distance.}
 
 \item{merge_method}{A character string specifying the algorithm used to
 perform the clustering merging of two barcodes. Currently only "greedy" is
@@ -29,6 +31,11 @@ least abundent to the most abundent ones.}
 \item{barcode_n}{A single or vector of integer, specifying the max sequences
 number should be. When the most abundent barcodes are satisfied this number
 the merging finished, and all the rest sub-abundent sequences are removed.}
+
+\item{dist_costs}{A list, the costs of the events when calculate distance
+between to barcode sequences, applicable when Levenshtein distance is 
+applied. The names of vector can be of "insert", "delete" and 
+"replace". The default cost is 1.}
 }
 \value{
 A BarcodeObj with cleanBc element updated.
@@ -42,27 +49,27 @@ element.
 data(bc_obj)
 
 d1 <- data.frame(
- seq = c(
-   "ACTTCGATCGATCGAAAAGATCGATCGATC",
-   "AATTCGATCGATCGAAGAGATCGATCGATC",
-   "CCTTCGATCGATCGAAGAAGATCGATCGATC",
-   "TTTTCGATCGATCGAAAAGATCGATCGATC",
-   "AAATCGATCGATCGAAGAGATCGATCGATC",
-   "CCCTCGATCGATCGAAGAAGATCGATCGATC",
-   "GGGTCGATCGATCGAAAAGATCGATCGATC",
-   "GGATCGATCGATCGAAGAGATCGATCGATC",
-   "ACTTCGATCGATCGAACAAGATCGATCGATC",
-   "GGTTCGATCGATCGACGAGATCGATCGATC",
-   "GCGTCCATCGATCGAAGAAGATCGATCGATC"
-   ),
- freq = c(
-   30, 60, 9, 10, 14, 5, 10, 30, 6, 4 , 6
-   )
- )
+    seq = c(
+        "ACTTCGATCGATCGAAAAGATCGATCGATC",
+        "AATTCGATCGATCGAAGAGATCGATCGATC",
+        "CCTTCGATCGATCGAAGAAGATCGATCGATC",
+        "TTTTCGATCGATCGAAAAGATCGATCGATC",
+        "AAATCGATCGATCGAAGAGATCGATCGATC",
+        "CCCTCGATCGATCGAAGAAGATCGATCGATC",
+        "GGGTCGATCGATCGAAAAGATCGATCGATC",
+        "GGATCGATCGATCGAAGAGATCGATCGATC",
+        "ACTTCGATCGATCGAACAAGATCGATCGATC",
+        "GGTTCGATCGATCGACGAGATCGATCGATC",
+        "GCGTCCATCGATCGAAGAAGATCGATCGATC"
+        ),
+    freq = c(
+        30, 60, 9, 10, 14, 5, 10, 30, 6, 4 , 6
+        )
+    )
 
 pattern <- "([ACTG]{3})TCGATCGATCGA([ACTG]+)ATCGATCGATC"
 bc_obj <- bc_extract(list(test = d1), pattern, sample_name=c("test"), 
-  pattern_type=c(UMI=1, barcode=2))
+    pattern_type=c(UMI=1, barcode=2))
 
 # Remove barcodes with depth <= 5
 (bc_cured <- bc_cure_depth(bc_obj, depth=5))
@@ -70,6 +77,10 @@ bc_obj <- bc_extract(list(test = d1), pattern, sample_name=c("test"),
 # Do the clustering, merge the less abundent barcodes to the more abundent
 # one by hamming distance <= 1 
 bc_cure_cluster(bc_cured, distance = 1)
+
+# Levenshtein distance <= 1
+bc_cure_cluster(bc_cured, distance = 2, dist_method = "leven",
+    dist_costs = list("insert" = 2, "replace" = 1, "delete" = 2))
 
 ###
 }

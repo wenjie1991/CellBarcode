@@ -25,11 +25,18 @@ NULL
 #' 
 #' This function will return the corrected UMI list.
 #'
-#' @param seq A string vector
+#' @param seq A string vector.
 #' @param count An integer vector with the same order and length of UMI
-#' @param count_threshold An integer the maximum barcodes number
-#' @param hamm_dist_threshold An integer the hamming distance threshold
-seq_correct <- function(seq, count, count_threshold, dist_threshold, dist_method = 1L, insert_cost = 1L, delete_cost = 1L, replace_cost = 1L) {
-    .Call('_Bc_seq_correct', PACKAGE = 'Bc', seq, count, count_threshold, dist_threshold, dist_method, insert_cost, delete_cost, replace_cost)
-}
+#' @param count_threshold An integer, read depth threshold to consider a
+#' barcode as a true barcode, when this condition satisfied the barcode is not
+#' going to merge into another barcode.
+#' @param dist_threshold A integer, distance threshold to consider two barcodes
+#' are related.
+#' @param dist_method A integer, if 2 the levenshtein distance will be used,
+#' otherwise the hamming distance will be applied.  
+#' @param insert_cost A integer, the insert cost when levenshtein distance is applied.
+#' @param delete_cost A integer, the delete cost when levenshtein distance is applied.
+#' @param replace_cost A integer, the replace cost when levenshtein distance is
+#' applied.  
+NULL
 

@@ -11,6 +11,9 @@
 
 \item{...}{Additional arguments}
 }
+\value{
+Formated BarcodeObj summary.
+}
 \description{
 Format the summary of BarcodeObj for pretty print.
 }
@@ -23,5 +26,5 @@ format(bc_obj)
 ###
 }
 \seealso{
-\code{\link[Bc::print.BarcodeObj]{Bc::print.BarcodeObj}}
+\code{\link[Bc]{print.BarcodeObj}}
 }

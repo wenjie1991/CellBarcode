@@ -5,10 +5,6 @@ Version: 0.1.1
 Authors@R: c(person("Wenjie", "Sun", email = "sunwjie@gmail.com", role = c("aut", "cre")),
   person("Anne-Marie", "Lyne", role = c("aut")),
   person("Leila", "Perie", role = c("aut")))
-Authors: Wenjie Sun<sunwjie@gmail.com>
-  Anne-Marie Lyne<Annie-Lyne@curie.fr>
-  Leila Perie<leila.perie@curie.fr>
-Maintainer: Wenjie Sun<sunwjie@gmail.com>
 Description: 
   This package performs DNA Barcode analysis. The package can handle all kinds
   of DNA barcodes, as long as the barcode withine a single reads and has a
@@ -19,23 +15,20 @@ Description:
   genome data.
 License: MIT + file LICENSE
 Encoding: UTF-8
-LazyData: true
 Depends: R (>= 3.5.0)
 Imports: 
     methods,
     Rcpp (>= 1.0.5),
     data.table,
     plyr,
-    parallel,
     ggplot2,
     stringr,
     magrittr,
-    readr,
     ShortRead,
     Biostrings,
     egg,
     utils,
-    S4Vectors,
+    S4Vectors
 LinkingTo: Rcpp
 RoxygenNote: 7.1.1
 Suggests: 
@@ -43,8 +36,6 @@ Suggests:
     testthat (>= 3.0.0),
     knitr,
     rmarkdown
-biocViews: Software
-URL: "TBD"
-Video: "TBD"
+biocViews: Preprocessing, QualityControl, Sequencing, CRISPR
 Config/testthat/edition: 3
 VignetteBuilder: knitr
