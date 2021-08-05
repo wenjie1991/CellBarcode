@@ -505,16 +505,16 @@ bc_subset <- function(barcodeObj,
 
 
         res <- stringr::str_glue(
-            "Bonjour le monde, This is a BarcodeObj.
-            ----------
-                It contains:
-            {subjects}
-            ----------
-                $metadata: {metadata_n} meta data field(s) available
-            {metadata_info}
-            ----------
-                $messyBc: {messyBc_n} Samples for raw barcodes
-            {messyBc_info}"
+"Bonjour le monde, This is a BarcodeObj.
+----------
+It contains: 
+    {subjects}
+----------
+$metadata: {metadata_n} meta data field(s) available
+    {metadata_info}
+----------
+$messyBc: {messyBc_n} Samples for raw barcodes
+{messyBc_info}"
         )
 
 
@@ -533,9 +533,9 @@ bc_subset <- function(barcodeObj,
                         stringr::str_glue("    In sample ${sample_name} there are: {n} barcodes")
                     }) %>% unlist %>% paste(collapse = "\n")
             res_cleanBc <- stringr::str_glue(
-                "----------
-                $cleanBc: {cleanBc_n} Samples for cleaned barcodes
-            {cleanBc_info}"
+"----------
+$cleanBc: {cleanBc_n} Samples for cleaned barcodes
+{cleanBc_info}"
             )
             res <- stringr::str_c(res, "\n", res_cleanBc)
         }

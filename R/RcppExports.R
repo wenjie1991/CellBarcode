@@ -37,6 +37,12 @@ NULL
 #' @param insert_cost A integer, the insert cost when levenshtein distance is applied.
 #' @param delete_cost A integer, the delete cost when levenshtein distance is applied.
 #' @param replace_cost A integer, the replace cost when levenshtein distance is
-#' applied.  
-NULL
+#' applied.
+#' @return a list with two data.frame. seq_freq_tab: table with barcode and
+#' corrected ' sequence reads; link_tab: data table record for the clustering
+#' process with ' first column of barcode be merged and second column of barcode
+#' that merge to.
+seq_correct <- function(seq, count, count_threshold, dist_threshold, dist_method = 1L, insert_cost = 1L, delete_cost = 1L, replace_cost = 1L) {
+    .Call('_Bc_seq_correct', PACKAGE = 'Bc', seq, count, count_threshold, dist_threshold, dist_method, insert_cost, delete_cost, replace_cost)
+}
 

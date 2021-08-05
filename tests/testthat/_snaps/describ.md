@@ -1,7 +1,7 @@
 # barcode diversity
 
     Code
-      bc_diversity(bc_obj, plot = F)
+      bc_diversity(bc_obj, plot = FALSE)
     Output
         sample_name total_reads uniq_barcode shannon_index equitability_index
       1       test1         174            4     0.9848302          0.7104048
