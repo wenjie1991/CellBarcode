@@ -12,7 +12,7 @@ check_sample_name <- function(barcodeObj) {
     }
 }
 
-#' Manage barcodes or samples in a BarcodeObj
+#' Manage barcodes and samples in the BarcodeObj object
 #'
 #' Get a subsets of or join BarcodesObj.
 #'
