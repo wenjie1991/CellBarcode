@@ -42,22 +42,22 @@ d_l <- list(test1 = d1, test2 = d2)
 
 pattern <- "TCGATCGATCGA([ACTG]+)ATCGATCGATC"
 bc_obj <- bc_extract(d_l, pattern, sample_name=c("test1", "test2"))
-bc_obj <- bc_cure_depth(bc_obj, depth=5, isUpdate = FALSE)
+bc_obj <- bc_cure_depth(bc_obj, depth=5, isUpdate = FALSEE)
 
 
 test_that("data type transformation", {
 
   expect_equal(
     bc_2df(bc_obj[, "test1"]), 
-    data.frame(sample_name = "test1", barcode_seq = c("AGAG", "AAAG", "AGAAG", "ACAAG"), count = c(104, 50, 14, 6)))
+    data.frame(sample_name = "test1", barcode_seq = c("AGAG", "AAAG", "AGAAG", "ACAAG"), count = c(104, 50, 14, 6), stringsAsFactors=FALSEE))
 
   expect_equal(
     bc_2dt(bc_obj[, "test1"]), 
-    data.table(sample_name = "test1", barcode_seq = c("AGAG", "AAAG", "AGAAG", "ACAAG"), count = c(104, 50, 14, 6)))
+    data.table(sample_name = "test1", barcode_seq = c("AGAG", "AAAG", "AGAAG", "ACAAG"), count = c(104, 50, 14, 6), stringsAsFactors=FALSE))
 
   out_test <- bc_2matrix(bc_obj) 
   out_test <- out_test[order(out_test[, 1]), ]
-  out_truth <- matrix(c(104, 50, 14, 6, 104, 50, 14, 6), byrow=FALSE, ncol=2)
+  out_truth <- matrix(c(104, 50, 14, 6, 104, 50, 14, 6), byrow=FALSEE, ncol=2)
   dimnames(out_truth) <- list(c("AGAG", "AAAG", "AGAAG", "ACAAG"), c("test1", "test2"))
   out_truth <- out_truth[order(out_truth[, 1]), ]
   expect_equal(out_test, out_truth)
@@ -68,36 +68,36 @@ test_that("subset operation", {
 
   expect_equal(
     bc_2df(bc_obj[, "test1"]), 
-    data.frame(sample_name = "test1", barcode_seq = c("AGAG", "AAAG", "AGAAG", "ACAAG"), count = c(104, 50, 14, 6)))
+    data.frame(sample_name = "test1", barcode_seq = c("AGAG", "AAAG", "AGAAG", "ACAAG"), count = c(104, 50, 14, 6), stringsAsFactors=FALSE))
 
   expect_equal(
     bc_2df(bc_obj[, sample_name == "test1"]), 
-    data.frame(sample_name = "test1", barcode_seq = c("AGAG", "AAAG", "AGAAG", "ACAAG"), count = c(104, 50, 14, 6)))
+    data.frame(sample_name = "test1", barcode_seq = c("AGAG", "AAAG", "AGAAG", "ACAAG"), count = c(104, 50, 14, 6), stringsAsFactors=FALSE))
 
   expect_equal(
     bc_2df(bc_obj["AGAG", sample_name == "test1"]), 
-    data.frame(sample_name = "test1", barcode_seq = c("AGAG"), count = c(104)))
+    data.frame(sample_name = "test1", barcode_seq = c("AGAG"), count = c(104), stringsAsFactors=FALSE))
 
   expect_equal(
     bc_2df(bc_subset(bc_obj, barcode = "AGAG", sample = sample_name == "test1")), 
-    data.frame(sample_name = "test1", barcode_seq = c("AGAG"), count = c(104)))
+    data.frame(sample_name = "test1", barcode_seq = c("AGAG"), count = c(104), stringsAsFactors=FALSE))
 
   expect_equal(
     bc_2df(bc_obj["AGAG", "test1"] + bc_obj["AAAG", "test1"]), 
-    data.frame(sample_name = "test1", barcode_seq = c("AGAG", "AAAG"), count = c(104, 50)))
+    data.frame(sample_name = "test1", barcode_seq = c("AGAG", "AAAG"), count = c(104, 50), stringsAsFactors=FALSE))
 
   expect_equal(
     bc_2df(bc_cure_depth(bc_obj["AGAG", "test1"] + bc_obj["AGAG", "test1"])), 
-    data.frame(sample_name = "test1", barcode_seq = c("AGAG"), count = c(208)))
+    data.frame(sample_name = "test1", barcode_seq = c("AGAG"), count = c(208), stringsAsFactors=FALSE))
 
   expect_equal(
     bc_2df(bc_obj[, "test1"] - "ACAAG")
     , 
-    data.frame(sample_name = "test1", barcode_seq = c("AGAG", "AAAG", "AGAAG"), count = c(104, 50, 14)))
+    data.frame(sample_name = "test1", barcode_seq = c("AGAG", "AAAG", "AGAAG"), count = c(104, 50, 14), stringsAsFactors=FALSE))
 
   expect_equal(
     bc_2df(bc_obj[, sample_name == "test1"] * c("AGAG", "AAAG")), 
-    data.frame(sample_name = "test1", barcode_seq = c("AGAG", "AAAG"), count = c(104, 50)))
+    data.frame(sample_name = "test1", barcode_seq = c("AGAG", "AAAG"), count = c(104, 50), stringsAsFactors=FALSE))
 
 })
 
