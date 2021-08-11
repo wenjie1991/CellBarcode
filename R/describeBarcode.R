@@ -1,9 +1,10 @@
 #' Evaluate barcode diversity
 #' 
-#' This function calculates several barcode diversity metrics using the cleanBc
-#' element in BarcodeObj.
+#' bc_diversity calculates sequence diversity metrics using the cleanBc
+#' element in BarcodeObj object. This function also generates Lorenz curve and
+#' barcode frequency distribution.
 #'
-#' @param barcodeObj A BarcodeObj.
+#' @param barcodeObj A BarcodeObj object.
 #' @param plot A bool, if TRUE, draw the lorenz curve and barcode distribution
 #' curve.
 #' @return A data.frame with following columns:
