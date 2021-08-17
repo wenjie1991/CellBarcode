@@ -2,7 +2,7 @@
 
 #' Filter the sequences by quality
 #' 
-#' Apply quality filters to remove low quality sequence.
+#' Applies quality filter to remove low quality sequence.
 #'
 #' @param x A single or a list of Fastq file, ShortReadQ, DNAStringSet,
 #' data.frame, integer vector.
@@ -12,9 +12,10 @@
 #' threshold of a sequence. 
 #' @param N_threshold A single or a vector of integer, specifying the maximum
 #' \code{N} in a sequence.
-#' @param sample_name A string vector, rename the samples.
+#' @param sample_name A string vector, specifying the sample name in the output.
 #' @param ... Additional arguments
-#' @return A ShortReadQ or DNAStringSet object with sequences passed the filters
+#' @return A ShortReadQ or DNAStringSet object with sequences passed the
+#' filters.
 #' @examples
 #' library(ShortRead)
 #' 

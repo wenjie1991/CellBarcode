@@ -1,18 +1,19 @@
 # TODO: Remove barcode reads distribution graph with log x-axis
 # Correlation between two samples w/o distribution information
 
-#' Filter barcodes by count
+#' Filters barcodes by counts
 #'
-#' The function filter barcodes by applying the filter on the reads count or the
-#' UMI count.
+#' bc_cure_depth filters barcodes by applying the filter on the read counts or
+#' the UMI counts.
 #'
-#' @param barcodeObj A BarcodeObj.
+#' @param barcodeObj A BarcodeObj object.
 #' @param depth A single or vector of numeric, specifying the threshold
-#' of the threshold of minimum count for a sequence to kept.
-#' @param isUpdate A bool, if TRUE, the cleanBc element in BarcodeObj will
-#' be used, otherwise the messyBc element will be used. In the case that no
-#' cleanBc is available, messyBc will always be used.
-#' @return A BarcodeObj with cleanBc update.
+#' of the threshold of minimum count for a sequence to kept. If the input is a
+#' vector, the vector length should be the same to the sample number.
+#' @param isUpdate A logical value. If TRUE, the cleanBc element in BarcodeObj
+#' will be used, otherwise the messyBc element will be used. If no
+#' cleanBc is available, messyBc will be used instead.
+#' @return A BarcodeObj object with cleanBc element updated.
 #'
 #' @examples
 #' data(bc_obj)
@@ -85,30 +86,32 @@ bc_cure_depth <- function(
     barcodeObj
 }
 
-#' Merge barcodes by editing distance
+#' Merges barcodes by editing distance
 #'
-#' This function performs the clustering to merge the barcodes with similar
-#' sequence. This function is only appliable to the BarcodeObj with a cleanBc
-#' element.
+#' bc_cure_cluster performs the clustering of barcodes by editing distance,
+#' then merge the barcodes with similar sequence. This function is only
+#' applicable for the BarcodeObj object with a cleanBc element.
 #'
-#' @param barcodeObj A BarcodeObj.
-#' @param distance A sigle or a vector of integer, specifying he editing
-#' distance threshold if two sequence is similar enough to be merged.
-#' @param dist_method A  character string specifying the distance algorithm used
+#' @param barcodeObj A BarcodeObj object.
+#' @param distance A single or a vector of integer, specifying the editing
+#' distance threshold of merging two similar barcode sequences. 
+#' @param dist_method A  character string, specifying the distance algorithm used
 #' to evaluate the barcodes similarity. It can be "hamm" for Hamming distance or
 #' "leven" for Levenshtein distance.
 #' @param merge_method A character string specifying the algorithm used to
 #' perform the clustering merging of two barcodes. Currently only "greedy" is
-#' available, the least abundent barcode to the most abundent ones, merge the
-#' least abundent to the most abundent ones.
+#' available, in this case, the least abundant barcode is merged to the most
+#' abundant ones.
 #' @param barcode_n A single or vector of integer, specifying the max sequences
-#' number should be. When the most abundent barcodes are satisfied this number
-#' the merging finished, and all the rest sub-abundent sequences are removed. 
+#' number to get. When the most abundant barcodes number reaches this number
+#' the merging finished, and all the rest sub-abundent sequences are
+#' discarded. 
 #' @param dist_costs A list, the costs of the events when calculate distance
 #' between to barcode sequences, applicable when Levenshtein distance is 
-#' applied. The names of vector can be of "insert", "delete" and 
-#' "replace". The default cost is 1.
-#' @return A BarcodeObj with cleanBc element updated.
+#' applied. The names of vector can be of "insert", "delete" and "replace",
+#' specifying the weight of insertion, deletion, replacement events
+#' respectively. The default cost for each evens is 1.
+#' @return A BarcodeObj object with cleanBc element updated.
 #' @examples
 #' data(bc_obj)
 #'
@@ -247,28 +250,26 @@ bc_cure_cluster <- function(
     barcodeObj
 }
 
-#' Filter on UMI-barcode tags
+#' Filters on UMI-barcode tags counts when UMI used
 #'
-#' When the UMI is used and identified by bc_extract, this function applies
-#' the filtering on the UMI-barcode tags.  This function read in data in
-#' messyBc element and create a cleanBc element in BarcodeObj.
+#' When the UMI is used, bc_cure_umi applies the filtering on the UMI-barcode tags counts. 
 #'
-#' @param barcodeObj A BarcodeObj
+#' @param barcodeObj A BarcodeObj object.
 #' @param depth A single or a vector of numeric, specifying the UMI-sequence
-#' tags counts threshold. Only the barcode with UMI-barcode larger than the
-#' threshold are considered barcodes.
-#' @param doFish A single or a vector of bool value, if TRUE, the "fishing"
-#' process will be applied to re-counting the UMI with  barcodes, which are not
-#' satisfied depth threshold.
-#' @param isUniqueUMI A single or a vector of bool value. In the case that a UMI
+#' tags count threshold. Only the barcodes with UMI-barcode tag count larger than
+#' the threshold are considered true barcodes.
+#' @param doFish A single or a vector of logical value. If TRUE, the "fishing"
+#' process will be applied to re-counting the UMI with true barcodes, but the
+#' UMI-barocde tag not satisfies the depth threshold.
+#' @param isUniqueUMI A single or a vector of logical value. When a UMI
 #' relates to several barcodes. If you believe that the UMI is absolute unique,
 #' then only the dominant sequence is chosen for each UMI.
-#' @return A BarcodeObj
+#' @return A BarcodeObj object with cleanBc element updated (or created).
 #' @details When invoke this function, the order of each steps are:
 #' \enumerate{
-#'   \item (optional) Find dominant sequence in each UMI.
+#'   \item (optional when isUniqueUMI is TRUE) Find dominant sequence in each UMI.
 #'   \item UMI-barcode depth filtering.
-#'   \item (optional) Fising the UMI with low UMI-barcode depth.
+#'   \item (optional when doFish is TRUE) Fishing the UMI with low UMI-barcode depth.
 #' }
 #'
 #' @examples

@@ -1,35 +1,3 @@
-# Design
-# library(Bc)
-# 
-# (Reads) -> bc_runQc -> bc_filterSeq -> (Reads) -> bc_runQc -> plot
-# (Reads) -> bc_extract -> bc_cure -> check -> bc_curec -> count -> biological analysis
-# 
-# runQc() -> class BarcodeObj(meta, rawBc)
-# filterFq.Barcode() -> class BarcodeObj(meta, rawBc)
-# 
-# BarcodeObj -> List(meta, messyBc, cleanBc, cleanProc)
-# 
-# extractBc.Barcode() -> class BarcodeObj(meta, rawBc, messyBc)
-# 
-# cureBc.Barcode() -> class BarcodeObj(meta, rawBc, messyBc, cleanBc)
-# 
-# countBc.Barcode() -> class BarcodeObj(meta, rawBc, messyBc, cleanBc, countBc)
-# 
-# 
-# barcodeObj[, 1]
-# barcodeObj[, "sample_name1"]
-# barcodeObj[, 1:2]
-# barcodeObj[, c("sample_name1", "sample_name2")]
-# barcodeObj["AACT", ]
-# renames(barcodeObj, c("old_sample_name", "new_sample_name"))
-# subset(barcodeObj, name = c("sample_name1", "sample_name2"))
-# subset(barcodeObj, barcode_white_list = c("AAAA", "TTT"), bacode_black = c("GGG", "CCC"))
-# barcodeObj1 + barcodeObj2
-# barcodeObj - black_list
-# barcodeObj * white_list
-# samplenames(bc_obj)
-# bc2genBarCode(bc_obj)
-
 # TODO:
 # One function do all the job
 # filterFq() -> output the filtering detail
@@ -40,11 +8,11 @@
 #' DNA Barcode Analysis toolkit
 #'
 #' This package performs DNA Barcode analysis. The package can handle all kinds
-#' of DNA barcodes, as long as the barcode withine a single reads and has a
-#' pattern that can be matched by regular expression. This package can handle
+#' of DNA barcodes, as long as the barcode within a single reads and has a
+#' pattern that can be matched by a regular expression. This package can handle
 #' barcode with flexible length, with or without UMI (unique molecular
-#' identifier). This tool also can be used for preprocssing of amplicon data
-#' analysis such as CRISPR gRNA screening, immue repotoire sequencing and meta
+#' identifier). This tool also can be used for preprocessing of amplicon data
+#' such as CRISPR gRNA screening, immune repertoire sequencing and meta
 #' genome data.
 #'
 #' @name Bc

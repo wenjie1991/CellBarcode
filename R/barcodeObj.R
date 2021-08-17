@@ -12,40 +12,48 @@ check_sample_name <- function(barcodeObj) {
     }
 }
 
-#' Manage barcodes and samples in the BarcodeObj object
+#' Manages barcodes and samples in the BarcodeObj object
 #'
-#' There is set of function and operators for subsetting of or joining
-#' BarcodesObj(s). Using these tools, a specific subset of barcodes or samples can
-#' be selected or eliminated, and two BarcodeObj objects can be joined to get
-#' one BarcodeObj object. 
+#' A set of functions and operators for subset and join of
+#' BarcodeObj object(s). 
+#' The bc_subset is used to select barcodes or samples in a BarcodeObj object.
+#' \code{*} and \code{-} are for a subset of barcodes using white list and black list
+#' respecrespectively.
+#' Two BarcodeObj objects can be joined by \code{+}.
 #'
-#' @param barcodeObj A BarcodeObj
+#' @param barcodeObj A BarcodeObj.
 #' @param barcode A vector of integer or string, indicating the selected
 #' barcode.
 #' @param sample A vector or an expression, specifying the samples in the
-#' subsets. And in the expression, the metadata can be used as variable.
-#' @param black_list A character vector. Remove the barcodes in the black list.
-#' @param white_list A character vector. Only barcodes in the white list kept.
-#' @param barcodeObj_x A BarcodeObj
-#' @param barcodeObj_y A BarcodeObj
-#' @param is_sample_quoted_exp A bool value. If TRUE, indicating the
-#' expression in \emph{sample} argument is quoted.
-#' @param ... Additional arguments
-#' @return A BarcodeObj
+#' subsets. When the value is an expression, the metadata can be used as variable.
+#' @param black_list A character vector, specifying the black list with excluded barcodes.
+#' @param white_list A character vector, giving the barcode white list. 
+#' @param barcodeObj_x A BarcodeObj object.
+#' @param barcodeObj_y A BarcodeObj object.
+#' @param is_sample_quoted_exp A logical value. If TRUE, the
+#' expression in \code{sample} argument will not be evaluated before executing
+#' the function. 
+#' @param ... Additional arguments.
+#' @return A BarcodeObj object.
 #'
 #' @details
-#' `bc_subset` and `[]` used for selecting samples barcodes.
+#' \code{bc_subset} and \code{[]}: Gets samples and barcodes subset.
 #'
-#' `+` used for combining two BarcodesObj objects. 
+#' \code{+}: Combines two BarcodeObj objects. The \code{metadata}, \code{cleanBc} and
+#' \code{messyBc} in BarcodeObj elements in BarcodeObj object will be joined. 
+#' For the \code{metadata} element, the \code{sample_name} column will be used as the key for the
+#' join, and the \emph{Full outer join} (the record in either BarcodeObj object) will
+#' be returned. 
+#' The \code{messyBc} and \code{cleanBc} from two objects are combined by rows.
+#' 
+#' \code{-}: removing barcodes in the black_list.
 #'
-#' `-` used for removing barcodes in a black_list.
-#'
-#' `*` used for selecting barcodes in a white_list.
+#' \code{*}: selecting barcodes in the white_list.
 #'
 #' @examples
 #' data(bc_obj)
 #'
-#' bc_obj
+#' bc_obp
 #'
 #' # Select barcodes
 #' bc_subset(bc_obj, barcode = c("AACCTT", "AACCTT"))
@@ -82,7 +90,7 @@ check_sample_name <- function(barcodeObj) {
 #' bc_obj
 #' bc_obj - "AAAG"
 #'
-#' bc_obj
+#' # Select barcodes in white list
 #' bc_obj
 #' bc_obj * "AAAG"
 #' ###
@@ -106,7 +114,7 @@ bc_subset <- function(barcodeObj,
         sample_call <- substitute(sample)
     }
 
-    # TODO: The funciton only can apply the operation to the `messyBc` `cleanBc`
+    # TODO: The function only can apply the operation to the `messyBc` `cleanBc`
     # and `metadata`. We need to make it capable to apply the selection to all
     # information in the object.
 
@@ -234,15 +242,15 @@ bc_subset <- function(barcodeObj,
     bc_subset(barcodeObj, barcode = white_list)
 }
 
-#' Get barcode sequences
+#' Gets barcode sequences
 #'
-#' This function retrieves the barcode sequences from cleanBc element in
-#' BarcodeObj.
+#' \code{bc_barcodes} used to get the barcode sequences in BarcodeObj object. The input 
+#' BarcodesObj object should be preprocessed by \code{bc_cure_*} functions.
 #'
-#' @param barcodeObj A BarcodeObj.
-#' @param unlist A bool value, if TRUE, then the function will return a vector
-#' of unique barcodes in all samples; otherwise a list will be returned, each
-#' element is corresponding to a sample.
+#' @param barcodeObj A BarcodeObj object.
+#' @param unlist A logical value. If TRUE, the function returns a vector
+#' of unique barcode list from all samples; otherwise a list will be
+#' returned, with each element containing the barcodes of each sample.
 #' @return A character vector or a list.
 #' @examples
 #' data(bc_obj)
@@ -271,13 +279,13 @@ bc_barcodes <- function(barcodeObj, unlist = TRUE) {
     }
 }
 
-#' Sample names in BarcodeObj
+#' Gets sample names in BarcodeObj
 #'
-#' Function to get or set sample name.
+#' Get or set sample names in BarcodeObj object.
 #'
-#' @param barcodeObj A BarcodeObj.
-#' @param value A string vector with the length of the samle number. The new
-#' sample names.
+#' @param barcodeObj A BarcodeObj object.
+#' @param value A string vector setting the new sample names, with the length of the samples number in
+#' BarcodeObj object.
 #' @return A character vector
 #' @examples
 #' data(bc_obj)
@@ -317,16 +325,17 @@ bc_names <- function(barcodeObj) {
     barcodeObj
 }
 
-#' Metadata in Barcode
+#' Accesses and sets metadata in BarcodeObj object
 #'
-#' Function to get or set metadata in BarcodeObj.
+#' Accesses and sets metadata in BarcodeObj object
 #'
-#' @param barcodeObj A BarcodeObj.
-#' @param key A string, the meta data record name.
-#' @param value A string vector with the length of sample number in the
-#' BarcodeObj, or a data.frame with the length of the sample number, the new
-#' meta data record value.  If a data.frame is given, the rownames of the
-#' data.frame should be the sample names.
+#' @param barcodeObj A BarcodeObj object.
+#' @param key A string, identifying the metadata record name to be modified.
+#' @param value A string vector or a data.frame. When the "value" is a vector, it
+#' should have the length of sample number in the BarcodeObj object and the
+#' "key" variable is necessary. Otherwise, when the "value" is data.frame, the
+#' row name of the data.frame should be the sample name, and each column as a
+#' metadata record. 
 #' @return A data.frame
 #' @examples
 #' data(bc_obj)
@@ -388,12 +397,12 @@ bc_meta <- function(barcodeObj) {
 }
 
 
-#' Transform BarcodeObj into other data type
+#' Transforms BarcodeObj object into other data type
 #'
-#' Transform BarcodeObj into `data.frame`, `data.table` and matrix.
+#' Transform BarcodeObj object into data.frame, data.table and matrix.
 #'
 #' @param barcodeObj A BarcodeObj.
-#' @return A data.frame, with two columns of `barcode_seq` and `count`.
+#' @return A data.frame, with two columns named `barcode_seq` and `count`.
 #' @examples
 #' data(bc_obj)
 #'
@@ -415,7 +424,7 @@ bc_2df <- function(barcodeObj) {
 }
 
 #' @rdname bc_2df
-#' @return A data.table, with two columns of `barcode_seq` and `count`.
+#' @return A data.table, with two columns named `barcode_seq` and `count`.
 #' @export
 bc_2dt <- function(barcodeObj) {
     # TODO: enable messyBc?
@@ -467,9 +476,9 @@ count_BarcodeObj <- function(barcodeObj) {
     summary_res
 }
 
-#' Format BarcodeObj
+#' Formats BarcodeObj object
 #'
-#' Format the summary of BarcodeObj for pretty print.
+#' Formats the summary of BarcodeObj object for pretty print.
 #'
 #' @param x A BarcodeObj
 #' @param ... Additional arguments
@@ -562,4 +571,3 @@ f' print(bc_obj)
 print.BarcodeObj <- function(x, ...) {
     cat(format(x), "\n")
 }
-
