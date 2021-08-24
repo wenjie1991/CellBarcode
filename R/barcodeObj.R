@@ -53,7 +53,7 @@ check_sample_name <- function(barcodeObj) {
 #' @examples
 #' data(bc_obj)
 #'
-#' bc_obp
+#' bc_obj
 #'
 #' # Select barcodes
 #' bc_subset(bc_obj, barcode = c("AACCTT", "AACCTT"))
@@ -557,14 +557,14 @@ $cleanBc: {cleanBc_n} Samples for cleaned barcodes
 #' Print the summary of BarcodeObj
 #'
 #' @param x A BarcodeObj
-f' @param ... Additional arguments
+#' @param ... Additional arguments
 #' @return Print formated BarcodeObj summary.
 #'
 #' @examples
 #' data(bc_obj)
 #'
 #' # print BarcodeObj
-f' print(bc_obj)
+#' print(bc_obj)
 #' ###
 #' @seealso \code{\link[Bc]{format.BarcodeObj}}
 #' @export

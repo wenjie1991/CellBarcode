@@ -6,10 +6,10 @@
       Bonjour le monde, This is a BarcodeObj.
       ----------
       It contains: 
-          messyBc  metadata  cleanBc
+      messyBc  metadata  cleanBc
       ----------
       $metadata: 2 meta data field(s) available
-          sample_name  id
+      sample_name  id
       ----------
       $messyBc: 2 Samples for raw barcodes
           In sample $test11 there are: 10 Tags

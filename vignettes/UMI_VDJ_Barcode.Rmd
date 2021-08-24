@@ -5,7 +5,7 @@ author:
   - Anne-Marie Lyne^[Anne-Marie.Lyne@curie.fr]
 package: Bc
 output: 
-  BiocStyle::html
+  BiocStyle::pdf-document
 vignette: >
   %\VignetteIndexEntry{UMI_Barcode}
   %\VignetteEngine{knitr::rmarkdown}
@@ -127,7 +127,7 @@ BiocManager::install("Bc")
 
 Install the devel version from Github.
 
-```{r installation devel}
+```{r installation devel, eval=FALSE}
 # install.packages("remotes")
 remotes::install_github("wenjie1991/Bc")
 ```
@@ -175,10 +175,10 @@ bc_sub <- bc_cure_umi(bc_sub, depth = 1) %>% bc_cure_depth(depth = 1)
 bc_sub[c("AAGTCCAGTACTATCGTACTA", "AAGTCCAGTACTGTAGCTACTA"), ]
 
 # export the barcode counts to data.frame
-bc_2df(bc_sub)
+bc_2df(bc_sub) %>% head
 
 # export the barcode counts to matrix
-bc_2matrix(bc_sub)
+bc_2matrix(bc_sub) %>% head
 ```
 
 
@@ -491,3 +491,5 @@ bc_2df(bc_obj_umi[bc_barcodes(bc_obj_umi)[1], "781_mixa"])
 ```{r}
 sessionInfo()
 ```
+
+# vim: syntax=rmd ts=2 sw=4 sts=4 sr noet

@@ -43,7 +43,7 @@ d_l <- list(test1 = d1, test2 = d2)
 
 pattern <- "TCGATCGATCGA([ACTG]+)ATCGATCGATC"
 bc_obj <- bc_extract(d_l, pattern, sample_name=c("test1", "test2"))
-bc_obj <- bc_cure_depth(bc_obj, depth=5, isUpdate = FALSE)
+bc_obj <- bc_cure_depth(bc_obj, depth=6, isUpdate = FALSE)
 
 
 test_that("barcode diversity", {

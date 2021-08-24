@@ -42,14 +42,14 @@ d_l <- list(test1 = d1, test2 = d2)
 
 pattern <- "TCGATCGATCGA([ACTG]+)ATCGATCGATC"
 bc_obj <- bc_extract(d_l, pattern, sample_name=c("test1", "test2"))
-bc_obj <- bc_cure_depth(bc_obj, depth=5, isUpdate = FALSEE)
+bc_obj <- bc_cure_depth(bc_obj, depth=6, isUpdate = FALSE)
 
 
 test_that("data type transformation", {
 
   expect_equal(
     bc_2df(bc_obj[, "test1"]), 
-    data.frame(sample_name = "test1", barcode_seq = c("AGAG", "AAAG", "AGAAG", "ACAAG"), count = c(104, 50, 14, 6), stringsAsFactors=FALSEE))
+    data.frame(sample_name = "test1", barcode_seq = c("AGAG", "AAAG", "AGAAG", "ACAAG"), count = c(104, 50, 14, 6), stringsAsFactors=FALSE))
 
   expect_equal(
     bc_2dt(bc_obj[, "test1"]), 
@@ -57,7 +57,7 @@ test_that("data type transformation", {
 
   out_test <- bc_2matrix(bc_obj) 
   out_test <- out_test[order(out_test[, 1]), ]
-  out_truth <- matrix(c(104, 50, 14, 6, 104, 50, 14, 6), byrow=FALSEE, ncol=2)
+  out_truth <- matrix(c(104, 50, 14, 6, 104, 50, 14, 6), byrow=FALSE, ncol=2)
   dimnames(out_truth) <- list(c("AGAG", "AAAG", "AGAAG", "ACAAG"), c("test1", "test2"))
   out_truth <- out_truth[order(out_truth[, 1]), ]
   expect_equal(out_test, out_truth)
