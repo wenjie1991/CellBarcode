@@ -1,11 +1,13 @@
 ---
 title: "Analyzing UMI Barcode with Bc"
 author: 
-  - Wenjie Sun^[sunwjie@gmail.com]
-  - Anne-Marie Lyne^[Anne-Marie.Lyne@curie.fr]
+- name: Wenjie Sun
+- name: Anne-Marie Lyne
 package: Bc
 output: 
-  BiocStyle::pdf-document
+  BiocStyle::html_document:
+    toc_float: true
+  BiocStyle::pdf_document: default
 vignette: >
   %\VignetteIndexEntry{UMI_Barcode}
   %\VignetteEngine{knitr::rmarkdown}
@@ -23,9 +25,6 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
-
-# install.packages("ShortRead")
-# install.packages("egg")
 # install.packages("BiocStyle")
 
 library(data.table)
@@ -71,7 +70,7 @@ then you can pick the function you need from the list.
 
 The test data set in this package can be accessed by
 
-```{r}
+```{r eval=FALSE}
 system.file("extdata", "mef_test_data", package="Bc")
 ```
 
@@ -175,16 +174,16 @@ bc_sub <- bc_cure_umi(bc_sub, depth = 1) %>% bc_cure_depth(depth = 1)
 bc_sub[c("AAGTCCAGTACTATCGTACTA", "AAGTCCAGTACTGTAGCTACTA"), ]
 
 # export the barcode counts to data.frame
-bc_2df(bc_sub) %>% head
+head(bc_2df(bc_sub))
 
 # export the barcode counts to matrix
-bc_2matrix(bc_sub) %>% head
+head(bc_2matrix(bc_sub))
 ```
 
 
 # Sequence quality control
 
-## Evaluate sequence quality
+## Evaluation
 
 In a full analysis starting from fastq files, the first step is to check the seqencing quality and filter as required. The `bc_seqQC` function is for checking the sequencing quality. If multiple samples are input the output is a `BarcodeQcSet` object, otherwise a `BarcodeQC` object will be returned. In addition, `bc_seqQC` also can handle the
 `ShortReadQ`, `DNAStringSet` and other data types.
@@ -218,7 +217,7 @@ class(qc_noFilter[[1]])
 plot(qc_noFilter[[1]]) 
 ```
 
-## Filter low quality sequences
+## Filtering
 
 `bc_filterSeq` reads in the sequence data and applies filters, then returns a
 `ShortReadQ` object which contains the filtered sequences. 
@@ -244,7 +243,7 @@ fq_filter
 plot(bc_seqQC(fq_filter))
 ```
 
-# Parse reads to get barcode
+# Parse reads
 
 One of the core applications of this package is parsing the sequences to get
 the barcode (and UMI). Our package uses regular expressions to identify
@@ -301,7 +300,7 @@ in mind when you use data in `$messyBc`
 to perform the analysis.
 
 
-## Process sequencing without UMI 
+## Sequencing without UMI 
 
 In the following example, only a barcode is extracted.
 
@@ -338,7 +337,7 @@ class(bc_obj_umi)
 bc_obj_umi
 ```
 
-# Data managemeent of `BarcodeObj`
+# Data management
 
 Besides, we provide operators to handle the data for `BarcodeObj`
 object. You can easily select one or several samples by their names,
@@ -448,7 +447,7 @@ more general R data types.
 bc_names(bc_obj_umi)
 ```
 
-## `BarcodeObj` to `data.frame`
+## Output to data.frame
 
 The `cleanBc` will be used, the columns in the output:
   - barcode_seq: barcode sequence
@@ -465,7 +464,7 @@ Or if you prefer `data.table`
 bc_2dt(bc_obj_umi)
 ```
 
-## BarcodeObj to matrix
+## Output to matrix
 
 The `cleanBc` will be used, the output is reads count or UMI count matrix, with
 barcodes in rows and samples in columns.
@@ -474,7 +473,7 @@ barcodes in rows and samples in columns.
 bc_2matrix(bc_obj_umi)
 ```
 
-## Combination
+## Combine two datasets
 
 You can combined several operations together to accomplish more complex
 operations.
@@ -491,5 +490,3 @@ bc_2df(bc_obj_umi[bc_barcodes(bc_obj_umi)[1], "781_mixa"])
 ```{r}
 sessionInfo()
 ```
-
-# vim: syntax=rmd ts=2 sw=4 sts=4 sr noet

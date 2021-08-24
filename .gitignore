@@ -35,3 +35,5 @@ devtools.R
 inst/doc
 data
 .clangd
+/doc/
+/Meta/

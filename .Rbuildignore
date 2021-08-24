@@ -7,3 +7,5 @@ devtools.R
 .clangd
 ./bk/*
 ./compile_commands.json
+^doc$
+^Meta$
