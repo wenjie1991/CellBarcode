@@ -2,7 +2,7 @@
 % Please edit documentation in R/barcodeObj.R
 \name{format.BarcodeObj}
 \alias{format.BarcodeObj}
-\title{Format BarcodeObj}
+\title{Formats BarcodeObj object}
 \usage{
 \method{format}{BarcodeObj}(x, ...)
 }
@@ -15,7 +15,7 @@
 Formated BarcodeObj summary.
 }
 \description{
-Format the summary of BarcodeObj for pretty print.
+Formats the summary of BarcodeObj object for pretty print.
 }
 \examples{
 data(bc_obj)

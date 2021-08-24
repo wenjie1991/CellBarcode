@@ -2,23 +2,23 @@
 % Please edit documentation in R/barcodeObj.R
 \name{bc_barcodes}
 \alias{bc_barcodes}
-\title{Get barcode sequences}
+\title{Gets barcode sequences}
 \usage{
 bc_barcodes(barcodeObj, unlist = TRUE)
 }
 \arguments{
-\item{barcodeObj}{A BarcodeObj.}
+\item{barcodeObj}{A BarcodeObj object.}
 
-\item{unlist}{A bool value, if TRUE, then the function will return a vector
-of unique barcodes in all samples; otherwise a list will be returned, each
-element is corresponding to a sample.}
+\item{unlist}{A logical value. If TRUE, the function returns a vector
+of unique barcode list from all samples; otherwise a list will be
+returned, with each element containing the barcodes of each sample.}
 }
 \value{
 A character vector or a list.
 }
 \description{
-This function retrieves the barcode sequences from cleanBc element in
-BarcodeObj.
+\code{bc_barcodes} used to get the barcode sequences in BarcodeObj object. The input 
+BarcodesObj object should be preprocessed by \code{bc_cure_*} functions.
 }
 \examples{
 data(bc_obj)

@@ -6,10 +6,10 @@
 \title{DNA Barcode Analysis toolkit}
 \description{
 This package performs DNA Barcode analysis. The package can handle all kinds
-of DNA barcodes, as long as the barcode withine a single reads and has a
-pattern that can be matched by regular expression. This package can handle
+of DNA barcodes, as long as the barcode within a single reads and has a
+pattern that can be matched by a regular expression. This package can handle
 barcode with flexible length, with or without UMI (unique molecular
-identifier). This tool also can be used for preprocssing of amplicon data
-analysis such as CRISPR gRNA screening, immue repotoire sequencing and meta
+identifier). This tool also can be used for preprocessing of amplicon data
+such as CRISPR gRNA screening, immune repertoire sequencing and meta
 genome data.
 }

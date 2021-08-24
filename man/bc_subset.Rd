@@ -6,7 +6,7 @@
 \alias{+.BarcodeObj}
 \alias{-.BarcodeObj}
 \alias{*.BarcodeObj}
-\title{Manage barcodes or samples in a BarcodeObj}
+\title{Manages barcodes and samples in the BarcodeObj object}
 \usage{
 bc_subset(
   barcodeObj,
@@ -25,41 +25,52 @@ bc_subset(
 \method{*}{BarcodeObj}(barcodeObj, white_list)
 }
 \arguments{
-\item{barcodeObj}{A BarcodeObj}
+\item{barcodeObj}{A BarcodeObj.}
 
 \item{sample}{A vector or an expression, specifying the samples in the
-subsets. And in the expression, the metadata can be used as variable.}
+subsets. When the value is an expression, the metadata can be used as variable.}
 
 \item{barcode}{A vector of integer or string, indicating the selected
 barcode.}
 
-\item{black_list}{A character vector. Remove the barcodes in the black list.}
+\item{black_list}{A character vector, specifying the black list with excluded barcodes.}
 
-\item{is_sample_quoted_exp}{A bool value. If TRUE, indicating the
-expression in \emph{sample} argument is quoted.}
+\item{is_sample_quoted_exp}{A logical value. If TRUE, the
+expression in \code{sample} argument will not be evaluated before executing
+the function.}
 
-\item{...}{Additional arguments}
+\item{...}{Additional arguments.}
 
-\item{barcodeObj_x}{A BarcodeObj}
+\item{barcodeObj_x}{A BarcodeObj object.}
 
-\item{barcodeObj_y}{A BarcodeObj}
+\item{barcodeObj_y}{A BarcodeObj object.}
 
-\item{white_list}{A character vector. Only barcodes in the white list kept.}
+\item{white_list}{A character vector, giving the barcode white list.}
 }
 \value{
-A BarcodeObj
+A BarcodeObj object.
 }
 \description{
-Get a subsets of or join BarcodesObj.
+A set of functions and operators for subset and join of
+BarcodeObj object(s). 
+The bc_subset is used to select barcodes or samples in a BarcodeObj object.
+\code{*} and \code{-} are for a subset of barcodes using white list and black list
+respecrespectively.
+Two BarcodeObj objects can be joined by \code{+}.
 }
 \details{
-`bc_subset` and `[]` used for selecting samples barcodes.
+\code{bc_subset} and \code{[]}: Gets samples and barcodes subset.
 
-`+` used for combining two BarcodesObj.
+\code{+}: Combines two BarcodeObj objects. The \code{metadata}, \code{cleanBc} and
+\code{messyBc} in BarcodeObj elements in BarcodeObj object will be joined. 
+For the \code{metadata} element, the \code{sample_name} column will be used as the key for the
+join, and the \emph{Full outer join} (the record in either BarcodeObj object) will
+be returned. 
+The \code{messyBc} and \code{cleanBc} from two objects are combined by rows.
 
-`-` used for removing barcodes in a black_list.
+\code{-}: removing barcodes in the black_list.
 
-`*` used for selecting barcodes in a white_list.
+\code{*}: selecting barcodes in the white_list.
 }
 \examples{
 data(bc_obj)

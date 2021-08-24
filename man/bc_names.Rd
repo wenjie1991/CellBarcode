@@ -3,23 +3,23 @@
 \name{bc_names}
 \alias{bc_names}
 \alias{bc_names<-}
-\title{Sample names in BarcodeObj}
+\title{Gets sample names in BarcodeObj}
 \usage{
 bc_names(barcodeObj)
 
 bc_names(barcodeObj) <- value
 }
 \arguments{
-\item{barcodeObj}{A BarcodeObj.}
+\item{barcodeObj}{A BarcodeObj object.}
 
-\item{value}{A string vector with the length of the samle number. The new
-sample names.}
+\item{value}{A string vector setting the new sample names, with the length of the samples number in
+BarcodeObj object.}
 }
 \value{
 A character vector
 }
 \description{
-Function to get or set sample name.
+Get or set sample names in BarcodeObj object.
 }
 \examples{
 data(bc_obj)

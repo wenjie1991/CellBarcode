@@ -4,7 +4,7 @@
 \alias{bc_2df}
 \alias{bc_2dt}
 \alias{bc_2matrix}
-\title{Transform BarcodeObj into other data type}
+\title{Transforms BarcodeObj object into other data type}
 \usage{
 bc_2df(barcodeObj)
 
@@ -16,14 +16,14 @@ bc_2matrix(barcodeObj)
 \item{barcodeObj}{A BarcodeObj.}
 }
 \value{
-A data.frame, with two columns of `barcode_seq` and `count`.
+A data.frame, with two columns named `barcode_seq` and `count`.
 
-A data.table, with two columns of `barcode_seq` and `count`.
+A data.table, with two columns named `barcode_seq` and `count`.
 
 matrix
 }
 \description{
-Transform BarcodeObj into `data.frame`, `data.table` and matrix.
+Transform BarcodeObj object into data.frame, data.table and matrix.
 }
 \examples{
 data(bc_obj)

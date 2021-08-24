@@ -2,39 +2,37 @@
 % Please edit documentation in R/correctBarcode.R
 \name{bc_cure_umi}
 \alias{bc_cure_umi}
-\title{Filter on UMI-barcode tags}
+\title{Filters on UMI-barcode tags counts when UMI used}
 \usage{
 bc_cure_umi(barcodeObj, depth = 2, doFish = FALSE, isUniqueUMI = FALSE)
 }
 \arguments{
-\item{barcodeObj}{A BarcodeObj}
+\item{barcodeObj}{A BarcodeObj object.}
 
 \item{depth}{A single or a vector of numeric, specifying the UMI-sequence
-tags counts threshold. Only the barcode with UMI-barcode larger than the
-threshold are considered barcodes.}
+tags count threshold. Only the barcodes with UMI-barcode tag count larger than
+the threshold are considered true barcodes.}
 
-\item{doFish}{A single or a vector of bool value, if TRUE, the "fishing"
-process will be applied to re-counting the UMI with  barcodes, which are not
-satisfied depth threshold.}
+\item{doFish}{A single or a vector of logical value. If TRUE, the "fishing"
+process will be applied to re-counting the UMI with true barcodes, but the
+UMI-barocde tag not satisfies the depth threshold.}
 
-\item{isUniqueUMI}{A single or a vector of bool value. In the case that a UMI
+\item{isUniqueUMI}{A single or a vector of logical value. When a UMI
 relates to several barcodes. If you believe that the UMI is absolute unique,
 then only the dominant sequence is chosen for each UMI.}
 }
 \value{
-A BarcodeObj
+A BarcodeObj object with cleanBc element updated (or created).
 }
 \description{
-When the UMI is used and identified by bc_extract, this function applies
-the filtering on the UMI-barcode tags.  This function read in data in
-messyBc element and create a cleanBc element in BarcodeObj.
+When the UMI is used, bc_cure_umi applies the filtering on the UMI-barcode tags counts.
 }
 \details{
 When invoke this function, the order of each steps are:
 \enumerate{
-  \item (optional) Find dominant sequence in each UMI.
+  \item (optional when isUniqueUMI is TRUE) Find dominant sequence in each UMI.
   \item UMI-barcode depth filtering.
-  \item (optional) Fising the UMI with low UMI-barcode depth.
+  \item (optional when doFish is TRUE) Fishing the UMI with low UMI-barcode depth.
 }
 }
 \examples{
@@ -63,7 +61,7 @@ pattern <- "([ACTG]{3})TCGATCGATCGA([ACTG]+)ATCGATCGATC"
 bc_obj <- bc_extract(list(test = d1), pattern, sample_name=c("test"), 
     pattern_type=c(UMI=1, barcode=2))
 
-# Use UMI information to filter the barcode <= 5 UMI-barcode tags
+# Use UMI information to remove the barcode < 5 UMI-barcode tags
 bc_umi_cured <- bc_cure_umi(bc_obj, depth =0, doFish=TRUE, isUniqueUMI=TRUE)
 bc_cure_depth(bc_umi_cured, depth = 5)
 

@@ -59,13 +59,14 @@ threshold of a sequence.}
 \item{N_threshold}{A single or a vector of integer, specifying the maximum
 \code{N} in a sequence.}
 
-\item{sample_name}{A string vector, rename the samples.}
+\item{sample_name}{A string vector, specifying the sample name in the output.}
 }
 \value{
-A ShortReadQ or DNAStringSet object with sequences passed the filters
+A ShortReadQ or DNAStringSet object with sequences passed the
+filters.
 }
 \description{
-Apply quality filters to remove low quality sequence.
+Applies quality filter to remove low quality sequence.
 }
 \examples{
 library(ShortRead)

@@ -10,7 +10,7 @@
 \alias{bc_seqQC.list}
 \alias{plot.barcodeQc}
 \alias{plot.barcodeQcSet}
-\title{Perform quality control}
+\title{Performs quality control}
 \usage{
 bc_seqQC(...)
 
@@ -33,8 +33,8 @@ bc_seqQC(...)
 \arguments{
 \item{...}{Additional arguments}
 
-\item{x}{A single or list of Fastq file, ShortReadQ Obj, DNAStringSet Obj,
-data.frame or named integer vector.}
+\item{x}{A single or list of Fastq file, ShortReadQ object, DNAStringSet
+object, data.frame or named integer vector.}
 
 \item{file}{A string. Fastq file name}
 
@@ -43,18 +43,18 @@ the samples.}
 }
 \value{
 A barcodeQc or barcodeQcSet class. 
-The barcodeQc is list with two elements, 
+The barcodeQc is a list with two elements, 
 \itemize{
-  \item base_quality_per_cycle: data.frame with row of sequence basepair
-  location, the columns are the basepair sequencing quality summary
+  \item base_quality_per_cycle: data.frame with sequence base-pair
+  location by row, and the base-pair sequencing quality summary by column.
   \item base_freq_per_cycle: data.frame with three columns, \emph{Cycle}: the
-  sequence basepair location (NGS sequencing cycle); \emph{Base}: DNA base;
+  sequence base-pair location (NGS sequencing cycle); \emph{Base}: DNA base;
   \emph{Count}: reads count.
 }
-The barcodeQcSet is list of barcodeQc.
+The barcodeQcSet is a list of barcodeQc.
 }
 \description{
-Perform quality control
+bc_seqQC evaluates the sequence quality.
 }
 \examples{
 library(ShortRead)

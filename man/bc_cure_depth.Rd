@@ -2,26 +2,27 @@
 % Please edit documentation in R/correctBarcode.R
 \name{bc_cure_depth}
 \alias{bc_cure_depth}
-\title{Filter barcodes by count}
+\title{Filters barcodes by counts}
 \usage{
 bc_cure_depth(barcodeObj, depth = 0, isUpdate = TRUE)
 }
 \arguments{
-\item{barcodeObj}{A BarcodeObj.}
+\item{barcodeObj}{A BarcodeObj object.}
 
 \item{depth}{A single or vector of numeric, specifying the threshold
-of the threshold of minimum count for a sequence to kept.}
+of the threshold of minimum count for a sequence to kept. If the input is a
+vector, the vector length should be the same to the sample number.}
 
-\item{isUpdate}{A bool, if TRUE, the cleanBc element in BarcodeObj will
-be used, otherwise the messyBc element will be used. In the case that no
-cleanBc is available, messyBc will always be used.}
+\item{isUpdate}{A logical value. If TRUE, the cleanBc element in BarcodeObj
+will be used, otherwise the messyBc element will be used. If no
+cleanBc is available, messyBc will be used instead.}
 }
 \value{
-A BarcodeObj with cleanBc update.
+A BarcodeObj object with cleanBc element updated.
 }
 \description{
-The function filter barcodes by applying the filter on the reads count or the
-UMI count.
+bc_cure_depth filters barcodes by applying the filter on the read counts or
+the UMI counts.
 }
 \examples{
 data(bc_obj)
@@ -46,7 +47,7 @@ d1 <- data.frame(
     )
 
 pattern <- "([ACTG]{3})TCGATCGATCGA([ACTG]+)ATCGATCGATC"
-bc_obj <- bc_extract(list(test = d1), pattern, sample_name=c("test"), 
+bc_obj <- bc_extract(list(test = d1), pattern, sample_name=c("test"),
     pattern_type=c(UMI=1, barcode=2))
 
 # Remove barcodes with depth <= 5
@@ -57,5 +58,5 @@ bc_2matrix(bc_cured)
 bc_umi_cured <- bc_cure_umi(bc_obj, depth =0, doFish=TRUE, isUniqueUMI=TRUE)
 bc_cure_depth(bc_umi_cured, depth = 5)
 
-### 
+###
 }

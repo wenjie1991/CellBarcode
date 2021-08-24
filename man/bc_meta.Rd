@@ -3,27 +3,28 @@
 \name{bc_meta}
 \alias{bc_meta}
 \alias{bc_meta<-}
-\title{Metadata in Barcode}
+\title{Accesses and sets metadata in BarcodeObj object}
 \usage{
 bc_meta(barcodeObj)
 
 bc_meta(barcodeObj, key = NULL) <- value
 }
 \arguments{
-\item{barcodeObj}{A BarcodeObj.}
+\item{barcodeObj}{A BarcodeObj object.}
 
-\item{key}{A string, the meta data record name.}
+\item{key}{A string, identifying the metadata record name to be modified.}
 
-\item{value}{A string vector with the length of sample number in the
-BarcodeObj, or a data.frame with the length of the sample number, the new
-meta data record value.  If a data.frame is given, the rownames of the
-data.frame should be the sample names.}
+\item{value}{A string vector or a data.frame. When the "value" is a vector, it
+should have the length of sample number in the BarcodeObj object and the
+"key" variable is necessary. Otherwise, when the "value" is data.frame, the
+row name of the data.frame should be the sample name, and each column as a
+metadata record.}
 }
 \value{
 A data.frame
 }
 \description{
-Function to get or set metadata in BarcodeObj.
+Accesses and sets metadata in BarcodeObj object
 }
 \examples{
 data(bc_obj)

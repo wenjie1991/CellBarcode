@@ -89,37 +89,39 @@ data.frame, or named integer.}
 \item{pattern}{A single character string, specifying the regular expression
 with capture to match the barcode which capture pattern.}
 
-\item{sample_name}{A string vector, applicable when x is list or fastq file
-vector. This argument specifies the sample names. If this argument is not
-provided, then the list names of the x will be used, or the file name will be
-used.}
+\item{sample_name}{A string vector, applicable when x is a list or fastq file
+vector. This argument specifies the sample names. If not
+provided, then the names or the value of the x will be used.}
 
 \item{maxLDist}{A integer. The mismatch threshold for barcode matching, when
 maxLDist is 0, the \code{\link[stringr]{str_match}}  is
-invoked, otherwise \code{\link[utils]{aregexec}} is invoked.}
+invoked for barcode matching which is faster, otherwise
+\code{\link[utils]{aregexec}} is invoked and the \code{costs} parameters can
+be used to specifying the weight of the distance calculation.}
 
 \item{pattern_type}{A vector. It defines the barcode (and UMI) capture
 group. See Details.}
 
 \item{costs}{A named list, applicable when maxLDist > 0, specifying the
-weight for each mismatch events while matching the barcode using pattern,
-with names of sub (substitution), ins (insertion), del (deletion). The
-default value is \code{list(sub = 1, ins = 99, del = 99)}.}
+weight for each mismatch events while doing the pattern matching of barcode.
+The list element name should be sub (substitution), ins (insertion) and del
+(deletion). The default value is \code{list(sub = 1, ins = 99, del = 99)}.
+See \code{\link[utils]{aregexec}} for more detail information.}
 
-\item{ordered}{A bool value. if the value is true, then the return barcodes
+\item{ordered}{A bool value. If the value is true, the return barcodes
 (UMI-barcode tags) are sorted by the reads counts.}
 
-\item{file}{A single or a vector of character string of Fastq file name.}
+\item{file}{A single or a vector of character string of fastq file name.}
 
-\item{metadata}{A data.frame with each row of a sample, each column is a
-meta data record.}
+\item{metadata}{A data.frame with sample per each row, and metadata per column 
+, specifying the sample characteristics.}
 }
 \value{
 This function returns a BarcodeObj object if the input is a list or a
 vector of Fastq files, otherwise it returns a data.frame. In the later case
 the data.frame has 5 columns:
 \enumerate{
-  \item reads_seq: sequence of the reads before parsing.
+  \item reads_seq: sequence of the reads. 
   \item match_seq: the sequence among read matched by pattern.
   \item umi_seq (optional): UMI sequence, applicable when there is UMI in
      `pattern` and `pattern_type` argument.
@@ -127,31 +129,30 @@ the data.frame has 5 columns:
   \item count: reads number.
 }
 
-The match_seq is part of reads_seq; The umi_seq and barcode_seq are part of
-match_seq. The reads_seq is the unique id for each record (row), but the
-match_seq, umi_seq or barcode_seq may not be unique, due to the potential
-variation in the outside the region of matched sequence.
+The \code{match_seq} is part of \code{reads_seq}; The \code{umi_seq} and \code{barcode_seq} are part of
+\code{match_seq}. The \code{reads_seq} is the unique id for each record (row), but the
+\code{match_seq}, \code{umi_seq} or \code{barcode_seq} may duplicated between rows.
 }
 \description{
-This function identifies the barcodes and (or) UMI from the seqeunces.
+bc_extract identifies the barcodes (and UMI) from the sequences using regular expressions.
 \code{pattern} and \code{pattern_type} arguments are necessary, which provide
 the barcode (and UMI) pattern and their location within the sequences.
 }
 \details{
-The pattern argument is a regular expression, the capture operation \code{()}
-shows the barcode or UMI. pattern_type argument is the annotation of the
-capture pattern, shows which captured patteern is UMI or the barcode. In the
+The input of \code{pattern} argument is a regular expression, the capture operation \code{()}
+identifying the barcode or UMI. \code{pattern_type} argument annotates of the
+capture pattern, identifying the UMI or the barcode captured pattern. In the
 example:
 \preformatted{
 ([ACTG]{3})TCGATCGATCGA([ACTG]+)ATCGATCGATC
-|--- starts with 3 base pairs UMI
-           |--- constant sequence in the backbone
-                       |--- flexible barcode seqeunces.
-                               |--- 3' constant sequence
+|--- starts with 3 base pairs UMI.
+           |--- constant sequence in the backbone.
+                       |--- flexible barcode sequences.
+                               |--- 3' constant sequence.
 }
 
-In the UMI pattern \code{[ACGT]{3}}, the \code{[ACGT]} means it can be one of
-the "A", "C", "G" and "T", and the \code{{3}} means there are 12
+In UMI part \code{[ACGT]{3}}, \code{[ACGT]} means it can be one of
+the "A", "C", "G" and "T", and \code{{3}} means there are 3 
 \code{[ACGT]}. In the barcode pattern \code{[ACGT]+}, the \code{+} denotes
 that there is at least one of the \code{[ACGT]}.
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/correctBarcode.R
 \name{bc_cure_cluster}
 \alias{bc_cure_cluster}
-\title{Merge barcodes by editing distance}
+\title{Merges barcodes by editing distance}
 \usage{
 bc_cure_cluster(
   barcodeObj,
@@ -14,36 +14,38 @@ bc_cure_cluster(
 )
 }
 \arguments{
-\item{barcodeObj}{A BarcodeObj.}
+\item{barcodeObj}{A BarcodeObj object.}
 
-\item{distance}{A sigle or a vector of integer, specifying he editing
-distance threshold if two sequence is similar enough to be merged.}
+\item{distance}{A single or a vector of integer, specifying the editing
+distance threshold of merging two similar barcode sequences.}
 
-\item{dist_method}{A  character string specifying the distance algorithm used
+\item{dist_method}{A  character string, specifying the distance algorithm used
 to evaluate the barcodes similarity. It can be "hamm" for Hamming distance or
 "leven" for Levenshtein distance.}
 
 \item{merge_method}{A character string specifying the algorithm used to
 perform the clustering merging of two barcodes. Currently only "greedy" is
-available, the least abundent barcode to the most abundent ones, merge the
-least abundent to the most abundent ones.}
+available, in this case, the least abundant barcode is merged to the most
+abundant ones.}
 
 \item{barcode_n}{A single or vector of integer, specifying the max sequences
-number should be. When the most abundent barcodes are satisfied this number
-the merging finished, and all the rest sub-abundent sequences are removed.}
+number to get. When the most abundant barcodes number reaches this number
+the merging finished, and all the rest sub-abundent sequences are
+discarded.}
 
 \item{dist_costs}{A list, the costs of the events when calculate distance
 between to barcode sequences, applicable when Levenshtein distance is 
-applied. The names of vector can be of "insert", "delete" and 
-"replace". The default cost is 1.}
+applied. The names of vector can be of "insert", "delete" and "replace",
+specifying the weight of insertion, deletion, replacement events
+respectively. The default cost for each evens is 1.}
 }
 \value{
-A BarcodeObj with cleanBc element updated.
+A BarcodeObj object with cleanBc element updated.
 }
 \description{
-This function performs the clustering to merge the barcodes with similar
-sequence. This function is only appliable to the BarcodeObj with a cleanBc
-element.
+bc_cure_cluster performs the clustering of barcodes by editing distance,
+then merge the barcodes with similar sequence. This function is only
+applicable for the BarcodeObj object with a cleanBc element.
 }
 \examples{
 data(bc_obj)
