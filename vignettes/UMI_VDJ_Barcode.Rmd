@@ -1,9 +1,11 @@
 ---
 title: "Analyzing UMI Barcode with Bc"
-author: "Wenjie Sun"
+author: 
+  - Wenjie Sun^[sunwjie@gmail.com]
+  - Anne-Marie Lyne^[Anne-Marie.Lyne@curie.fr]
 package: Bc
 output: 
-  BiocStyle::pdf_document
+  BiocStyle::html
 vignette: >
   %\VignetteIndexEntry{UMI_Barcode}
   %\VignetteEngine{knitr::rmarkdown}
@@ -206,7 +208,7 @@ plot(qc_noFilter)
 ```
 
 We can also choose to plot one of the `BarcodeQc` in the `BarcodeQcSet` object. In the
-output, there are three panels. The top left one shows the amplicon sequencing
+output, there are three panels. The top left one shows the reads depth 
 distribution, the top right figure shows the "ATCG" base ratio by each
 sequencing cycle, and the last one shows the sequencing quality by sequencing
 cycle.
@@ -286,7 +288,7 @@ Each `data.frame` has 5 columns:
 3. umi_seq (optional): UMI sequence, applicable when there is a UMI in `pattern`
    and `pattern_type` argument.
 4. barcode_seq: barcode sequence.
-5. count: reads number.
+5. count: how many reads a barcode has. 
 
 If the input to `bc_extract` is just one sample, the output is a single `data.frame` with the 5 columns 1). `reads_seq`, 2). `match_seq`, 3). `umi_seq`, 4).
 `barcode_seq` and 5). `count`, as described above.
@@ -338,7 +340,7 @@ bc_obj_umi
 
 # Data managemeent of `BarcodeObj`
 
-Besides, we provide a serials operator to handle the data for `BarcodeObj`
+Besides, we provide operators to handle the data for `BarcodeObj`
 object. You can easily select one or several samples by their names,
 indices or metadata.
 
@@ -374,7 +376,7 @@ bc_subset(bc_obj_umi, sample = rep == "a")
 
 `bc_extract` will output all the barcodes found in the sequences. Some of
 the identified barcodes may come from PCR or sequencing errors. The `bc_cure_*`
-functions perform filtering for true barcodes. The `bc_cure_*`
+functions perform filtering for barcodes. The `bc_cure_*`
 functions create or update the `cleanBc` element in `BarcodeObj`. The `cleanBc`
 element contains 2 columns
   - barcode_seq: barcode sequence
@@ -382,8 +384,14 @@ element contains 2 columns
 
 In the `bc_cure_*` function family, there is:
 
+- `bc_cure_depth` perform filtering by sequence depth.
+  - depth: sequence depth.
+  - isUpdate: if true the bc_cure will perform filtering on the `cleanBc`
+    element and update it, otherwise `messyBc` will be used and update
+    `cleanBc`.
+
 - `bc_cure_umi` it processes the `messyBc` element, filtering based on the
-  UMI-barcode tag depth, the available arguments, 
+  UMI-barcode reads counts, the available arguments, 
   - depth: minimum read depth for a UMI.
   - doFish: if true, "fish" for UMIs with true barcodes with UMI depth below the threshold. The consequence of "doFish" will not increase the number of identified barcodes, but the UMI counts will increase due to including the low depth UMI barcodes.
   - isUniqueUMI: in data, a single UMI can be detected with multiple different barcodes. Do you believe the UMI
@@ -394,17 +402,29 @@ In the `bc_cure_*` function family, there is:
 - `bc_cure_cluster` do clustering to merge the barcodes with insufficient
   depth (or UMI counts) to the most abundant ones, it needs the `cleanBc`
   element and will update it.
-  - distance: the distance threshold to trigger the merge.
+  - distance: a single or a vector of integer, specifying the editing
+    distance threshold of merging two similar barcode sequences. 
   - barcode_n: max barcode number, when this number is reached the clustering will
     stop and the remaining barcodes are obsolete.
   - dist_method: the distance algorithm, currently only "hamm" (Hamming distance) available.
   - merge_method: the distance algorithm, only "greedy" available currently.
+  - dist_method: A  character string, specifying the distance algorithm used
+    to evaluate the barcodes similarity. It can be "hamm" for Hamming distance or
+    "leven" for Levenshtein distance.
+  - merge_method: A character string specifying the algorithm used to
+    perform the clustering merging of two barcodes. Currently only "greedy" is
+    available, in this case, the least abundant barcode is merged to the most
+    abundant ones.
+  - barcode_n: A single or vector of integer, specifying the max sequences
+    number to get. When the most abundant barcodes number reaches this number
+    the merging finished, and all the rest sub-abundent sequences are
+    discarded. 
+  - dist_costs: A list, the costs of the events when calculate distance
+    between to barcode sequences, applicable when Levenshtein distance is 
+    applied. The names of vector can be of "insert", "delete" and "replace",
+    specifying the weight of insertion, deletion, replacement events
+    respectively. The default cost for each evens is 1.
   
-- `bc_cure_depth` perform filtering by sequence depth or UMI counts.
-  - depth: sequence depth or UMI counts threshold
-  - isUpdate: if true the bc_cure will perform filtering on the `cleanBc`
-    element and update it, otherwise `messyBc` will be used and update
-    `cleanBc`.
  
 ```{r correct_barcodde_with_UMI}
 # Filter the barcode with UMI-barcode pairs > 1, and treat UMI as absolute

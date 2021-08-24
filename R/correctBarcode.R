@@ -75,7 +75,7 @@ bc_cure_depth <- function(
             ## TODO: If the output is empty (with 0 row) ...
             d[, 
                 .(count = sum(count)), 
-                by = barcode_seq][count > parameter_df[i, "depth"]]
+                by = barcode_seq][count >= parameter_df[i, "depth"]]
         }
     )
 
@@ -298,7 +298,7 @@ bc_cure_cluster <- function(
 #' bc_obj <- bc_extract(list(test = d1), pattern, sample_name=c("test"), 
 #'     pattern_type=c(UMI=1, barcode=2))
 #'
-#' # Use UMI information to filter the barcode <= 5 UMI-barcode tags
+#' # Use UMI information to remove the barcode < 5 UMI-barcode tags
 #' bc_umi_cured <- bc_cure_umi(bc_obj, depth =0, doFish=TRUE, isUniqueUMI=TRUE)
 #' bc_cure_depth(bc_umi_cured, depth = 5)
 #'
@@ -332,7 +332,7 @@ bc_cure_umi <- function(
                     count = max(count)), by = umi_seq]
         } 
 
-        d1 = d0[count > parameter_df[i, "umi_depth"]]
+        d1 = d0[count >= parameter_df[i, "umi_depth"]]
 
         if (doFish) {
             # including umi with true barcodes do not meet depth threshold
