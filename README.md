@@ -1,3 +1,5 @@
+[![R-CMD-check](https://github.com/wenjie1991/Bc/actions/workflows/check-standard.yaml/badge.svg)](https://github.com/wenjie1991/Bc/actions/workflows/check-standard.yaml)
+
 # Bc
 
 **Bc** is an R package for dealing with **DNA barcoding** sequencing data.
