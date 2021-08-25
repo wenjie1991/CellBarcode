@@ -9,3 +9,4 @@ devtools.R
 ./compile_commands.json
 ^doc$
 ^Meta$
+^\.github$
