@@ -1,33 +1,24 @@
-# BC
+# Bc
 
-**Bc** is an R package for dealing with **genetic barcode** data.
+**Bc** is an R package for dealing with **DNA barcoding** sequencing data.
+
+## Kinds of barcodes
+
+**Bc** handle all kinds of DNA barcodes, as long as:
+
+- The barcode have a pattern which be matched by a regular expression.
+- Each barcode is within a single sequencing read.
 
 ## What you can do with **Bc**
 
-In other words, what Bc can do for you. If you are reading these words, you must
-know the general knowledge of genetic barcodes. If you don't, maybe you need
-to read the following reviews "# TODO add paper links". Of course, our article about
-this tool is also good (but not yet written).
-
-Briefly, **Bc** can provide you (so far)
-
-- Quality control the DNA sequence results and filter the sequences according
+- Performs quality control the DNA sequence results and filters the sequences according
   to the quality metrics.
 
-- Parsing sequences, extracting Barcode (and UMI) information.
+- Parses sequences, extracts barcode (and UMI) information.
 
-- Quality control and filter the Barcode. And give you reliable Barcodes.
+- Performs quality control and filters the barcode.
 
-- Toolkits make it easier to manipulate Barcode data.
-
-If you want to learn more about the **Bc** utilization, reading the examples in
-vignettes can be a good way (Vignette link):
-
-- [A simple example]()
-
-- [Barcode with UMI]()
-
-- [More example]()
+- Provides toolkits make it easier to manipulate samples and barcodes with metadata.
 
 ## Installing
 
@@ -38,20 +29,57 @@ library(devtools)
 install_github("wenjie1991/Bc")
 ```
 
-2. Release in GitHub ...
-
-3. Bioconductor
+2. Bioconductor
 TBD (I hope the package can be accepted in Bioconductor).
 
-## Contributing
+## Get start
 
-If you think it's useful to you now, then please make the most of it. "Useful"
-is the value of its existence.
+Here is an example of a basic workflow:
 
-If you think it's not so good to use, then please:
+```{r basic_workflow}
+library(Bc)
+library(magrittr)
 
-Pull requests are welcome. If you encounter any trouble, open an issue before
-give it up.
+# The example data is the mix of MEF lines with known barcodes
+# 2000 reads for each file have been sampled for this test dataset
+# TODO: Citation of the paper:
+example_data <- system.file("extdata", "mef_test_data", package = "Bc")
+fq_files <- dir(example_data, "gz", full=TRUE)
+
+# prepare metadata
+metadata <- stringr::str_split_fixed(basename(fq_files), "_", 10)[, c(4, 6)]
+metadata <- data.frame(metadata)
+sample_name <- apply(metadata, 1, paste, collapse = "_")
+colnames(metadata) = c("cell_number", "replication")
+rownames(metadata) = sample_name
+metadata
+
+# extract UMI barcode with regular expression
+bc_obj <- bc_extract(
+  fq_files,
+  pattern = "(.{12})CTCGAGGTCATCGAAGTATCAAG(.+)TAGCAAGCTCGAGAGTAGACCTACT", 
+  pattern_type = c("UMI" = 1, "barcode" = 2),
+  sample_name = sample_name,
+  metadata = metadata
+)
+bc_obj
+
+# sample subset operation, select technical repeats 'mixa'
+bc_sub = bc_obj[, replication == "mixa"]
+bc_sub 
+
+# filter the barcode, UMI barcode amplicon > 1 & UMI counts > 1
+bc_sub <- bc_cure_umi(bc_sub, depth = 1) %>% bc_cure_depth(depth = 1)
+
+# select barcodes with a white list
+bc_sub[c("AAGTCCAGTACTATCGTACTA", "AAGTCCAGTACTGTAGCTACTA"), ]
+
+# export the barcode counts to data.frame
+head(bc_2df(bc_sub))
+
+# export the barcode counts to matrix
+head(bc_2matrix(bc_sub))
+```
 
 ## License
 
