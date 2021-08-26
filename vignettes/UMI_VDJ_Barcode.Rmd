@@ -25,8 +25,6 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
-# install.packages("BiocStyle")
-
 library(data.table)
 library(ggplot2)
 library(CellBarcode)
@@ -373,67 +371,112 @@ bc_subset(bc_obj_umi, sample = rep == "a")
 
 # Barcode filtering
 
-`bc_extract` will output all the barcodes found in the sequences. Some of
-the identified barcodes may come from PCR or sequencing errors. The `bc_cure_*`
-functions perform filtering for barcodes. The `bc_cure_*`
+Most of times, it needs PCR and NGS sequencing to read out the cellular barcode. `bc_extract` will output all the barcodes found in the sequences. Some of the identified barcodes may come from PCR or sequencing errors. 
+
+The potential errors derived from PCR and NGS sequencing lead to spurious barcodes. The spurious barcodes are more likely to be less abundant comparing to corresponding "mother" barcodes which they derived from.
+
+What's more, UMI (unique molecular identifier) can be used to label a barcode DNA molecular. After PCR, one barcode-UMI molecular becomes multiple copies with the same UMI. Thus all the sequences derived from one template, including original template sequence and mutant ones, are marked. The original template sequence is likely having more reads comparing to spurious one, because errors happened with low probability. Also, a barcode sequence is less likely to be spurious one when it relates to several UMIs. 
+
+The `bc_cure_*` functions perform filtering for barcodes. The `bc_cure_*`
 functions create or update the `cleanBc` element in `BarcodeObj`. The `cleanBc`
 element contains 2 columns
   - barcode_seq: barcode sequence
   - counts: reads count or UMI count
 
-In the `bc_cure_*` function family, there is:
+In the `bc_cure_*` function family, there are `bc_cure_depth`, `bc_cure_umi` and `bc_cure_cluster`.
 
-- `bc_cure_depth` perform filtering by sequence depth.
-  - depth: sequence depth.
-  - isUpdate: if true the bc_cure will perform filtering on the `cleanBc`
-    element and update it, otherwise `messyBc` will be used and update
-    `cleanBc`.
 
-- `bc_cure_umi` it processes the `messyBc` element, filtering based on the
-  UMI-barcode reads counts, the available arguments, 
-  - depth: minimum read depth for a UMI.
-  - doFish: if true, "fish" for UMIs with true barcodes with UMI depth below the threshold. The consequence of "doFish" will not increase the number of identified barcodes, but the UMI counts will increase due to including the low depth UMI barcodes.
-  - isUniqueUMI: in data, a single UMI can be detected with multiple different barcodes. Do you believe the UMI
-    is absolutely unique? If yes, then the most abundant UMI-barcode will be
-    picked for a specific UMI, and less abundant barcodes with the same UMI are
-    obsolete.
+## Filter UMI-barcode
+
+The UMI-barcode amplicons with few reads are likely deriving from PCR or sequence
+errors. `bc_cure_umi` does the filtering based on the UMI-barcode read count
+from the `messyBc` element in BarcodeObj object, and return a updated BarcodeObj object with a `cleanBc`
+element containing the barcodes passing the filtering.
+
+```{r correct_barcodde_with_UMI}
+# Filter the barcodes with UMI-barcode pairs > 1, 
+# and treat UMI as absolute unique and do "fish"
+bc_obj_umi <- bc_cure_umi(
+    bc_obj_umi, depth = 1, 
+    isUniqueUMI = TRUE, 
+    doFish = TRUE)
+bc_obj_umi
+```
+
+The available arguments of `bc_cure_umi` are: 
+
+- depth: minimum read count required for a UMI.
+- doFish: if true, "fish" for UMIs with depth below the depth threshold, but
+  linking to a barcode passed the depth filter. The consequence of
+  "doFish" will not increase the number of identified barcodes, but the UMI
+  count will increase due to including the low depth UMI barcodes.
+- isUniqueUMI: one UMI sequence may be linked to several barcodes. Do you
+  believe the UMI is absolutely unique? If yes, we treat the UMI as absolutely
+  unique makers. Thus the most abundant barcode will be picked for a UMI, and
+  less abundant barcodes with the same UMI are obsolete.
+
+## Filter by count
+
+`bc_cure_depth` performs filtering by reads/UMI count. Barcodes
+ not meet the reads/UMI count threshold will be removed. A `cleanBc` element
+ contains the UMI count in a BarcodeObj object returned by `bc_cure_umi`.
+ When we apply `bc_cure_depth` to the BarcodeObj object, we are filtering
+ barcodes by the UMI count.
+
+The function has two arguments:
+
+- depth: sequence/UMI count threshold.
+- isUpdate: if true the bc_cure will perform filtering on the `cleanBc`
+  element and update it, otherwise the `messyBc` will be used as input. You
+  should set this argument to `TRUE`, when you want apply the filtering on the
+  UMI count with the `bc_cure_umi` output. In this case, `bc_cure_depth` will
+  update the `cleanBc` element created by `bc_cure_umi`.
+
+```{r correct_barcodde_with_count}
+# Applys the UMI count filter, keep barcode >= 3 UMI
+bc_obj_umi <- bc_cure_depth(bc_obj_umi, depth = 3, isUpdate = TRUE)
+bc_obj_umi
+```
+
+## Cluster and merge
+
+The sequences with more reads have more chance to be the original template. In
+contrast，the sequences with few reads are more likely derived from mutations
+of the most abundant sequence. Thus, the spurious sequence might be identified
+by comparing the most abundant sequence to the least one. If they are similar, the
+least abundant sequence will be merged to the most abundant one.
     
-- `bc_cure_cluster` do clustering to merge the barcodes with insufficient
-  depth (or UMI counts) to the most abundant ones, it needs the `cleanBc`
-  element and will update it.
-  - distance: a single or a vector of integer, specifying the editing
-    distance threshold of merging two similar barcode sequences. 
-  - barcode_n: max barcode number, when this number is reached the clustering will
-    stop and the remaining barcodes are obsolete.
-  - dist_method: the distance algorithm, currently only "hamm" (Hamming distance) available.
-  - merge_method: the distance algorithm, only "greedy" available currently.
-  - dist_method: A  character string, specifying the distance algorithm used
-    to evaluate the barcodes similarity. It can be "hamm" for Hamming distance or
-    "leven" for Levenshtein distance.
-  - merge_method: A character string specifying the algorithm used to
-    perform the clustering merging of two barcodes. Currently only "greedy" is
-    available, in this case, the least abundant barcode is merged to the most
-    abundant ones.
-  - barcode_n: A single or vector of integer, specifying the max sequences
-    number to get. When the most abundant barcodes number reaches this number
-    the merging finished, and all the rest sub-abundent sequences are
-    discarded. 
-  - dist_costs: A list, the costs of the events when calculate distance
-    between to barcode sequences, applicable when Levenshtein distance is 
-    applied. The names of vector can be of "insert", "delete" and "replace",
-    specifying the weight of insertion, deletion, replacement events
-    respectively. The default cost for each evens is 1.
+`bc_cure_cluster` performs the clustering to merge the barcodes with
+insufficient depth (or UMI counts) to the most abundant ones by similarity, it
+needs the `cleanBc` element and will update it.
+
+To control the clustering methods and threshold for merging you need the
+following arguments:
+
+- distance: a single or a vector of integer, specifying the editing distance
+  threshold controlling if two barcode sequences are similar enough to merge. 
+- dist_method: A  character string, specifying the distance algorithm for
+  evaluating barcodes similarity. It can be "hamm" for Hamming distance or
+  "leven" for Levenshtein distance.
+- merge_method: A character string specifying the algorithm used to perform the
+  clustering merging of barcodes. Currently only "greedy" is available, in this
+  case, the least abundant barcode is preferentially merged to the most
+  abundant ones.
+- barcode_n: A single or vector of integer, specifying the max sequences number
+  to get. When the most abundant barcodes number reaches this number the
+  merging iteration stopped, and all the remaining less abundant sequences are
+  discarded. 
+- dist_costs: A list, the costs of the events when calculate distance between
+  two barcode sequences, applicable when Levenshtein distance is applied. The
+  names of vector can be of "insert", "delete" and "replace", specifying the
+  weight of insertion, deletion, replacement events respectively. The default
+  cost value for these evens is 1.
   
  
-```{r correct_barcodde_with_UMI}
-# Filter the barcode with UMI-barcode pairs > 1, and treat UMI as absolute
-# unique and do "fish"
-bc_obj_umi <- bc_cure_umi(bc_obj_umi, depth = 1, isUniqueUMI = TRUE, doFish = TRUE)
-# Apply the UMI count filter, keep barcode > 3 UMI
-bc_obj_umi <- bc_cure_depth(bc_obj_umi, depth = 3)
-bc_meta(bc_obj_umi)
-bc_obj_umi
-bc_2matrix(bc_obj_umi)
+```{r correct_barcodde_clustering}
+# Do the clustering and merging the least abundant barcodes to the similar
+# abundant ones
+bc_cure_cluster(bc_obj_umi)
 ```
 
 # Miscellaneous
@@ -473,13 +516,38 @@ barcodes in rows and samples in columns.
 bc_2matrix(bc_obj_umi)
 ```
 
-## Combine two datasets
+## More
 
-You can combined several operations together to accomplish more complex
-operations.
+You can use:
 
-In the following example, the sample barcode is selected in one sample, then
-get the result in `data.frame` format.
+- `+`: to combine two BarcodeObj objects.
+- `-`: to remove barcodes in a black list.
+- `*`: only include barcodes in a white list.
+
+```{r}
+data(bc_obj)
+
+# Join two samples with different barcodes 
+bc_obj["AGAG", "test1"] + bc_obj["AAAG", "test1"]
+
+# Join two samples with shared barcodes
+bc_obj_join <- bc_obj["AGAG", "test1"] + bc_obj["AGAG", "test1"]
+bc_obj_join
+
+# In this case, the shared barcodes are not merged.
+# Applying bc_cure_depth() to merge them.
+bc_cure_depth(bc_obj_join)
+
+# Remove barcodes
+bc_obj - "AAAG"
+
+# Select barcodes in white list
+bc_obj * "AAAG"
+```
+
+What's more, by combining several functions, it is possible to accomplish more
+complex task. In the following example, a barcode from sample "781_mixa" is
+selected , then output the result in `data.frame` format.
 
 ```{r}
 bc_2df(bc_obj_umi[bc_barcodes(bc_obj_umi)[1], "781_mixa"])

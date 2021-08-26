@@ -104,10 +104,10 @@ bc_cure_depth <- function(
 #' abundant ones.
 #' @param barcode_n A single or vector of integer, specifying the max sequences
 #' number to get. When the most abundant barcodes number reaches this number
-#' the merging finished, and all the rest sub-abundent sequences are
+#' the merging finished, and all the remaining less abundant sequences are
 #' discarded. 
 #' @param dist_costs A list, the costs of the events when calculate distance
-#' between to barcode sequences, applicable when Levenshtein distance is 
+#' between two barcode sequences, applicable when Levenshtein distance is 
 #' applied. The names of vector can be of "insert", "delete" and "replace",
 #' specifying the weight of insertion, deletion, replacement events
 #' respectively. The default cost for each evens is 1.
