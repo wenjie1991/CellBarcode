@@ -7,13 +7,13 @@
 
 #' DNA Barcode Analysis toolkit
 #'
-#' This package performs DNA Barcode analysis. The package can handle all kinds
-#' of DNA barcodes, as long as the barcode within a single reads and has a
-#' pattern that can be matched by a regular expression. This package can handle
-#' barcode with flexible length, with or without UMI (unique molecular
-#' identifier). This tool also can be used for preprocessing of amplicon data
-#' such as CRISPR gRNA screening, immune repertoire sequencing and meta
-#' genome data.
+#' This package performs DNA Barcode (genetic lineage tracing) analysis. The
+#' package can handle all kinds of DNA barcodes, as long as the barcode within a
+#' single sequencing read and has a pattern which can be matched by a regular
+#' expression. This package can handle barcode with flexible length, with or
+#' without UMI (unique molecular identifier). This tool also can be used for
+#' pre-processing of some amplicon data such as CRISPR gRNA screening, immune
+#' repertoire sequencing and meta genome data.
 #'
 #' @name Bc
 #' @docType package

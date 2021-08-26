@@ -1,20 +1,20 @@
 Package: Bc
 Type: Package
 Title: DNA Barcode Analysis toolkit
-Version: 0.1.1
+Version: 0.99.1
 Authors@R: c(
   person("Wenjie", "Sun", email = "sunwjie@gmail.com", role = "cre"),
   person("Anne-Marie", "Lyne", email = "Anne-Marie.Lyne@curie.fr", role = "aut"),
   person("Leila", "Perie", email = "leila.perie@curie.fr", role = "aut")
   )
 Description: 
-  This package performs DNA Barcode analysis. The package can handle all kinds
-  of DNA barcodes, as long as the barcode withine a single reads and has a
-  pattern that can be matched by regular expression. This package can handle
-  barcode with flexible length, with or without UMI (unique molecular
-  identifier). This tool also can be used for preprocssing of amplicon data
-  analysis such as CRISPR gRNA screening, immue repotoire sequencing and meta
-  genome data.
+  This package performs DNA Barcode (genetic lineage tracing) analysis. The
+  package can handle all kinds of DNA barcodes, as long as the barcode within a
+  single sequencing read and has a pattern which can be matched by a regular
+  expression. This package can handle barcode with flexible length, with or
+  without UMI (unique molecular identifier). This tool also can be used for
+  pre-processing of some amplicon data such as CRISPR gRNA screening, immune
+  repertoire sequencing and meta genome data.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Depends: R (>= 4.0.0)
