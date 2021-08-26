@@ -1,6 +1,6 @@
-Package: Bc
+Package: CellBC
 Type: Package
-Title: DNA Barcode Analysis toolkit
+Title: Cellular DNA Barcode Analysis toolkit
 Version: 0.99.1
 Authors@R: c(
   person("Wenjie", "Sun", email = "sunwjie@gmail.com", role = "cre"),
@@ -8,7 +8,7 @@ Authors@R: c(
   person("Leila", "Perie", email = "leila.perie@curie.fr", role = "aut")
   )
 Description: 
-  This package performs DNA Barcode (genetic lineage tracing) analysis. The
+  This package performs Cellular DNA Barcode (genetic lineage tracing) analysis. The
   package can handle all kinds of DNA barcodes, as long as the barcode within a
   single sequencing read and has a pattern which can be matched by a regular
   expression. This package can handle barcode with flexible length, with or
