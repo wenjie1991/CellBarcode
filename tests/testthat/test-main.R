@@ -64,11 +64,11 @@ test_that("Senerio4: Backbone 1 error, Depth cutoff >= 6, Fishing, UMI is not un
   expect_equal(bc_2df(bc_obj), data.frame(sample_name="test", barcode_seq = c("AGAG", "AAAG", "AGAAG", "ACAAG"), count=c(3, 3, 3, 1), stringsAsFactors=FALSE))
 })
 
-test_that("Senerio5: Backbone 1 error, Depth cutoff > 6, Fishing, UMI is not unique", {
+test_that("Senerio5: Backbone 1 error, Depth cutoff >= 6, Fishing, UMI is is unique", {
   pattern <- "([ACTG]{3})TCGATCGATCGA([ACTG]+)ATCGATCGATC"
   bc_obj <- bc_extract(list(test = d1), pattern, sample_name=c("test"), pattern_type=c(UMI=1, barcode=2), maxLDist=1)
-  bc_obj <- bc_cure_depth(bc_cure_umi(bc_obj, depth=6, doFish=TRUE, isUniqueUMI=FALSE), depth=0)
-  expect_equal(bc_2df(bc_obj), data.frame(sample_name="test", barcode_seq = c("AGAG", "AAAG", "AGAAG", "ACAAG"), count=c(3, 3, 3, 1), stringsAsFactors=FALSE))
+  bc_obj <- bc_cure_depth(bc_cure_umi(bc_obj, depth=6, doFish=TRUE, isUniqueUMI=TRUE), depth=0)
+  expect_equal(bc_2df(bc_obj), data.frame(sample_name="test", barcode_seq = c("AGAG", "AAAG", "AGAAG"), count=c(3, 3, 3), stringsAsFactors=FALSE))
 })
 
 

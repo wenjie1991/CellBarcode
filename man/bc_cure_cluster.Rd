@@ -73,7 +73,7 @@ pattern <- "([ACTG]{3})TCGATCGATCGA([ACTG]+)ATCGATCGATC"
 bc_obj <- bc_extract(list(test = d1), pattern, sample_name=c("test"), 
     pattern_type=c(UMI=1, barcode=2))
 
-# Remove barcodes with depth <= 5
+# Remove barcodes with depth < 5
 (bc_cured <- bc_cure_depth(bc_obj, depth=5))
 
 # Do the clustering, merge the less abundent barcodes to the more abundent

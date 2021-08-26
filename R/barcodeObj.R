@@ -18,6 +18,8 @@ check_sample_name <- function(barcodeObj) {
 #' can be applied to the BarcodeObj object for quality control and selecting
 #' barcodes/samples. subset.
 #'
+#' @name BarcodeObj
+#' @docType class
 #' @details
 #' The BarcodeObj object is a S3 object, which is a list under hood with class
 #' name "BarcodeObj". There can be three elements in the BarcodeObj object,
@@ -43,7 +45,7 @@ check_sample_name <- function(barcodeObj) {
 #'
 #' #######
 #' # Get BarcodeObj using fastq file
-#' fq_file <- system.file("extdata", "simple.fq", package="Bc")
+#' fq_file <- system.file("extdata", "simple.fq", package="CellBarcode")
 #' library(ShortRead)
 #' bc_extract(fq_file, pattern = "AAAAA(.*)CCCCC")
 #'
@@ -92,6 +94,7 @@ check_sample_name <- function(barcodeObj) {
 #' bc_obj
 #' bc_obj * "AAAG"
 #' ###
+NULL
 
 #' Manages barcodes and samples in the BarcodeObj object
 #'
@@ -572,7 +575,7 @@ count_BarcodeObj <- function(barcodeObj) {
 #' format(bc_obj)
 #'
 #' ###
-#' @seealso \code{\link[Bc]{print.BarcodeObj}}
+#' @seealso \code{\link[CellBarcode]{print.BarcodeObj}}
 #' @export
 format.BarcodeObj <- function(x, ...) {
     summary_res <- count_BarcodeObj(x)
@@ -647,7 +650,7 @@ $cleanBc: {cleanBc_n} Samples for cleaned barcodes
 #' # print BarcodeObj
 #' print(bc_obj)
 #' ###
-#' @seealso \code{\link[Bc]{format.BarcodeObj}}
+#' @seealso \code{\link[CellBarcode]{format.BarcodeObj}}
 #' @export
 print.BarcodeObj <- function(x, ...) {
     cat(format(x), "\n")

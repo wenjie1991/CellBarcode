@@ -1,4 +1,4 @@
 library(testthat)
-library(Bc)
+library(CellBarcode)
 
-test_check("Bc")
+test_check("CellBarcode")

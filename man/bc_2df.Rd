@@ -20,10 +20,10 @@ A data.frame, with two columns named `barcode_seq` and `count`.
 
 A data.table, with two columns named `barcode_seq` and `count`.
 
-matrix
+A data matrix with sample by columns and barcode by rows.
 }
 \description{
-Transform BarcodeObj object into data.frame, data.table and matrix.
+Transforms BarcodeObj object into data.frame, data.table or matrix.
 }
 \examples{
 data(bc_obj)

@@ -1,9 +1,9 @@
 ---
-title: "Analyzing UMI Barcode with Bc"
+title: "Analyzing Cellular DNA Barcode with CellBarcode"
 author: 
 - name: Wenjie Sun
 - name: Anne-Marie Lyne
-package: Bc
+package: CellBarcode
 output: 
   BiocStyle::html_document:
     toc_float: true
@@ -29,7 +29,7 @@ knitr::opts_chunk$set(
 
 library(data.table)
 library(ggplot2)
-library(Bc)
+library(CellBarcode)
 ```
 
 # Introduction
@@ -38,7 +38,7 @@ library(Bc)
 
 **What's this package used for?**
 
-  DNA barcoding (genetic lineage tracing) is a powerful tool for lineage tracing and clonal tracking studies. This
+  Cellular DNA barcoding (genetic lineage tracing) is a powerful tool for lineage tracing and clonal tracking studies. This
   package provides a toolbox for DNA barcode analysis, from extraction from fastq files to barcode error correction and quantification. 
 
 **What types of barcode can this package handle?**
@@ -71,7 +71,7 @@ then you can pick the function you need from the list.
 The test data set in this package can be accessed by
 
 ```{r eval=FALSE}
-system.file("extdata", "mef_test_data", package="Bc")
+system.file("extdata", "mef_test_data", package="CellBarcode")
 ```
 
 The data are from Jos et. al (TODO: citation). There are 7 mouse embryo
@@ -110,7 +110,7 @@ The original FASTQ files are relatively large, so only 2000 reads for each sampl
 have been randomly sampled as a test set here.
 
 ```{r smaples}
-example_data <- system.file("extdata", "mef_test_data", package = "Bc")
+example_data <- system.file("extdata", "mef_test_data", package = "CellBarcode")
 fq_files <- dir(example_data, "fastq.gz", full=TRUE)
 ```
 
@@ -121,14 +121,14 @@ Install from Bioconductor.
 ```{r installation Bioconducotr, eval=FALSE}
 if(!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
-BiocManager::install("Bc")
+BiocManager::install("CellBarcode")
 ```
 
 Install the devel version from Github.
 
 ```{r installation devel, eval=FALSE}
 # install.packages("remotes")
-remotes::install_github("wenjie1991/Bc")
+remotes::install_github("wenjie1991/CellBarcode")
 ```
 
 # A basic workflow
@@ -136,13 +136,13 @@ remotes::install_github("wenjie1991/Bc")
 Here is an example of a basic workflow:
 
 ```{r basic_workflow}
-library(Bc)
+library(CellBarcode)
 library(magrittr)
 
 # The example data is the mix of MEF lines with known barcodes
 # 2000 reads for each file have been sampled for this test dataset
 # TODO: Citation of the paper:
-example_data <- system.file("extdata", "mef_test_data", package = "Bc")
+example_data <- system.file("extdata", "mef_test_data", package = "CellBarcode")
 fq_files <- dir(example_data, "gz", full=TRUE)
 
 # prepare metadata
@@ -379,7 +379,7 @@ functions perform filtering for barcodes. The `bc_cure_*`
 functions create or update the `cleanBc` element in `BarcodeObj`. The `cleanBc`
 element contains 2 columns
   - barcode_seq: barcode sequence
-  - counts: reads depth or UMI count
+  - counts: reads count or UMI count
 
 In the `bc_cure_*` function family, there is:
 
@@ -428,7 +428,7 @@ In the `bc_cure_*` function family, there is:
 ```{r correct_barcodde_with_UMI}
 # Filter the barcode with UMI-barcode pairs > 1, and treat UMI as absolute
 # unique and do "fish"
-bc_obj_umi <- bc_cure_umi(bc_obj_umi, depth = 1, isUniqueUMI = T, doFish = T)
+bc_obj_umi <- bc_cure_umi(bc_obj_umi, depth = 1, isUniqueUMI = TRUE, doFish = TRUE)
 # Apply the UMI count filter, keep barcode > 3 UMI
 bc_obj_umi <- bc_cure_depth(bc_obj_umi, depth = 3)
 bc_meta(bc_obj_umi)

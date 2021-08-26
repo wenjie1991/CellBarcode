@@ -3,7 +3,6 @@
 #include <vector>
 using namespace Rcpp;
 
-
 //' Levenshtein distance
 //'
 //' This function return Levenshtein distance between two string.

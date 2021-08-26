@@ -157,7 +157,7 @@ the "A", "C", "G" and "T", and \code{{3}} means there are 3
 that there is at least one of the \code{[ACGT]}.
 }
 \examples{
-fq_file <- system.file("extdata", "simple.fq", package="Bc")
+fq_file <- system.file("extdata", "simple.fq", package="CellBarcode")
 
 library(ShortRead)
 

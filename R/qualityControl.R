@@ -57,7 +57,7 @@ get_base_freq_per_cycle <- function(dnastringset) {
 #' @examples
 #' library(ShortRead)
 #' # fastq file
-#' fq_file <- system.file("extdata", "simple.fq", package="Bc")
+#' fq_file <- system.file("extdata", "simple.fq", package="CellBarcode")
 #' bc_seqQC(fq_file)
 #'
 #' # ShortReadQ

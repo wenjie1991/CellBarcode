@@ -50,11 +50,11 @@ pattern <- "([ACTG]{3})TCGATCGATCGA([ACTG]+)ATCGATCGATC"
 bc_obj <- bc_extract(list(test = d1), pattern, sample_name=c("test"),
     pattern_type=c(UMI=1, barcode=2))
 
-# Remove barcodes with depth <= 5
+# Remove barcodes with depth < 5
 (bc_cured <- bc_cure_depth(bc_obj, depth=5))
 bc_2matrix(bc_cured)
 
-# Use UMI information to filter the barcode <= 5 UMI-barcode tags
+# Use UMI information to filter the barcode < 5 UMI-barcode tags
 bc_umi_cured <- bc_cure_umi(bc_obj, depth =0, doFish=TRUE, isUniqueUMI=TRUE)
 bc_cure_depth(bc_umi_cured, depth = 5)
 

@@ -19,7 +19,7 @@
 #' @examples
 #' library(ShortRead)
 #' 
-#' fq_file <- system.file("extdata", "simple.fq", package="Bc")
+#' fq_file <- system.file("extdata", "simple.fq", package="CellBarcode")
 #'
 #' # apply filter to fastq files
 #' bc_filterSeq(fq_file)
