@@ -1,15 +1,15 @@
-# Bc
+# CellBarcode
 
-**Bc** is an R package for dealing with **DNA barcoding** sequencing data.
+**CellBarcode** is an R package for dealing with **Cellular DNA barcoding** sequencing data.
 
 ## Kinds of barcodes
 
-**Bc** handle all kinds of DNA barcodes, as long as:
+**CellBarcode** handle all kinds of DNA barcodes, as long as:
 
 - The barcode have a pattern which be matched by a regular expression.
 - Each barcode is within a single sequencing read.
 
-## What you can do with **Bc**
+## What you can do with **CellBarcode**
 
 - Performs quality control the DNA sequence results and filters the sequences according
   to the quality metrics.
@@ -26,7 +26,7 @@
 
 ```
 library(devtools)
-install_github("wenjie1991/Bc")
+install_github("wenjie1991/CellBarcode")
 ```
 
 2. Bioconductor
@@ -36,14 +36,14 @@ TBD (I hope the package can be accepted in Bioconductor).
 
 Here is an example of a basic workflow:
 
-```{r basic_workflow}
-library(Bc)
+```{r}
+library(CellBarcode)
 library(magrittr)
 
 # The example data is the mix of MEF lines with known barcodes
 # 2000 reads for each file have been sampled for this test dataset
 # TODO: Citation of the paper:
-example_data <- system.file("extdata", "mef_test_data", package = "Bc")
+example_data <- system.file("extdata", "mef_test_data", package = "CellBarcode")
 fq_files <- dir(example_data, "gz", full=TRUE)
 
 # prepare metadata
@@ -80,6 +80,22 @@ head(bc_2df(bc_sub))
 # export the barcode counts to matrix
 head(bc_2matrix(bc_sub))
 ```
+
+## Depends
+
+R (>= 4.0.0)
+methods,
+Rcpp (>= 1.0.5),
+data.table (>= 1.14.0),
+plyr (>= 1.8.6),
+ggplot2 (>= 3.3.5),
+stringr (>= 1.4.0),
+magrittr (>= 2.0.1),
+ShortRead (>= 1.48.0),
+Biostrings (>= 2.58.0),
+egg (>= 0.4.5),
+utils,
+S4Vectors
 
 ## License
 

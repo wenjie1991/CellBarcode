@@ -24,14 +24,14 @@
 #' # apply filter to fastq files
 #' bc_filterSeq(fq_file)
 #'
-#' # Read fastq files get ShortReadQ object
+#' # read in fastq files to get ShortReadQ object
 #' sr <- readFastq(fq_file[1])
-#' # apply filter to ShortReadQ
+#' # apply sequencing quality filter to ShortReadQ
 #' bc_filterSeq(sr)
 #'
 #' # get DNAStringSet object
 #' ds <- sr@sread
-#' # apply filter to DNAStringSet
+#' # apply sequencing quality filter to DNAStringSet
 #' bc_filterSeq(ds)
 #'
 #' ###
