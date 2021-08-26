@@ -1,17 +1,15 @@
-[![R-CMD-check](https://github.com/wenjie1991/Bc/actions/workflows/check-standard.yaml/badge.svg)](https://github.com/wenjie1991/Bc/actions/workflows/check-standard.yaml)
+# CellBarcode
 
-# Bc
-
-**Bc** is an R package for dealing with **DNA barcoding** sequencing data.
+**CellBarcode** is an R package for dealing with **Cellular DNA barcoding** sequencing data.
 
 ## Kinds of barcodes
 
-**Bc** handle all kinds of DNA barcodes, as long as:
+**CellBarcode** handle all kinds of DNA barcodes, as long as:
 
 - The barcode have a pattern which be matched by a regular expression.
 - Each barcode is within a single sequencing read.
 
-## What you can do with **Bc**
+## What you can do with **CellBarcode**
 
 - Performs quality control the DNA sequence results and filters the sequences according
   to the quality metrics.
@@ -28,7 +26,7 @@
 
 ```
 library(devtools)
-install_github("wenjie1991/Bc")
+install_github("wenjie1991/CellBarcode")
 ```
 
 2. Bioconductor
@@ -39,13 +37,13 @@ TBD (I hope the package can be accepted in Bioconductor).
 Here is an example of a basic workflow:
 
 ```{r}
-library(Bc)
+library(CellBarcode)
 library(magrittr)
 
 # The example data is the mix of MEF lines with known barcodes
 # 2000 reads for each file have been sampled for this test dataset
 # TODO: Citation of the paper:
-example_data <- system.file("extdata", "mef_test_data", package = "Bc")
+example_data <- system.file("extdata", "mef_test_data", package = "CellBarcode")
 fq_files <- dir(example_data, "gz", full=TRUE)
 
 # prepare metadata

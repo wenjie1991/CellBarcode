@@ -1,4 +1,4 @@
-Package: CellBC
+Package: CellBarcode
 Type: Package
 Title: Cellular DNA Barcode Analysis toolkit
 Version: 0.99.1
