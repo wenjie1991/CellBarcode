@@ -93,24 +93,26 @@ bc_cure_depth <- function(
 #' applicable for the BarcodeObj object with a cleanBc element.
 #'
 #' @param barcodeObj A BarcodeObj object.
-#' @param distance A single or a vector of integer, specifying the editing
-#' distance threshold of merging two similar barcode sequences. 
-#' @param dist_method A  character string, specifying the distance algorithm used
-#' to evaluate the barcodes similarity. It can be "hamm" for Hamming distance or
+#' @param dist_thresh: a single integer or vector of integers with the length of sample
+#' count, specifying the editing distance threshold of merging two similar
+#' barcode sequences. If the input is a vector, each value in vector is for
+#' one sample according to the sample order in BarcodeObj object.
+#' @param dist_method: A  character string, specifying the distance algorithm for
+#' evaluating barcodes similarity. It can be "hamm" for Hamming distance or
 #' "leven" for Levenshtein distance.
-#' @param merge_method A character string specifying the algorithm used to
-#' perform the clustering merging of two barcodes. Currently only "greedy" is
-#' available, in this case, the least abundant barcode is merged to the most
+#' @param merge_method: A character string specifying the algorithm used to perform the
+#' clustering merging of barcodes. Currently only "greedy" is available, in this
+#' case, the least abundant barcode is preferentially merged to the most
 #' abundant ones.
-#' @param barcode_n A single or vector of integer, specifying the max sequences
-#' number to get. When the most abundant barcodes number reaches this number
-#' the merging finished, and all the remaining less abundant sequences are
-#' discarded. 
-#' @param dist_costs A list, the costs of the events when calculate distance
-#' between two barcode sequences, applicable when Levenshtein distance is 
-#' applied. The names of vector can be of "insert", "delete" and "replace",
-#' specifying the weight of insertion, deletion, replacement events
-#' respectively. The default cost for each evens is 1.
+#' @param barcode_n: A single integer or vector of integers, specifying the max number
+#' of sequences expected. When the most abundant barcode number reaches this
+#' number the merging finishes, and all the rest sub-abundant sequences are
+#' discarded.
+#' @param dist_costs: A list, the cost of the events when calculating distance between
+#' two barcode sequences, applicable when Levenshtein distance is applied. The
+#' names of vector have to be “insert”, “delete” and “replace”, specifying the
+#' weight of insertion, deletion, replacement events respectively. The default
+#' cost for each event is 1.
 #' @return A BarcodeObj object with cleanBc element updated.
 #' @examples
 #' data(bc_obj)
@@ -143,17 +145,17 @@ bc_cure_depth <- function(
 #' 
 #' # Do the clustering, merge the less abundent barcodes to the more abundent
 #' # one by hamming distance <= 1 
-#' bc_cure_cluster(bc_cured, distance = 1)
+#' bc_cure_cluster(bc_cured, dist_thresh = 1)
 #' 
 #' # Levenshtein distance <= 1
-#' bc_cure_cluster(bc_cured, distance = 2, dist_method = "leven",
+#' bc_cure_cluster(bc_cured, dist_thresh = 2, dist_method = "leven",
 #'     dist_costs = list("insert" = 2, "replace" = 1, "delete" = 2))
 #' 
 #' ###
 #' @export
 bc_cure_cluster <- function(
     barcodeObj
-    , distance = 1
+    , dist_thresh = 1
     , dist_method = "hamm"
     , merge_method = "greedy"
     , barcode_n = 10000
@@ -163,7 +165,7 @@ bc_cure_cluster <- function(
 
     parameter_df <- data.frame(
         sample_names = rownames(barcodeObj$metadata)
-        , distance = distance
+        , distance =dist_thresh 
         , barcode_n = barcode_n
     )
 
@@ -258,9 +260,11 @@ bc_cure_cluster <- function(
 #' @param depth A single or a vector of numeric, specifying the UMI-sequence
 #' tags count threshold. Only the barcodes with UMI-barcode tag count larger than
 #' the threshold are considered true barcodes.
-#' @param doFish A single or a vector of logical value. If TRUE, the "fishing"
-#' process will be applied to re-counting the UMI with true barcodes, but the
-#' UMI-barocde tag not satisfies the depth threshold.
+#' @param doFish A single or a vector of logical value. If TRUE, for barcodes
+#' with UMI read depth above the threshold, “fish” for identical barcodes with
+#' UMI read depth below the threshold. The consequence of “doFish” will not
+#' increase the number of identified barcodes, but the UMI counts will increase
+#' due to including the low depth UMI barcodes. 
 #' @param isUniqueUMI A single or a vector of logical value. When a UMI
 #' relates to several barcodes. If you believe that the UMI is absolute unique,
 #' then only the dominant sequence is chosen for each UMI.
