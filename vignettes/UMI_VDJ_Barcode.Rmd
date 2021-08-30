@@ -135,6 +135,7 @@ remotes::install_github("wenjie1991/CellBarcode")
 Here is an example of a basic workflow:
 
 ```{r basic_workflow}
+install.packages("stringr")
 library(CellBarcode)
 library(magrittr)
 
@@ -376,11 +377,11 @@ bc_subset(bc_obj_umi, sample = rep == "a")
 
 # Barcode filtering
 
-Most of the times, it needs PCR and NGS sequencing to read out the cellular
+Most of the times, it needs PCR and NGS to read out the cellular
 barcode sequences. `bc_extract` will output all barcodes found in the sequences. Some
 of the identified barcodes may contain PCR or sequencing errors. 
 
-The potential errors derived from PCR and NGS sequencing lead to spurious
+The potential errors derived from PCR and NGS lead to spurious
 barcodes that not existed in biological samples. The spurious barcodes are more
 likely to be less abundant comparing to corresponding "mother" barcodes 
 they derived from.
@@ -393,12 +394,14 @@ having more reads comparing to the spurious one derived from PCR or sequencing
 mutation, as errors happens with low probability. Also, a barcode sequence is
 less likely to be spurious one when it relates to several UMIs. 
 
-We prepared the `bc_cure_*` functions to perform filtering for removing the
+We created the `bc_cure_*` functions to perform filtering for removing the
 potential spurious barcodes. The `bc_cure_*` functions create or update the
 `cleanBc` element in `BarcodeObj`. The `cleanBc` element contains 2 columns
   - barcode_seq: barcode sequence.
   - counts: reads count, or UMI count in the case that the cleanBc was created
     by `bc_cure_umi`.
+
+**Important**: The `createBc` element, the barcode_seq is not duplicated in each sample.
 
 In the `bc_cure_*` function family, there are `bc_cure_depth`, `bc_cure_umi`
 and `bc_cure_cluster`.
@@ -450,15 +453,28 @@ The function has two arguments:
 - depth: sequence/UMI count threshold, it can be a numeric number or a numeric
   vector, in the later case, each number corresponds to a sample in the
   BarcodeObj object.
-- isUpdate: if true the bc_cure will preferentially perform filtering on the `cleanBc`
+- isUpdate: if true (default) the bc_cure will preferentially perform filtering on the `cleanBc`
   element and update it, otherwise the `messyBc` will be used as input. 
 
 ```{r correct_barcodde_with_count}
-# Applys the barcode sequence depth with depth >= 3
-bc_obj_umi <- bc_cure_depth(bc_obj_umi, depth = 3)
+# Apply the barcode sequence depth with depth >= 3
+# With isUpdate = FLASE, the data in `messyBc` element of bc_obj_umi 
+#   will be used for depth filtering. The UMI information will be discarded, 
+#   the identical barcodes in different UMI-barcode tags are merged before
+#   performing the sequence depth filtering.
+bc_obj_umi <- bc_cure_depth(bc_obj_umi, depth = 3, isUpdate = FALSE)
 bc_obj_umi
 
-# Applys the UMI count filter, keep barcode >= 3 UMI
+# Apply the UMI count filter, keep barcode >= 3 UMI
+# The `bc_cure_umi` function applies the filtering on the UMI-barcode tags,
+#   and create a `cleanBc` element in the return BarcodeObj object. Then, 
+#   the `bc_cure_depth` with `isUpdate` argument TRUE will apply the filtering
+#   on the UMI counts in `cleanBc` and updated the `cleanBc`.
+bc_obj_umi <- bc_cure_umi(
+    bc_obj_umi, depth = 1, 
+    isUniqueUMI = TRUE, 
+    doFish = TRUE)
+bc_obj_umi
 bc_obj_umi <- bc_cure_depth(bc_obj_umi, depth = 3, isUpdate = TRUE)
 bc_obj_umi
 ```
