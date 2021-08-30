@@ -6,7 +6,7 @@
 \usage{
 bc_cure_cluster(
   barcodeObj,
-  distance = 1,
+  dist_thresh = 1,
   dist_method = "hamm",
   merge_method = "greedy",
   barcode_n = 10000,
@@ -16,28 +16,30 @@ bc_cure_cluster(
 \arguments{
 \item{barcodeObj}{A BarcodeObj object.}
 
-\item{distance}{A single or a vector of integer, specifying the editing
-distance threshold of merging two similar barcode sequences.}
+\item{dist_thresh:}{a single integer or vector of integers with the length of sample
+count, specifying the editing distance threshold of merging two similar
+barcode sequences. If the input is a vector, each value in vector is for
+one sample according to the sample order in BarcodeObj object.}
 
-\item{dist_method}{A  character string, specifying the distance algorithm used
-to evaluate the barcodes similarity. It can be "hamm" for Hamming distance or
+\item{dist_method:}{A  character string, specifying the distance algorithm for
+evaluating barcodes similarity. It can be "hamm" for Hamming distance or
 "leven" for Levenshtein distance.}
 
-\item{merge_method}{A character string specifying the algorithm used to
-perform the clustering merging of two barcodes. Currently only "greedy" is
-available, in this case, the least abundant barcode is merged to the most
+\item{merge_method:}{A character string specifying the algorithm used to perform the
+clustering merging of barcodes. Currently only "greedy" is available, in this
+case, the least abundant barcode is preferentially merged to the most
 abundant ones.}
 
-\item{barcode_n}{A single or vector of integer, specifying the max sequences
-number to get. When the most abundant barcodes number reaches this number
-the merging finished, and all the remaining less abundant sequences are
+\item{barcode_n:}{A single integer or vector of integers, specifying the max number
+of sequences expected. When the most abundant barcode number reaches this
+number the merging finishes, and all the rest sub-abundant sequences are
 discarded.}
 
-\item{dist_costs}{A list, the costs of the events when calculate distance
-between two barcode sequences, applicable when Levenshtein distance is 
-applied. The names of vector can be of "insert", "delete" and "replace",
-specifying the weight of insertion, deletion, replacement events
-respectively. The default cost for each evens is 1.}
+\item{dist_costs:}{A list, the cost of the events when calculating distance between
+two barcode sequences, applicable when Levenshtein distance is applied. The
+names of vector have to be “insert”, “delete” and “replace”, specifying the
+weight of insertion, deletion, replacement events respectively. The default
+cost for each event is 1.}
 }
 \value{
 A BarcodeObj object with cleanBc element updated.
@@ -78,10 +80,10 @@ bc_obj <- bc_extract(list(test = d1), pattern, sample_name=c("test"),
 
 # Do the clustering, merge the less abundent barcodes to the more abundent
 # one by hamming distance <= 1 
-bc_cure_cluster(bc_cured, distance = 1)
+bc_cure_cluster(bc_cured, dist_thresh = 1)
 
 # Levenshtein distance <= 1
-bc_cure_cluster(bc_cured, distance = 2, dist_method = "leven",
+bc_cure_cluster(bc_cured, dist_thresh = 2, dist_method = "leven",
     dist_costs = list("insert" = 2, "replace" = 1, "delete" = 2))
 
 ###

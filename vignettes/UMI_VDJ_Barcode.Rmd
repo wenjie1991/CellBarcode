@@ -285,8 +285,8 @@ Each `data.frame` has 5 columns:
 2. match_seq: the sequence matched by pattern.
 3. umi_seq (optional): UMI sequence, applicable when there is a UMI in `pattern`
    and `pattern_type` argument.
-4. barcode_seq: barcode sequence. 
-5. count: the count of the full read sequence. 
+4. barcode_seq: barcode sequence.
+5. count: the count of the full read sequence.
 
 **Attention**: In this data.frame, `barcode_seq` value may be not unique, as
 two different full read sequences can contain the same barcode sequence, due to
@@ -376,25 +376,26 @@ bc_subset(bc_obj_umi, sample = rep == "a")
 
 # Barcode filtering
 
-Most of times, it needs PCR and NGS sequencing to read out the cellular
-barcode. `bc_extract` will output all the barcodes found in the sequences. Some
-of the identified barcodes may come from PCR or sequencing errors. 
+Most of the times, it needs PCR and NGS sequencing to read out the cellular
+barcode sequences. `bc_extract` will output all barcodes found in the sequences. Some
+of the identified barcodes may contain PCR or sequencing errors. 
 
 The potential errors derived from PCR and NGS sequencing lead to spurious
-barcodes. The spurious barcodes are more likely to be less abundant comparing
-to corresponding "mother" barcodes which they derived from.
+barcodes that not existed in biological samples. The spurious barcodes are more
+likely to be less abundant comparing to corresponding "mother" barcodes 
+they derived from.
 
-What's more, UMI (unique molecular identifier) can be used to label a barcode
-DNA molecular. After PCR, one barcode-UMI molecular becomes multiple copies
-with the same UMI. Thus all the sequences derived from one template, including
-original template sequence and mutant ones, are marked. The original template
-sequence is likely having more reads comparing to spurious one, because errors
-happened with low probability. Also, a barcode sequence is less likely to be
-spurious one when it relates to several UMIs. 
+As UMI can be used to label a DNA molecular, one UMI labeled barcode molecular
+becomes multiple copies by PCR. Thus all the sequences derived from the
+template sequence, including original template sequence and mutant ones, are
+marked by UMI for having the same UMI. The original template sequence is likely
+having more reads comparing to the spurious one derived from PCR or sequencing
+mutation, as errors happens with low probability. Also, a barcode sequence is
+less likely to be spurious one when it relates to several UMIs. 
 
-The `bc_cure_*` functions perform filtering for barcodes. The `bc_cure_*`
-functions create or update the `cleanBc` element in `BarcodeObj`. The `cleanBc`
-element contains 2 columns
+We prepared the `bc_cure_*` functions to perform filtering for removing the
+potential spurious barcodes. The `bc_cure_*` functions create or update the
+`cleanBc` element in `BarcodeObj`. The `cleanBc` element contains 2 columns
   - barcode_seq: barcode sequence.
   - counts: reads count, or UMI count in the case that the cleanBc was created
     by `bc_cure_umi`.
@@ -405,10 +406,11 @@ and `bc_cure_cluster`.
 
 ## Filter UMI-barcode tag
 
-In the following text, a "UMI-barcode tag" denotes a combination of a UMI and a
+In the case when the UMI is applied, the template sequence is marked by UMI,
+and we use "UMI-barcode tag" to denote a combination of a UMI and a
 barcode. The UMI-barcode tag with few reads are likely deriving from PCR or
-sequence errors. `bc_cure_umi` does the filtering based on the UMI-barcode tag
-read count from the `messyBc` element in BarcodeObj object, and return a
+sequence errors. `bc_cure_umi` carries out the filtering based on the UMI-barcode tag
+read count from the `messyBc` element in BarcodeObj object, and returns a
 updated BarcodeObj object with a `cleanBc` element containing the barcodes
 passing the filtering.
 
@@ -436,22 +438,26 @@ The available arguments of `bc_cure_umi` are:
 
 ## Filter by count
 
-`bc_cure_depth` performs filtering by reads/UMI count. Barcodes
- not meet the reads/UMI count threshold will be removed. A `cleanBc` element
- contains the UMI count in a BarcodeObj object returned by `bc_cure_umi`.
- When we apply `bc_cure_depth` to the BarcodeObj object, we are filtering
- barcodes by the UMI count.
+`bc_cure_depth` performs filtering by reads/UMI count. It can filter the raw
+barcodes in the `messyBc` and create a `cleanBc` element, or update the
+`cleanBc` when the argument `isUpdate` is TRUE. You should set this argument to
+`TRUE`, when you want apply the filtering on the UMI count with the
+`bc_cure_umi` output. In this case, `bc_cure_depth` will update the `cleanBc`
+element created by `bc_cure_umi`.
 
 The function has two arguments:
 
-- depth: sequence/UMI count threshold.
-- isUpdate: if true the bc_cure will perform filtering on the `cleanBc`
-  element and update it, otherwise the `messyBc` will be used as input. You
-  should set this argument to `TRUE`, when you want apply the filtering on the
-  UMI count with the `bc_cure_umi` output. In this case, `bc_cure_depth` will
-  update the `cleanBc` element created by `bc_cure_umi`.
+- depth: sequence/UMI count threshold, it can be a numeric number or a numeric
+  vector, in the later case, each number corresponds to a sample in the
+  BarcodeObj object.
+- isUpdate: if true the bc_cure will preferentially perform filtering on the `cleanBc`
+  element and update it, otherwise the `messyBc` will be used as input. 
 
 ```{r correct_barcodde_with_count}
+# Applys the barcode sequence depth with depth >= 3
+bc_obj_umi <- bc_cure_depth(bc_obj_umi, depth = 3)
+bc_obj_umi
+
 # Applys the UMI count filter, keep barcode >= 3 UMI
 bc_obj_umi <- bc_cure_depth(bc_obj_umi, depth = 3, isUpdate = TRUE)
 bc_obj_umi
@@ -459,7 +465,7 @@ bc_obj_umi
 
 ## Cluster and merge
 
-The sequences with more reads have more chance to be the original template. In
+The sequences with more reads have more chance to be the original templates. In
 contrast，the sequences with few reads are more likely derived from mutations
 of the most abundant sequence. Thus, the spurious sequence might be identified
 by comparing the most abundant sequence to the least one. If they are similar, the
@@ -543,6 +549,8 @@ You can use:
 - `+`: to combine two BarcodeObj objects.
 - `-`: to remove barcodes in a black list.
 - `*`: only include barcodes in a white list.
+
+For examples:
 
 ```{r}
 data(bc_obj)

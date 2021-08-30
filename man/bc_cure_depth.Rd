@@ -11,10 +11,11 @@ bc_cure_depth(barcodeObj, depth = 0, isUpdate = TRUE)
 
 \item{depth}{A single or vector of numeric, specifying the threshold
 of the threshold of minimum count for a sequence to kept. If the input is a
-vector, the vector length should be the same to the sample number.}
+vector, the vector length should be the same to the sample number, and a 
+numeric per sample.}
 
 \item{isUpdate}{A logical value. If TRUE, the cleanBc element in BarcodeObj
-will be used, otherwise the messyBc element will be used. If no
+will be used preferentially, otherwise the messyBc element will be used. If no
 cleanBc is available, messyBc will be used instead.}
 }
 \value{

@@ -13,9 +13,11 @@ bc_cure_umi(barcodeObj, depth = 2, doFish = FALSE, isUniqueUMI = FALSE)
 tags count threshold. Only the barcodes with UMI-barcode tag count larger than
 the threshold are considered true barcodes.}
 
-\item{doFish}{A single or a vector of logical value. If TRUE, the "fishing"
-process will be applied to re-counting the UMI with true barcodes, but the
-UMI-barocde tag not satisfies the depth threshold.}
+\item{doFish}{A single or a vector of logical value. If TRUE, for barcodes
+with UMI read depth above the threshold, “fish” for identical barcodes with
+UMI read depth below the threshold. The consequence of “doFish” will not
+increase the number of identified barcodes, but the UMI counts will increase
+due to including the low depth UMI barcodes.}
 
 \item{isUniqueUMI}{A single or a vector of logical value. When a UMI
 relates to several barcodes. If you believe that the UMI is absolute unique,

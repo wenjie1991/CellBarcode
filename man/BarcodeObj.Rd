@@ -23,12 +23,15 @@ Each `data.frame` has 5 columns: 1. "reads_seq": full read sequence before
 parsing. 2. "match_seq": the sequence matched by pattern. 3. "umi_seq"
 (optional): UMI sequence, applicable when there is a UMI in `pattern` and
 `pattern_type` argument. 4. "barcode_seq": barcode sequence. 5. "count": how
-many reads a barcode has. 
+many reads a full sequence has. In this data.frame, `barcode_seq` value may
+be not unique, as two different full read sequences can contain the same
+barcode sequence, due to the UMI or mutations in the constant region.
 
 "cleanBc" is a list holds the barcodes sequence after applying filtering,
 where each element is a `data.frame` corresponding to the successive samples.
 The "cleanBc" element contains 2 columns 1. "barcode_seq": barcode sequence
-2. "counts": reads count or UMI count.
+2. "counts": reads count, or UMI count if the cleanBc was created by
+bc_cure_umi.
 }
 \examples{
 
