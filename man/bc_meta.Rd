@@ -32,13 +32,13 @@ data(bc_obj)
 # get the metadata data.frame
 bc_meta(bc_obj)
 
-# assign value to metadata by $ operation
+# assign value to a metadata by $ operation
 bc_meta(bc_obj)$phenotype <- c("l", "b")
 
-# assign value to metasta by key argument
+# assign value to a metasta by "key" argument
 bc_meta(bc_obj, key = "sample_type") <- c("l", "b")
 
-# show the updated metadata
+# show the updated the metadata
 bc_meta(bc_obj)
 
 # assign a new data.frame as metadata

@@ -25,5 +25,5 @@ print(bc_obj)
 ###
 }
 \seealso{
-\code{\link[Bc]{format.BarcodeObj}}
+\code{\link[CellBarcode]{format.BarcodeObj}}
 }

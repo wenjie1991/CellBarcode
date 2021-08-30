@@ -1,6 +1,6 @@
 # library(ShortRead)
 
-fq_file <- system.file("extdata", "simple.fq", package="Bc")
+fq_file <- system.file("extdata", "simple.fq", package="CellBarcode")
 sr <- readFastq(fq_file)
 ds <- sr@sread
 iv <- tables(ds, n = Inf)$top

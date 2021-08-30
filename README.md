@@ -4,33 +4,30 @@
 
 ## Kinds of barcodes
 
-**CellBarcode** handle all kinds of DNA barcodes, as long as:
+**CellBarcode** can handle all kinds of DNA barcodes, as long as:
 
-- The barcode have a pattern which be matched by a regular expression.
+- The barcodes have a pattern which can be matched by a regular expression.
 - Each barcode is within a single sequencing read.
 
 ## What you can do with **CellBarcode**
 
-- Performs quality control the DNA sequence results and filters the sequences according
-  to the quality metrics.
+- Performs quality control for the DNA sequence results, and filters the sequences according
+  to their quality metrics.
 
-- Parses sequences, extracts barcode (and UMI) information.
+- Identifies barcode (and UMI) information in sequencing results.
 
-- Performs quality control and filters the barcode.
+- Performs quality control and deals with the spurious sequence which comes from potential PCR & sequence errors.
 
-- Provides toolkits make it easier to manipulate samples and barcodes with metadata.
+- Provides toolkits to make it easier to manipulate samples and barcodes with metadata.
 
 ## Installing
 
-1. Use the `devtools` install package from GitHub
+1. Uses the `devtools` install package from GitHub
 
 ```
 library(devtools)
 install_github("wenjie1991/CellBarcode")
 ```
-
-2. Bioconductor
-TBD (I hope the package can be accepted in Bioconductor).
 
 ## Get start
 
@@ -40,7 +37,7 @@ Here is an example of a basic workflow:
 library(CellBarcode)
 library(magrittr)
 
-# The example data is the mix of MEF lines with known barcodes
+# The example data is a mix of MEF lines with known barcodes
 # 2000 reads for each file have been sampled for this test dataset
 # TODO: Citation of the paper:
 example_data <- system.file("extdata", "mef_test_data", package = "CellBarcode")
@@ -64,12 +61,12 @@ bc_obj <- bc_extract(
 )
 bc_obj
 
-# sample subset operation, select technical repeats 'mixa'
+# sample subset operation, select 'mixa'
 bc_sub = bc_obj[, replication == "mixa"]
 bc_sub 
 
-# filter the barcode, UMI barcode amplicon > 1 & UMI counts > 1
-bc_sub <- bc_cure_umi(bc_sub, depth = 1) %>% bc_cure_depth(depth = 1)
+# filter the barcode, UMI barcode amplicon >= 2 & UMI counts >= 2
+bc_sub <- bc_cure_umi(bc_sub, depth = 2) %>% bc_cure_depth(depth = 2)
 
 # select barcodes with a white list
 bc_sub[c("AAGTCCAGTACTATCGTACTA", "AAGTCCAGTACTGTAGCTACTA"), ]

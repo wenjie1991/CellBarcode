@@ -8,36 +8,23 @@ Authors@R: c(
   person("Leila", "Perie", email = "leila.perie@curie.fr", role = "aut")
   )
 Description: 
-  This package performs Cellular DNA Barcode (genetic lineage tracing) analysis. The
-  package can handle all kinds of DNA barcodes, as long as the barcode within a
-  single sequencing read and has a pattern which can be matched by a regular
-  expression. This package can handle barcode with flexible length, with or
-  without UMI (unique molecular identifier). This tool also can be used for
-  pre-processing of some amplicon data such as CRISPR gRNA screening, immune
-  repertoire sequencing and meta genome data.
+  This package performs Cellular DNA Barcode (genetic lineage tracing) analysis. The package can handle all kinds of DNA barcodes, as long as the barcode within a single sequencing read and has a pattern which can be matched by a regular expression. This package can handle barcode with flexible length, with or without UMI (unique molecular identifier). This tool also can be used for pre-processing of some amplicon data such as CRISPR gRNA screening, immune repertoire sequencing and meta genome data.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Depends: R (>= 4.0.0)
-Imports: 
-    methods,
-    Rcpp (>= 1.0.5),
-    data.table (>= 1.14.0),
-    plyr (>= 1.8.6),
-    ggplot2 (>= 3.3.5),
-    stringr (>= 1.4.0),
-    magrittr (>= 2.0.1),
-    ShortRead (>= 1.48.0),
-    Biostrings (>= 2.58.0),
-    egg (>= 0.4.5),
-    utils,
-    S4Vectors
+Imports: methods, Rcpp (>= 1.0.5), data.table (>= 1.14.0), plyr (>=
+        1.8.6), ggplot2 (>= 3.3.5), stringr (>= 1.4.0), magrittr (>=
+        2.0.1), ShortRead (>= 1.48.0), Biostrings (>= 2.58.0), egg (>=
+        0.4.5), utils, S4Vectors
 LinkingTo: Rcpp
 RoxygenNote: 7.1.1
-Suggests: 
-    BiocStyle,
-    testthat (>= 3.0.0),
-    knitr,
-    rmarkdown
+Suggests: BiocStyle, testthat (>= 3.0.0), knitr, rmarkdown
 biocViews: Preprocessing, QualityControl, Sequencing, CRISPR
 Config/testthat/edition: 3
 VignetteBuilder: knitr
+NeedsCompilation: yes
+Packaged: 2021-08-26 12:20:54 UTC; wsun
+Author: Wenjie Sun [cre],
+  Anne-Marie Lyne [aut],
+  Leila Perie [aut]
+Maintainer: Wenjie Sun <sunwjie@gmail.com>

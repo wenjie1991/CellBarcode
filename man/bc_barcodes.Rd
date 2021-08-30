@@ -11,22 +11,22 @@ bc_barcodes(barcodeObj, unlist = TRUE)
 
 \item{unlist}{A logical value. If TRUE, the function returns a vector
 of unique barcode list from all samples; otherwise a list will be
-returned, with each element containing the barcodes of each sample.}
+returned, with each element containing the barcodes of a sample.}
 }
 \value{
 A character vector or a list.
 }
 \description{
 \code{bc_barcodes} used to get the barcode sequences in BarcodeObj object. The input 
-BarcodesObj object should be preprocessed by \code{bc_cure_*} functions.
+BarcodesObj object should be pre-processed by \code{bc_cure_*} functions.
 }
 \examples{
 data(bc_obj)
 
-# get unique barcode vector
+# get unique barcode vector of all samples
 bc_barcodes(bc_obj)
 
-# get barcode for each sample
+# get a list with each element containing barcodes from one sample
 bc_barcodes(bc_obj, unlist = FALSE)
 
 ###

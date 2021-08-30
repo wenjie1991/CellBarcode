@@ -59,7 +59,7 @@ bc_seqQC evaluates the sequence quality.
 \examples{
 library(ShortRead)
 # fastq file
-fq_file <- system.file("extdata", "simple.fq", package="Bc")
+fq_file <- system.file("extdata", "simple.fq", package="CellBarcode")
 bc_seqQC(fq_file)
 
 # ShortReadQ

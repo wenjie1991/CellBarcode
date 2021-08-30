@@ -65,7 +65,7 @@
 #' \code{match_seq}, \code{umi_seq} or \code{barcode_seq} may duplicated between rows.
 #'
 #' @examples
-#' fq_file <- system.file("extdata", "simple.fq", package="Bc")
+#' fq_file <- system.file("extdata", "simple.fq", package="CellBarcode")
 #'
 #' library(ShortRead)
 #'

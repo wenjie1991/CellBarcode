@@ -18,6 +18,8 @@ check_sample_name <- function(barcodeObj) {
 #' can be applied to the BarcodeObj object for quality control and selecting
 #' barcodes/samples. subset.
 #'
+#' @name BarcodeObj
+#' @docType class
 #' @details
 #' The BarcodeObj object is a S3 object, which is a list under hood with class
 #' name "BarcodeObj". There can be three elements in the BarcodeObj object,
@@ -32,18 +34,22 @@ check_sample_name <- function(barcodeObj) {
 #' parsing. 2. "match_seq": the sequence matched by pattern. 3. "umi_seq"
 #' (optional): UMI sequence, applicable when there is a UMI in `pattern` and
 #' `pattern_type` argument. 4. "barcode_seq": barcode sequence. 5. "count": how
-#' many reads a barcode has. 
+#' many reads a full sequence has. In this data.frame, `barcode_seq` value may
+#' be not unique, as two different full read sequences can contain the same
+#' barcode sequence, due to the UMI or mutations in the constant region.
+
 #'
 #' "cleanBc" is a list holds the barcodes sequence after applying filtering,
 #' where each element is a `data.frame` corresponding to the successive samples.
 #' The "cleanBc" element contains 2 columns 1. "barcode_seq": barcode sequence
-#' 2. "counts": reads count or UMI count.
+#' 2. "counts": reads count, or UMI count if the cleanBc was created by
+#' bc_cure_umi.
 #'
 #' @examples
 #'
 #' #######
 #' # Get BarcodeObj using fastq file
-#' fq_file <- system.file("extdata", "simple.fq", package="Bc")
+#' fq_file <- system.file("extdata", "simple.fq", package="CellBarcode")
 #' library(ShortRead)
 #' bc_extract(fq_file, pattern = "AAAAA(.*)CCCCC")
 #'
@@ -92,6 +98,7 @@ check_sample_name <- function(barcodeObj) {
 #' bc_obj
 #' bc_obj * "AAAG"
 #' ###
+NULL
 
 #' Manages barcodes and samples in the BarcodeObj object
 #'
@@ -572,7 +579,7 @@ count_BarcodeObj <- function(barcodeObj) {
 #' format(bc_obj)
 #'
 #' ###
-#' @seealso \code{\link[Bc]{print.BarcodeObj}}
+#' @seealso \code{\link[CellBarcode]{print.BarcodeObj}}
 #' @export
 format.BarcodeObj <- function(x, ...) {
     summary_res <- count_BarcodeObj(x)
@@ -647,7 +654,7 @@ $cleanBc: {cleanBc_n} Samples for cleaned barcodes
 #' # print BarcodeObj
 #' print(bc_obj)
 #' ###
-#' @seealso \code{\link[Bc]{format.BarcodeObj}}
+#' @seealso \code{\link[CellBarcode]{format.BarcodeObj}}
 #' @export
 print.BarcodeObj <- function(x, ...) {
     cat(format(x), "\n")
