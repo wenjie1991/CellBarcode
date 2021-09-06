@@ -24,7 +24,7 @@ bc_seqQC(...)
 
 \method{bc_seqQC}{character}(file, sample_name = basename(file), ...)
 
-\method{bc_seqQC}{list}(x, ...)
+\method{bc_seqQC}{list}(x, sample_name = names(x), ...)
 
 \method{plot}{barcodeQc}(x, ...)
 
@@ -43,13 +43,21 @@ the samples.}
 }
 \value{
 A barcodeQc or barcodeQcSet class. 
-The barcodeQc is a list with two elements, 
+The barcodeQc is a list with four elements, 
 \itemize{
+  \item top: a data.frame with top 50 frequency sequence, 
+  \item distribution: a data.frame with the distribution of read depth with
+  \emph{nOccurrences} (depth), and \emph{nReads} (unique sequence) columns.
   \item base_quality_per_cycle: data.frame with sequence base-pair
-  location by row, and the base-pair sequencing quality summary by column.
+  location by row, and the base-pair sequencing quality summary by column,
+  including Mean, P5 (5% quantile), P25 (25% quantile), Median, P75 (75%
+  quantile) and P95 (95% quantile).
   \item base_freq_per_cycle: data.frame with three columns, \emph{Cycle}: the
   sequence base-pair location (NGS sequencing cycle); \emph{Base}: DNA base;
   \emph{Count}: reads count.
+  \emph{summary}: a numeric vector with following elements:
+  \emph{total_read}, \emph{median_read_length},
+  \emph{p5_read_length}, \emph{p95_read_length}.
 }
 The barcodeQcSet is a list of barcodeQc.
 }
