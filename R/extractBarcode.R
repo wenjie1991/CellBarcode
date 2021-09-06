@@ -1,3 +1,46 @@
+bc_process_sample_name <- function(sample_name, metadata, input_names) {
+    # input metadata,
+    # input samle_name,
+    # names of input data or the file name
+    # metadata = sample_name > names or file name
+    if (is.null(sample_name)) {
+        if (!is.null(metadata)) {
+            sample_name <- rownames(metadata)
+        } else {
+            sample_name <- input_names
+        }
+    } else {
+        if (length(sample_name) != length(input_names)) {
+            stop("Sample name length does not meet sample number.")
+        }
+    }
+    
+    if (!is.null(metadata)) {
+        if (all(sample_name == rownames(metadata))) {
+            stop("Sample name does not match row name of metadata.")
+        }
+    }
+    sample_name
+}
+
+bc_process_metadata <- function(sample_name, old_metadata, new_metadata) {
+    res <- merge(old_metadata, new_metadata, by = 0, all=T)
+    rownames(res) <- res$Row.names
+    res$Row.names <- NULL
+    res[sample_name, ]
+}
+
+bc_extract_metadata <- function(x, sample_name) {
+    d <- vapply(x, function(x_i) {
+        res <- c(attr(x_i, "raw_read_count"), attr(x_i, "barcode_read_count"))
+        res
+    }, c("raw_read_count" = 1, "barcode_read_count" = 1))
+    d <- as.data.frame(t(d))
+    rownames(d) <- sample_name
+    d
+}
+
+
 #' Extract barcode from reads
 #' 
 #' bc_extract identifies the barcodes (and UMI) from the sequences using regular expressions.
@@ -212,6 +255,11 @@ bc_extract.data.frame <- function(
     if (ordered) {
         d <- d[order(count, decreasing = TRUE)]
     } 
+
+    # prepare the row_read_count & barcode_read_count
+    attr(d, "raw_read_count") <- sum(reads_freq)
+    attr(d, "barcode_read_count") <- sum(d$count)
+
     stats::na.omit(d)
 }
 
@@ -312,32 +360,8 @@ bc_extract.character <- function(file,
     # if more than one fastq file as input
     if (length(file) > 1) {
 
-        # use sample_name
-        if (is.null(sample_name)) {
-            if (!is.null(metadata$sample_name)) {
-                # use metadata
-                sample_name = metadata$sample_name
-            } else {
-                # use file name
-                sample_name <- names(file)
-            }
-        }
-        # still no sample_name use length of file
-        if (is.null(sample_name)) {
-            sample_name <- seq_along(file)
-        }
-
-        if (is.null(metadata)) {
-            metadata <- data.frame(sample_name = sample_name)
-        }
-        if (is.null(metadata$sample_name)) {
-            metadata$sample_name <- sample_name
-        }
-        rownames(metadata) <- sample_name
-
-        if (length(metadata$sample_name) != length(file))
-            stop("sample_name or metadata does not match sample number.")
-
+        input_names <- basename(file)
+        sample_name <- bc_process_sample_name(sample_name, metadata, input_names)
 
         messyBc <- lapply(seq_along(file), function(i) {
             bc_extract(
@@ -348,7 +372,10 @@ bc_extract.character <- function(file,
                 pattern_type = pattern_type, 
                 costs = costs, 
                 ordered = ordered)
-    })
+        })
+
+        new_metadata <- bc_extract_metadata(messyBc, sample_name)
+        metadata <- bc_process_metadata(sample_name, metadata, new_metadata)
 
         names(messyBc) <- sample_name
         output <- list(messyBc = messyBc, metadata = metadata)
@@ -380,34 +407,8 @@ bc_extract.list <- function(
     costs = list(sub = 1, ins = 99, del = 99),
     ordered = TRUE, ...) {
 
-    # use sample_name
-    if (is.null(sample_name)) {
-        if (!is.null(metadata)) {
-            # use metadata
-            sample_name = metadata$sample_name
-        } else {
-            # use list name
-            sample_name <- names(x)
-        }
-    }
-
-    # still no sample_name use length of list
-    if (is.null(sample_name)) {
-        sample_name <- seq_along(x)
-    }
-
-    if (is.null(metadata)) {
-        metadata <- data.frame(sample_name = sample_name)
-    }
-    if (is.null(metadata$sample_name)) {
-        metadata$sample_name <- sample_name
-    }
-    rownames(metadata) <- sample_name
-
-
-    if (length(metadata$sample_name) != length(x))
-        stop("sample_name or metadata does not match sample number.")
-
+    input_names <- ifnullelse(names(x), seq_along(x))
+    sample_name <- bc_process_sample_name(sample_name, metadata, input_names)
 
     lapply(seq_along(x), function(i) {
         bc_extract(
@@ -420,8 +421,13 @@ bc_extract.list <- function(
             ordered = ordered)
     }) -> messyBc
 
+    new_metadata <- bc_extract_metadata(messyBc, sample_name)
+    metadata <- bc_process_metadata(sample_name, metadata, new_metadata)
+
     names(messyBc) <- sample_name
     output <- list(messyBc = messyBc, metadata = metadata)
+
+
     class(output) <- "BarcodeObj"
     output
 }

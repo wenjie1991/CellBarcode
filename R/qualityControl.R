@@ -294,6 +294,7 @@ plot.barcodeQcSet <- function(x, ...) {
     }
 }
 
+
 #' Summary barcodeQcSet
 #'
 #' Summary the total read count and read length for each samples within
