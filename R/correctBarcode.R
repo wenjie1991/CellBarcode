@@ -1,6 +1,59 @@
 # TODO: Remove barcode reads distribution graph with log x-axis
 # Correlation between two samples w/o distribution information
 
+# bc_filter_barcode = function(count, sequence) {
+#     sequence = sequence[count != 0]
+#     count = count[count != 0]
+#     k = 2
+#     x_m = mean(count)
+#     count = log2(count + 1)
+#     x_sub = count[count > log2(x_m)]
+#     s_sub = sequence[count > log2(x_m)]
+#     d_sub = data.table(count = 2^x_sub, barcode_seq = s_sub)
+#     weight_log_reads = x_sub
+#     result = Ckmeans.1d.dp::Ckmeans.1d.dp(x_sub, k, y = weight_log_reads, method = "linear")
+#     d_res = d_sub[result$cluster == 2]
+#     d_merge = merge(x_known_barcod, d_res, all = T)
+#     count_sum = d_merge$count %>% sum(na.rm = T)
+#     d_merge[, cell_out := count / count_sum * cell_number]
+#     d_merge
+# }
+ 
+bc_find_depth_cutoff_point <- function(count, count_lower_bound = mean(count[count > 0])) {
+
+    count <- count[count != 0]
+    k <- 2
+
+    count_log <- log2(count + 1)
+
+    count_log_sub <- count_log[count_log > log2(count_lower_bound + 1)]
+    weight_log_reads <- count_log_sub
+
+    result <- Ckmeans.1d.dp::Ckmeans.1d.dp(count_log_sub, k, y = weight_log_reads, method = "linear")
+    count_select <- count_log_sub[result$cluster == 2]
+
+    2^min(count_select) - 1
+}
+
+
+#' @export
+bc_auto_cutoff <- function(barcodeObj) {
+
+    if (is.null(barcodeObj$cleanBc)) {
+        x <- barcodeObj$messyBc
+        message("-message----\nbc_auto_cutoff: messyBc is used.\n------------")
+    } else {
+        x <- barcodeObj$cleanBc
+        message("-message----\nbc_auto_cutoff: cleanBc is used.\n------------")
+    }
+
+    res <- vapply(x, function(x_i) {
+        bc_find_depth_cutoff_point(x_i$count)
+    }, c(1.0))
+    names(res) <- bc_names(barcodeObj)
+    res
+}
+
 #' Filters barcodes by counts
 #'
 #' bc_cure_depth filters barcodes by applying the filter on the read counts or
@@ -54,21 +107,36 @@
 #' @export
 bc_cure_depth <- function(
     barcodeObj
-    , depth = 0
+    , depth = NULL
     , isUpdate = TRUE
     ){
 
-    parameter_df <- data.frame(
-        sample_names = rownames(barcodeObj$metadata)
-        , depth = depth
-    )
-
+    if (isUpdate) {
+        message("-message----\nbc_cure_depth: isUpdate is TRUE, update the cleanBc.\n------------")
+    } else {
+        message("-message----\nbc_cure_depth: isUpdate is FALSE, use messyBc as input.\n------------")
+    }
+    
     if (is.null(barcodeObj$cleanBc) | !isUpdate) {
         cleanBc <- barcodeObj$messyBc
     } else {
         cleanBc <- barcodeObj$cleanBc
     }
 
+    if (is.null(depth)) {
+        message("-message----\nbc_cure_depth: no depth provided, applys auto depth threshold.\n------------")
+        depth <- vapply(cleanBc, function(x_i) {
+                bc_find_depth_cutoff_point(x_i$count)
+        }, c(1.0))
+    }
+
+
+    parameter_df <- data.frame(
+        sample_names = rownames(barcodeObj$metadata)
+        , depth = depth
+    )
+
+    
     ## count the reads directly
     cleanBc <- lapply(seq_along(cleanBc),
         function(i) {
