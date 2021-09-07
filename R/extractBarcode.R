@@ -1,3 +1,4 @@
+
 bc_process_sample_name <- function(sample_name, metadata, input_names) {
     # input metadata,
     # input samle_name,
@@ -16,7 +17,7 @@ bc_process_sample_name <- function(sample_name, metadata, input_names) {
     }
     
     if (!is.null(metadata)) {
-        if (all(sample_name == rownames(metadata))) {
+        if (!all(sample_name == rownames(metadata))) {
             stop("Sample name does not match row name of metadata.")
         }
     }
