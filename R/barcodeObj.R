@@ -1,14 +1,15 @@
+
 check_sample_name <- function(barcodeObj) {
-    meta_name <- rownames(barcodeObj$metadata)
+    metaname <- rownames(barcodeObj$metadata)
 
     # metadata v.s. messyBc
-    if (all(meta_name != names(barcodeObj$messyBc)))
-        stop("The messyBc sample names are not consistent with metadta")
+    if (all(metaname != names(barcodeObj$messyBc)))
+        stop("The messyBc sample names are not consistent with metadata")
 
     # metadata v.s. cleanBc
     if (!is.null(barcodeObj$cleanBc)) {
-        if (all(meta_name != names(barcodeObj$cleanBc)))
-            stop("The cleanBc sample names are not consistent with metadta")
+        if (all(metaname != names(barcodeObj$cleanBc)))
+            stop("The cleanBc sample names are not consistent with metadata")
     }
 }
 
@@ -73,19 +74,19 @@ check_sample_name <- function(barcodeObj) {
 #' # Select samples by sample name
 #' bc_obj[, "test1"]
 #' bc_obj[, c("test1", "test2")]
-#' bc_subset(bc_obj, sample = "sample1_rep1", barcode = c("AACCTT", "AACCTT"))
+#' bc_subset(bc_obj, sample = "test1", barcode = c("AACCTT", "AACCTT"))
 #'
 #' # Apply barcodes black list
 #' bc_subset(
 #' bc_obj,
-#'     sample = c("sample1_rep1", "sample1_rep2"),
+#'     sample = c("test1", "test2"),
 #'     barcode = c("AACCTT"))
 #'
 #' # Join two samples with different barcode sets
-#' bc_obj["AGAG", "test1"] + bc_obj["AAAG", "test1"]
+#' bc_obj["AGAG", "test1"] + bc_obj["AAAG", "test2"]
 #'
 #' # Join two samples with overlap barcodes
-#' bc_obj_join <- bc_obj["AGAG", "test1"] + bc_obj["AGAG", "test1"]
+#' bc_obj_join <- bc_obj["AGAG", "test1"] + bc_obj["AGAG", "test2"]
 #' bc_obj_join
 #' # The same barcode will merged after applying bc_cure_depth()
 #' bc_cure_depth(bc_obj_join)
@@ -157,19 +158,19 @@ NULL
 #' # Select samples by sample name
 #' bc_obj[, "test1"]
 #' bc_obj[, c("test1", "test2")]
-#' bc_subset(bc_obj, sample = "sample1_rep1", barcode = c("AACCTT", "AACCTT"))
+#' bc_subset(bc_obj, sample = "test1", barcode = c("AACCTT", "AACCTT"))
 #'
 #' # Apply barcodes black list
 #' bc_subset(
 #' bc_obj,
-#'     sample = c("sample1_rep1", "sample1_rep2"),
+#'     sample = c("test1", "test2"),
 #'     barcode = c("AACCTT"))
 #'
 #' # Join two samples with different barcode sets
-#' bc_obj["AGAG", "test1"] + bc_obj["AAAG", "test1"]
+#' bc_obj["AGAG", "test1"] + bc_obj["AAAG", "test2"]
 #'
 #' # Join two samples with overlap barcodes
-#' bc_obj_join <- bc_obj["AGAG", "test1"] + bc_obj["AGAG", "test1"]
+#' bc_obj_join <- bc_obj["AGAG", "test1"] + bc_obj["AGAG", "test2"]
 #' bc_obj_join
 #' # The same barcode will merged after applying bc_cure_depth()
 #' bc_cure_depth(bc_obj_join)
@@ -243,6 +244,7 @@ bc_subset <- function(barcodeObj,
 
     # select samples
     if (!is.null(sample_call)) {
+        
         # evaluate the sample argument
         sample_i <- eval(sample_call, metadata, parent.frame())
 
@@ -262,6 +264,7 @@ bc_subset <- function(barcodeObj,
         }
     }
 
+    check_sample_name(barcodeObj)
     return(barcodeObj)
 }
 
@@ -284,34 +287,73 @@ bc_subset <- function(barcodeObj,
 
 #' @rdname bc_subset
 #' @export
+bc_merge <- function(barcodeObj_x, barcodeObj_y) {
+    barcodeObj_x + barcodeObj_y
+}
+
+#' @rdname bc_subset
+#' @export
 "+.BarcodeObj" <- function(barcodeObj_x, barcodeObj_y) {
     # TODO: Apply the merge to all parts of the data
     #       How to deal when two BarcodeObj have the same samples, the same
     #       samples will merged
 
     # merge metadata
+    suffixes <- paste0(".", 
+        c(
+        deparse(substitute(barcodeObj_x)), 
+        deparse(substitute(barcodeObj_y))
+        ))
     metadata_x <- barcodeObj_x$metadata
     metadata_y <- barcodeObj_y$metadata
     metadata_xy <-
-        merge(metadata_x, metadata_y, by = "sample_name", all = TRUE)
-    rownames(metadata_xy) <- metadata_xy$sample_name
+        merge(metadata_x, metadata_y, by = 0, all = TRUE, suffixes=suffixes, no.dups = TRUE)
+    rownames(metadata_xy) <- metadata_xy$Row.names
+    metadata_xy$Row.names <- NULL
 
     # merge messyBc
+    # if the messyBc do not have the same header, do not merge them
+    flag_remove_umi <- FALSE
+    if (!all(names(barcodeObj_x$messyBc) == names(barcodeObj_y$messyBc))) {
+        message("-message----\n+.BarcodeObj: You are merge data with UMI to data without UMI. The UMI info are discarded.\n------------")
+        flag_remove_umi <- TRUE
+    }
+
     barcodeObj_x$messyBc <-
         lapply(rownames(metadata_xy), function(sample_name) {
-            rbind(barcodeObj_x$messyBc[[sample_name]],
-                barcodeObj_y$messyBc[[sample_name]])
-    })
-    names(barcodeObj_x$messyBc) <- metadata_xy$sample_name
+            d_x <- barcodeObj_x$messyBc[[sample_name]]
+            d_y <- barcodeObj_y$messyBc[[sample_name]]
+            if (flag_remove_umi) {
+                if (!is.null(d_x$umi_seq))
+                    d_x$umi_seq <- NULL
+                if (!is.null(d_y$umi_seq))
+                    d_y$umi_seq <- NULL
+            }
+
+            d_merged <- rbind(d_x, d_y)
+            var_by <- setdiff(names(d_merged), "count")
+            d_merged[, .(count = sum(count)), by = var_by]
+        })
+
+    names(barcodeObj_x$messyBc) <- rownames(metadata_xy)
 
     # merge cleanBc
     if (!is.null(barcodeObj_x$cleanBc) & !is.null(barcodeObj_y$cleanBc)) {
         barcodeObj_x$cleanBc <-
             lapply(rownames(metadata_xy), function(sample_name) {
-                rbind(barcodeObj_x$cleanBc[[sample_name]],
-                    barcodeObj_y$cleanBc[[sample_name]])
-        })
-        names(barcodeObj_x$cleanBc) <- metadata_xy$sample_name
+                d_x <- barcodeObj_x$cleanBc[[sample_name]]
+                d_y <- barcodeObj_y$cleanBc[[sample_name]]
+
+                d_merged <- rbind(d_x, d_y)
+                var_by <- setdiff(names(d_merged), "count")
+                d_merged[, .(count = sum(count)), by = var_by]
+            })
+
+        names(barcodeObj_x$cleanBc) <- rownames(metadata_xy)
+    } else if (is.null(barcodeObj_x$cleanBc) + is.null(barcodeObj_y$cleanBc) == 1) {
+        message("-message----\n+.BarcodeObj: One of the BarcodesObj does not have cleanBc, discard the cleanBc while merging.\n------------")
+        barcodeObj_x$cleanBc <- NULL
+        bc_meta(barcodeObj_x, "depth_cutoff") <- NULL
     }
 
     barcodeObj_x$metadata <- metadata_xy
@@ -393,23 +435,22 @@ bc_names <- function(barcodeObj) {
     check_sample_name(barcodeObj)
 
     # check if the new names fit the sample number
-    if (length(value) != nrow(barcodeObj$metadata))
-        stop("The sample names do not have correct length.")
+    if (length(unique(value)) != nrow(barcodeObj$metadata))
+        stop("The given sample names do not have the same length with sample number. Or the sample names are not unique.")
 
     # If exists messyBc renew the name
-    if (!is.null(barcodeObj$messyBc)) {
+    if (!is.null(barcodeObj$messyBc)) 
         names(barcodeObj$messyBc) <- value
-    }
-
+    
     # If exists cleanBc renew the name
-    if (!is.null(barcodeObj$cleanBc)) {
+    if (!is.null(barcodeObj$cleanBc)) 
         names(barcodeObj$cleanBc) <- value
-    }
 
     # renew sample name in metadata
     rownames(barcodeObj$metadata) <- value
-    barcodeObj$metadata$sample_name <- value
-
+    # barcodeObj$metadata <- value
+    #
+    check_sample_name(barcodeObj)
     barcodeObj
 }
 
@@ -466,13 +507,13 @@ bc_meta <- function(barcodeObj) {
             stop("The input data is not data.frame")
 
         # if new value matches the sample number
-        if (nrow(value) != nrow(barcodeObj$metadata))
+        if (length(value) != 1 & nrow(value) != nrow(barcodeObj$metadata))
             stop("The given meta data does not have correct length.")
 
         barcodeObj$metadata <- value
     } else {
         # if new value matches the sample number
-        if (length(value) != nrow(barcodeObj$metadata))
+        if (length(value) != 1 & length(value) != nrow(barcodeObj$metadata))
             stop("The given meta data does not have correct length.")
 
         barcodeObj$metadata[[key]] <- value

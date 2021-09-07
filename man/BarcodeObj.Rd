@@ -61,19 +61,19 @@ bc_obj[, phenotype == "l"]
 # Select samples by sample name
 bc_obj[, "test1"]
 bc_obj[, c("test1", "test2")]
-bc_subset(bc_obj, sample = "sample1_rep1", barcode = c("AACCTT", "AACCTT"))
+bc_subset(bc_obj, sample = "test1", barcode = c("AACCTT", "AACCTT"))
 
 # Apply barcodes black list
 bc_subset(
 bc_obj,
-    sample = c("sample1_rep1", "sample1_rep2"),
+    sample = c("test1", "test2"),
     barcode = c("AACCTT"))
 
 # Join two samples with different barcode sets
-bc_obj["AGAG", "test1"] + bc_obj["AAAG", "test1"]
+bc_obj["AGAG", "test1"] + bc_obj["AAAG", "test2"]
 
 # Join two samples with overlap barcodes
-bc_obj_join <- bc_obj["AGAG", "test1"] + bc_obj["AGAG", "test1"]
+bc_obj_join <- bc_obj["AGAG", "test1"] + bc_obj["AGAG", "test2"]
 bc_obj_join
 # The same barcode will merged after applying bc_cure_depth()
 bc_cure_depth(bc_obj_join)

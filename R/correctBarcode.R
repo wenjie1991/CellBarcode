@@ -107,9 +107,12 @@ bc_auto_cutoff <- function(barcodeObj) {
 #' @export
 bc_cure_depth <- function(
     barcodeObj
-    , depth = NULL
+    , depth = 0
     , isUpdate = TRUE
     ){
+
+    if (depth < 0)
+        depth <- NULL
 
     if (isUpdate) {
         message("-message----\nbc_cure_depth: isUpdate is TRUE, update the cleanBc.\n------------")
@@ -125,7 +128,7 @@ bc_cure_depth <- function(
     }
 
     if (is.null(depth)) {
-        message("-message----\nbc_cure_depth: no depth provided, applys auto depth threshold.\n------------")
+        message("-message----\nbc_cure_depth: Null depth or negative provided, applys auto depth threshold.\n------------")
         depth <- vapply(cleanBc, function(x_i) {
                 bc_find_depth_cutoff_point(x_i$count)
         }, c(1.0))

@@ -128,7 +128,7 @@ bc_extract_metadata <- function(x, sample_name) {
 #' bc_extract(iv, pattern = "AAAAA(.*)CCCCC")
 #'
 #' # barcode from data.frame 
-#' df <- data.frame(seq = names(iv), freq = as.character(iv)) # data.frame
+#' df <- data.frame(seq = names(iv), freq = as.integer(iv)) # data.frame
 #' bc_extract(df, pattern = "AAAAA(.*)CCCCC")
 #'
 #' # barcode from list of DNAStringSet

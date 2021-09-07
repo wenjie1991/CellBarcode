@@ -307,7 +307,10 @@ plot.barcodeQcSet <- function(x, ...) {
 #' 
 #' @examples
 #'
-#' fq_file <- system.file("extdata", "simple.fq", package="CellBarcode")
+#' fq_file <- dir(
+#'     system.file("extdata", "mef_test_data", package = "CellBarcode"),
+#'     full=T)
+#'
 #' summary(bc_seqQC(fq_file))
 #' ###
 #'
