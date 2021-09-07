@@ -113,6 +113,7 @@ bc_cure_depth <- function(
 
     if (isUpdate) {
         message("-message----\nbc_cure_depth: isUpdate is TRUE, update the cleanBc.\n------------")
+        bc_meta(barcodeObj)$depth <- NULL
     } else {
         message("-message----\nbc_cure_depth: isUpdate is FALSE, use messyBc as input.\n------------")
     }
@@ -130,6 +131,7 @@ bc_cure_depth <- function(
         }, c(1.0))
     }
 
+    bc_meta(barcodeObj, "depth_cutoff") <- depth
 
     parameter_df <- data.frame(
         sample_names = rownames(barcodeObj$metadata)
