@@ -45,7 +45,7 @@
 #' # evaluate barcode diversity
 #' bc_diversity(bc_obj)
 #' @export
-bc_diversity <- function(barcodeObj, plot = TRUE) {
+bc_diversity <- function(barcodeObj, plot = TRUE, log_x=TRUE) {
 
     # BUG: Could not work.
 
@@ -67,12 +67,17 @@ bc_diversity <- function(barcodeObj, plot = TRUE) {
     if (plot) {
         g1 <- plot_lorenz_curve(d)
         g2 <- plot_reads_per_barcode_distribution(d)
+
+        if (log_x) {
+            g1 <- g1 + scale_x_log10()
+            g2 <- g2 + scale_x_log10()
+        }
         # TODO: use common legend?
-        egg::ggarrange(plots = list(g1, g2), nrow = 1, ncol = 2) %>% print
+        egg::ggarrange(plots = list(g1, g2), nrow = 1, ncol = 2)
     }
 
     d[, .(
-        total_reads = sum(count)
+        total_barcode_reads = sum(count)
         , uniq_barcode = length(count)
         , shannon_index = calc_shannon_index(count)
         , equitability_index = calc_equitability_index(count)

@@ -4,7 +4,7 @@
 \alias{bc_diversity}
 \title{Evaluate barcode diversity}
 \usage{
-bc_diversity(barcodeObj, plot = TRUE)
+bc_diversity(barcodeObj, plot = TRUE, log_x = TRUE)
 }
 \arguments{
 \item{barcodeObj}{A BarcodeObj object.}

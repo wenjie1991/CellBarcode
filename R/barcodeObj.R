@@ -30,18 +30,17 @@ check_sample_name <- function(barcodeObj) {
 #' such as data.frame, fastq files and ShortReadQ.
 #'
 #' "messyBc" is a list holds the barcodes sequence before applying filtering,
-#' where each element is a `data.frame` corresponding to the successive samples.
-#' Each `data.frame` has 5 columns: 1. "reads_seq": full read sequence before
+#' where each element is a `data.table` corresponding to the successive samples.
+#' Each table has 5 columns: 1. "reads_seq": full read sequence before
 #' parsing. 2. "match_seq": the sequence matched by pattern. 3. "umi_seq"
 #' (optional): UMI sequence, applicable when there is a UMI in `pattern` and
 #' `pattern_type` argument. 4. "barcode_seq": barcode sequence. 5. "count": how
-#' many reads a full sequence has. In this data.frame, `barcode_seq` value may
+#' many reads a full sequence has. In this table, `barcode_seq` value may
 #' be not unique, as two different full read sequences can contain the same
 #' barcode sequence, due to the UMI or mutations in the constant region.
-
 #'
 #' "cleanBc" is a list holds the barcodes sequence after applying filtering,
-#' where each element is a `data.frame` corresponding to the successive samples.
+#' where each element is a `data.table` corresponding to the successive samples.
 #' The "cleanBc" element contains 2 columns 1. "barcode_seq": barcode sequence
 #' 2. "counts": reads count, or UMI count if the cleanBc was created by
 #' bc_cure_umi.
@@ -67,9 +66,7 @@ check_sample_name <- function(barcodeObj) {
 #' # Select samples by meta data
 #' bc_meta(bc_obj)$phenotype <- c("l", "b")
 #' bc_meta(bc_obj)
-#' bc_subset(bc_obj, phenotype == "l")
-#'
-#' bc_obj[, phenotype == "l"]
+#' bc_subset(bc_obj, sample = phenotype == "l")
 #'
 #' # Select samples by sample name
 #' bc_obj[, "test1"]
@@ -113,8 +110,9 @@ NULL
 #' @param barcodeObj A BarcodeObj.
 #' @param barcode A vector of integer or string, indicating the selected
 #' barcode.
-#' @param sample A vector or an expression, specifying the samples in the
-#' subsets. When the value is an expression, the metadata can be used as variable.
+#' @param sample A vector or an expression (not applicable for `[]` operator),
+#' specifying the samples in the subsets. When the value is an expression, the
+#' metadata can be used as variable.
 #' @param black_list A character vector, specifying the black list with excluded barcodes.
 #' @param white_list A character vector, giving the barcode white list. 
 #' @param barcodeObj_x A BarcodeObj object.
@@ -152,8 +150,6 @@ NULL
 #' bc_meta(bc_obj)$phenotype <- c("l", "b")
 #' bc_meta(bc_obj)
 #' bc_subset(bc_obj, phenotype == "l")
-#'
-#' bc_obj[, phenotype == "l"]
 #'
 #' # Select samples by sample name
 #' bc_obj[, "test1"]
@@ -215,13 +211,13 @@ bc_subset <- function(barcodeObj,
         if (!is.null(barcodeObj$messyBc)) {
             barcodeObj$messyBc <- lapply(barcodeObj$messyBc, function(d) {
                 d[barcode_seq %in% barcode]
-    })
+            })
         }
         # select barcodes in cleanBc
         if (!is.null(barcodeObj$cleanBc)) {
             barcodeObj$cleanBc <- lapply(barcodeObj$cleanBc, function(d) {
                 d[barcode_seq %in% barcode]
-    })
+            })
         }
     }
 
@@ -231,14 +227,14 @@ bc_subset <- function(barcodeObj,
         if (!is.null(barcodeObj$messyBc)) {
             barcodeObj$messyBc <- lapply(barcodeObj$messyBc, function(d) {
                 d[!(barcode_seq %in% black_list)]
-    })
+            })
         }
 
         # remove barcodes in cleanBc
         if (!is.null(barcodeObj$cleanBc)) {
             barcodeObj$cleanBc <- lapply(barcodeObj$cleanBc, function(d) {
                 d[!(barcode_seq %in% black_list)]
-    })
+            })
         }
     }
 
@@ -271,9 +267,13 @@ bc_subset <- function(barcodeObj,
 #' @export
 #' @rdname bc_subset
 "[.BarcodeObj" <-
-    function(barcodeObj, barcode = NULL, sample = NULL, ...) {
+    function(barcodeObj, barcode = NULL, sample = NULL, isSampleExpression=FALSE, ...) {
         # do not evaluate the expression
-        y_call <- substitute(sample)
+        if (isSampleExpression) {
+            y_call <- substitute(sample)
+        } else {
+            y_call <- sample
+        }
         # invoke bc_subset to done the job
         return(
             bc_subset(

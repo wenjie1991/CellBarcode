@@ -59,7 +59,7 @@ bc_extract(...)
 \method{bc_extract}{character}(
   file,
   pattern = "",
-  sample_name = basename(file),
+  sample_name = NULL,
   metadata = NULL,
   maxLDist = 0,
   pattern_type = c(barcode = 1),
@@ -113,7 +113,7 @@ See \code{\link[utils]{aregexec}} for more detail information.}
 
 \item{file}{A single or a vector of character string of fastq file name.}
 
-\item{metadata}{A data.frame with sample per each row, and metadata per column 
+\item{metadata}{A data.frame with sample names as the row names, and metadata per column 
 , specifying the sample characteristics.}
 }
 \value{

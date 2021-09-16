@@ -17,7 +17,7 @@ bc_subset(
   is_sample_quoted_exp = FALSE
 )
 
-\method{[}{BarcodeObj}(barcodeObj, barcode = NULL, sample = NULL, ...)
+\method{[}{BarcodeObj}(barcodeObj, barcode = NULL, sample = NULL, isSampleExpression = FALSE, ...)
 
 bc_merge(barcodeObj_x, barcodeObj_y)
 
@@ -30,8 +30,9 @@ bc_merge(barcodeObj_x, barcodeObj_y)
 \arguments{
 \item{barcodeObj}{A BarcodeObj.}
 
-\item{sample}{A vector or an expression, specifying the samples in the
-subsets. When the value is an expression, the metadata can be used as variable.}
+\item{sample}{A vector or an expression (not applicable for `[]` operator),
+specifying the samples in the subsets. When the value is an expression, the
+metadata can be used as variable.}
 
 \item{barcode}{A vector of integer or string, indicating the selected
 barcode.}
@@ -88,8 +89,6 @@ bc_obj[c("AGAG", "AAAG"), ]
 bc_meta(bc_obj)$phenotype <- c("l", "b")
 bc_meta(bc_obj)
 bc_subset(bc_obj, phenotype == "l")
-
-bc_obj[, phenotype == "l"]
 
 # Select samples by sample name
 bc_obj[, "test1"]

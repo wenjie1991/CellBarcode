@@ -3,7 +3,34 @@
 # filterFq() -> output the filtering detail
 # make function to cross talk with genBaRcode and other packages
 # create function to identify the cutoff point
-# evaluate the sequencing depth (saturation of the sequene)
+# [ ] evaluate the sequencing depth (saturation of the sequene)
+# [y] sequence qc output: data.frame with 1. total reads, 2. mean length
+# [y] bc_extract add raw_read_count, barcode_read_count to metadata
+# [y] bc_cure_depth auto_identify the depth cutoff point
+# [y] Add cutoff point in metadata
+# [ ] bc_plot_pairwise with interactive available (plotly)
+# [ ] bc_plot_pairwise with interactive available (d3)
+# [y] bc_plot_pairwise ggplot2
+# [ ] bc_plot_single with interactive (plotly)
+# [ ] bc_plot_single with interactive (d3)
+# [ ] bc_plot_single with ggplot2
+
+# [y] Draw reads per barcode between samples pairwisely between technical replicates
+#       or different samples, draw reads per barcodes between more than two samples.
+# [ ] Explore the barcodes within a single sample or between two sample or more
+#       interactively (explore the cutoff point interactively).
+# [y] Merge technical repeats by merge sample function (subsetting barcodeObj ->
+#       change samle names -> combine two or more barcodeObj).
+
+# global help function
+
+ifnullelse <- function(cand1, other) {
+    if (is.null(cand1)) {
+        return(other)
+    } else {
+        return(cand1)
+    }
+}
 
 #' DNA Barcode Analysis toolkit
 #'
@@ -22,6 +49,7 @@
 #' @importFrom Biostrings readDNAStringSet
 #' @importFrom methods is
 #' @importFrom plyr . count
+#' @importFrom Ckmeans.1d.dp Ckmeans.1d.dp
 #' @import ShortRead
 #' @import Rcpp
 #' @import ggplot2

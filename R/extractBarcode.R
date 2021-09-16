@@ -15,7 +15,7 @@ bc_process_sample_name <- function(sample_name, metadata, input_names) {
             stop("Sample name length does not meet sample number.")
         }
     }
-    
+        
     if (!is.null(metadata)) {
         if (!all(sample_name == rownames(metadata))) {
             stop("Sample name does not match row name of metadata.")
@@ -26,6 +26,7 @@ bc_process_sample_name <- function(sample_name, metadata, input_names) {
 
 bc_process_metadata <- function(sample_name, old_metadata, new_metadata) {
     res <- merge(old_metadata, new_metadata, by = 0, all=T)
+    res <- as.data.frame(res)
     rownames(res) <- res$Row.names
     res$Row.names <- NULL
     res[sample_name, ]
@@ -56,7 +57,7 @@ bc_extract_metadata <- function(x, sample_name) {
 #' @param sample_name A string vector, applicable when x is a list or fastq file
 #' vector. This argument specifies the sample names. If not
 #' provided, then the names or the value of the x will be used.
-#' @param metadata A data.frame with sample per each row, and metadata per column 
+#' @param metadata A data.frame with sample names as the row names, and metadata per column 
 #' , specifying the sample characteristics. 
 #' @param maxLDist A integer. The mismatch threshold for barcode matching, when
 #' maxLDist is 0, the \code{\link[stringr]{str_match}}  is
@@ -249,7 +250,7 @@ bc_extract.data.frame <- function(
             match_seq = seq_v, 
             barcode_seq = barcode_v, 
             count = reads_freq
-        )
+        ) 
     }
 
     # order the data by counts
@@ -257,11 +258,14 @@ bc_extract.data.frame <- function(
         d <- d[order(count, decreasing = TRUE)]
     } 
 
+
+    d <- stats::na.omit(d)
+
     # prepare the row_read_count & barcode_read_count
     attr(d, "raw_read_count") <- sum(reads_freq)
     attr(d, "barcode_read_count") <- sum(d$count)
 
-    stats::na.omit(d)
+    d
 }
 
 
@@ -346,7 +350,7 @@ bc_extract.integer <- function(
 #' @export
 bc_extract.character <- function(file, 
     pattern = "", 
-    sample_name = basename(file), 
+    sample_name = NULL,
     metadata = NULL, 
     maxLDist = 0, 
     pattern_type = c(barcode = 1), 
@@ -357,6 +361,10 @@ bc_extract.character <- function(file,
     # meta_data given
     #   no sample_name
     #   no rowname
+    
+    if (!is.null(metadata) & !is(metadata, "data.frame")) {
+        stop("metadata should be a data.frame.")
+    }
 
     # if more than one fastq file as input
     if (length(file) > 1) {
