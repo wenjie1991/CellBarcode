@@ -33,32 +33,32 @@ get_base_freq_per_cycle <- function(dnastringset) {
             variable.name = "Base"))
 }
 
-#' Performs quality control
+#' Evaluates sequences quality
 #'
-#' bc_seqQC evaluates the sequence quality.
+#' \code{bc_seqQC} evaluates sequences quality. See the return value for detail.
 #' 
 #' @param x A single or list of Fastq file, ShortReadQ object, DNAStringSet
 #' object, data.frame or named integer vector.
-#' @param file A string. Fastq file name
-#' @param sample_name A string vector with the length of sample number, rename
-#' the samples.
+#' @param file A character vector, specifying the input Fastq file.
+#' @param sample_name A character vector with the length of sample number, used
+#' to set the sample name.
 #' @param ... Additional arguments
-#' @return A barcodeQc or barcodeQcSet class. 
+#' @return A barcodeQc or a barcodeQcSet class. 
 #' The barcodeQc is a list with four elements, 
 #' \itemize{
-#'   \item top: a data.frame with top 50 frequency sequence, 
-#'   \item distribution: a data.frame with the distribution of read depth with
-#'   \emph{nOccurrences} (depth), and \emph{nReads} (unique sequence) columns.
-#'   \item base_quality_per_cycle: data.frame with sequence base-pair
-#'   location by row, and the base-pair sequencing quality summary by column,
+#'   \item \code{top}: a \code{data.frame} with top 50 most frequency sequence, 
+#'   \item \code{distribution}: a \code{data.frame} with the distribution of read depth. It contains 
+#'   \code{nOccurrences} (depth), and \code{nReads} (unique sequence) columns.
+#'   \item \code{base_quality_per_cycle}: \code{data.frame} with base-pair
+#'   location (NGS sequencing cycle) by row, and the base-pair quality summary by column,
 #'   including Mean, P5 (5% quantile), P25 (25% quantile), Median, P75 (75%
 #'   quantile) and P95 (95% quantile).
-#'   \item base_freq_per_cycle: data.frame with three columns, \emph{Cycle}: the
-#'   sequence base-pair location (NGS sequencing cycle); \emph{Base}: DNA base;
-#'   \emph{Count}: reads count.
-#'   \emph{summary}: a numeric vector with following elements:
-#'   \emph{total_read}, \emph{median_read_length},
-#'   \emph{p5_read_length}, \emph{p95_read_length}.
+#'   \item \code{base_freq_per_cycle}: \code{data.frame} with three columns: 1. \code{Cycle}, the
+#'   sequence base-pair location (NGS sequencing cycle); 2. \code{Base}, DNA base;
+#'   \code{Count}: reads count.
+#'   \item{summary}: a numeric vector with following elements:
+#'   \code{total_read}, \code{median_read_length},
+#'   \code{p5_read_length}, \code{p95_read_length}.
 #' }
 #' The barcodeQcSet is a list of barcodeQc.
 #' 
@@ -297,25 +297,26 @@ plot.barcodeQcSet <- function(x, ...) {
 
 #' Summary barcodeQcSet
 #'
-#' Summary the total read count and read length for each samples within
-#' barcodeQcSet, and output a data.frame with sample by row and different
+#' Summary the "total read count" and "read length" of each samples within
+#' a \code{BarcodeQcSet} object, and output a \code{data.frame} with sample by row and different
 #' metrics by column.
 #'
 #' @param x a barcodeQcSet object.
-#' @return a data.frame with 5 columns: sample_name, total_read, median_read_length,
-#' p5_read_length, p95_read_length.
+#' @return A \code{data.frame} with 5 columns: \code{sample_name},
+#' \code{total_read}, \code{median_read_length}, \code{p5_read_length} and
+#' \code{p95_read_length.}
 #' 
 #' @examples
 #'
 #' fq_file <- dir(
 #'     system.file("extdata", "mef_test_data", package = "CellBarcode"),
-#'     full=T)
+#'     full=TRUE)
 #'
 #' summary(bc_seqQC(fq_file))
 #' ###
 #'
 #' @export
-summary.barcodeQcSet <- function(x) {
+bc_summary_qc <- function(x) {
     res <- lapply(x, function(x_i) {
         as.list(x_i$summary)
     }) %>% rbindlist(idcol = TRUE)

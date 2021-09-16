@@ -526,10 +526,9 @@ following arguments:
   clustering merging of barcodes. Currently only "greedy" is available, in this
   case, the least abundant barcode is preferentially merged to the most
   abundant ones.
-- barcode_n: A single integer or vector of integers with the length of sample
-  number, specifying the max number of sequences expected. When the most
-  abundant barcode number reaches this number the merging finishes, and all the
-  rest sub-abundant sequences are discarded.
+- param count_threshold: An integer, read depth threshold to consider a
+  barcode as a true barcode, when when a barcode with count higher than this
+  threshold it will not be merged into more abundant barcode.
 - dist_costs: A list, the cost of the events when calculating distance between
   two barcode sequences, applicable when Levenshtein distance is applied. The
   names of vector have to be “insert”, “delete” and “replace”, specifying the
@@ -558,7 +557,7 @@ The `bc_plot_single` function provides arguments for showing the potential cutof
 
 ```{r}
 # re-do the filtering using depth threshold 0 to include all barcodes.
-bc_obj_umi_sub_neo <- bc_cure_depth(bc_obj_umi_sub, depth=0, isUpdate=F)
+bc_obj_umi_sub_neo <- bc_cure_depth(bc_obj_umi_sub, depth=0, isUpdate=FALSE)
 
 # you can use the count_marks argument to display the cutoff points in the figure
 # and the highlight argument to highlight specific barcodes.

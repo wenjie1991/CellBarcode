@@ -12,7 +12,7 @@
 \item{...}{Additional arguments}
 }
 \value{
-Formated BarcodeObj summary.
+Formated BarcodeObj summary text.
 }
 \description{
 Formats the summary of BarcodeObj object for pretty print.

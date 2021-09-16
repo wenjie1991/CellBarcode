@@ -10,7 +10,7 @@
 \alias{bc_seqQC.list}
 \alias{plot.barcodeQc}
 \alias{plot.barcodeQcSet}
-\title{Performs quality control}
+\title{Evaluates sequences quality}
 \usage{
 bc_seqQC(...)
 
@@ -36,33 +36,33 @@ bc_seqQC(...)
 \item{x}{A single or list of Fastq file, ShortReadQ object, DNAStringSet
 object, data.frame or named integer vector.}
 
-\item{file}{A string. Fastq file name}
+\item{file}{A character vector, specifying the input Fastq file.}
 
-\item{sample_name}{A string vector with the length of sample number, rename
-the samples.}
+\item{sample_name}{A character vector with the length of sample number, used
+to set the sample name.}
 }
 \value{
-A barcodeQc or barcodeQcSet class. 
+A barcodeQc or a barcodeQcSet class. 
 The barcodeQc is a list with four elements, 
 \itemize{
-  \item top: a data.frame with top 50 frequency sequence, 
-  \item distribution: a data.frame with the distribution of read depth with
-  \emph{nOccurrences} (depth), and \emph{nReads} (unique sequence) columns.
-  \item base_quality_per_cycle: data.frame with sequence base-pair
-  location by row, and the base-pair sequencing quality summary by column,
+  \item \code{top}: a \code{data.frame} with top 50 most frequency sequence, 
+  \item \code{distribution}: a \code{data.frame} with the distribution of read depth. It contains 
+  \code{nOccurrences} (depth), and \code{nReads} (unique sequence) columns.
+  \item \code{base_quality_per_cycle}: \code{data.frame} with base-pair
+  location (NGS sequencing cycle) by row, and the base-pair quality summary by column,
   including Mean, P5 (5% quantile), P25 (25% quantile), Median, P75 (75%
   quantile) and P95 (95% quantile).
-  \item base_freq_per_cycle: data.frame with three columns, \emph{Cycle}: the
-  sequence base-pair location (NGS sequencing cycle); \emph{Base}: DNA base;
-  \emph{Count}: reads count.
-  \emph{summary}: a numeric vector with following elements:
-  \emph{total_read}, \emph{median_read_length},
-  \emph{p5_read_length}, \emph{p95_read_length}.
+  \item \code{base_freq_per_cycle}: \code{data.frame} with three columns: 1. \code{Cycle}, the
+  sequence base-pair location (NGS sequencing cycle); 2. \code{Base}, DNA base;
+  \code{Count}: reads count.
+  \item{summary}: a numeric vector with following elements:
+  \code{total_read}, \code{median_read_length},
+  \code{p5_read_length}, \code{p95_read_length}.
 }
 The barcodeQcSet is a list of barcodeQc.
 }
 \description{
-bc_seqQC evaluates the sequence quality.
+\code{bc_seqQC} evaluates sequences quality. See the return value for detail.
 }
 \examples{
 library(ShortRead)

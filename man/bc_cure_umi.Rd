@@ -2,39 +2,40 @@
 % Please edit documentation in R/correctBarcode.R
 \name{bc_cure_umi}
 \alias{bc_cure_umi}
-\title{Filters on UMI-barcode tags counts when UMI used}
+\title{Filters UMI-barcode tag by counts}
 \usage{
 bc_cure_umi(barcodeObj, depth = 2, doFish = FALSE, isUniqueUMI = FALSE)
 }
 \arguments{
 \item{barcodeObj}{A BarcodeObj object.}
 
-\item{depth}{A single or a vector of numeric, specifying the UMI-sequence
-tags count threshold. Only the barcodes with UMI-barcode tag count larger than
-the threshold are considered true barcodes.}
+\item{depth}{A numeric or a vector of numeric, specifying the UMI-barcode
+tag count threshold. Only the barcodes with UMI-barcode tag count larger than
+the threshold are kept.}
 
-\item{doFish}{A single or a vector of logical value. If TRUE, for barcodes
-with UMI read depth above the threshold, “fish” for identical barcodes with
-UMI read depth below the threshold. The consequence of “doFish” will not
-increase the number of identified barcodes, but the UMI counts will increase
-due to including the low depth UMI barcodes.}
+\item{doFish}{A logical value, if true, for barcodes with UMI read depth
+above the threshold, “fish” for identical barcodes with UMI read depth below
+the threshold. The consequence of \code{doFish} will not increase the number of
+identified barcodes, but the UMI counts will increase due to including the
+low depth UMI barcodes.}
 
-\item{isUniqueUMI}{A single or a vector of logical value. When a UMI
-relates to several barcodes. If you believe that the UMI is absolute unique,
-then only the dominant sequence is chosen for each UMI.}
+\item{isUniqueUMI}{A logical value, In the case that a UMI
+relates to several barcodes, if you believe that the UMI is absolute unique,
+then only the UMI-barcodes tags with highest count are chosen for each UMI.}
 }
 \value{
-A BarcodeObj object with cleanBc element updated (or created).
+A \code{BarcodeObj} object with \code{cleanBc} element updated (or created).
 }
 \description{
-When the UMI is used, bc_cure_umi applies the filtering on the UMI-barcode tags counts.
+When the UMI is applied, \code{bc_cure_umi} can filter the UMI-barcode tags by counts.
 }
 \details{
-When invoke this function, the order of each steps are:
+When invoke this function, it processes the data with following
+steps:
 \enumerate{
-  \item (optional when isUniqueUMI is TRUE) Find dominant sequence in each UMI.
+  \item (if isUniqueUMI is TRUE) Find dominant sequence in each UMI.
   \item UMI-barcode depth filtering.
-  \item (optional when doFish is TRUE) Fishing the UMI with low UMI-barcode depth.
+  \item (if doFish is TRUE) Fishing the UMI with low UMI-barcode depth.
 }
 }
 \examples{

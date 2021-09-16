@@ -1,22 +1,22 @@
 
-#' Barcode read count scatter plot pairwise combination of samples
+#' Barcode read count 2D scatter plot of sample combination
 #'
-#' Draw barcode read count scatter plot for all pairwise combination of samples
-#' within BarcodeObj object. The cleanBc element in the BarcodeObj
-#' object is used to draw the figure. If the BarcodeObj object does not have the
-#' cleanBc element, it have to run the bc_cure* functions, such as
-#' bc_cure_depth, bc_cure_umi.
+#' Draw barcode count scatter plot for all pairwise combination of samples
+#' within a \code{BarcodeObj} object. It uses \code{cleanBc} element in the \code{BarcodeObj}
+#' object is used to draw the figure. If the \code{BarcodeObj} object does not have a 
+#' cleanBc element, you have to run the \code{bc_cure*} functions in ahead, such as
+#' \code{\link[CellBarcode]{bc_cure_depth}}, \code{\link[CellBarcode]{bc_cure_umi}}. 
 #'
-#' @param barcodeObj A BarcodeObj with cleanBc element.
+#' @param barcodeObj A \code{BarcodeObj} object, which has a \code{cleanBc} element.
 #' @param count_marks A numeric or numeric vector, specifying the read count
 #' cutoff in the scatter plot for each sample.
-#' @param highlight A character vector, specifying the barcodes need to be
+#' @param highlight A character vector, specifying the barcodes to be
 #' highlighted.
-#' @param log_coord A logical value, if TRUE (default), the x and y coordinates
-#' of the scatter plot will be logarized by log10.
+#' @param log_coord A logical value, if TRUE (default), the \code{x} and \code{y} coordinates
+#' of the scatter plot will be logarized by \code{log10.}
 #' @param alpha A numeric between 0 and 1, specifies the transparency of the
 #' dots in the scatter plot.
-#' @return Scatter plot matrix.
+#' @return A scatter plot matrix.
 #'
 #' @examples
 #'
@@ -47,9 +47,9 @@ bc_plot_mutual <- function(
     if (length(sample_names) < 2) {
         stop("The input BarcodeObj only contains less than 2 samples.")
     } else {
-        g_list <- apply(combn(seq_along(sample_names), 2), 2, function(x_i) {
+        g_list <- apply(utils::combn(seq_along(sample_names), 2), 2, function(x_i) {
             d <- bc_2dt(bc_subset(barcodeObj, sample = x_i))
-            d <- dcast(d, barcode_seq ~ sample_name, sep = "_", value.var = "count")
+            d <- data.table::dcast(d, barcode_seq ~ sample_name, sep = "_", value.var = "count")
             names(d) <- make.names(names(d))
             d[is.na(d)] <- 0
             bc_plot_draw_pair(d, log_coord, highlight, count_marks[x_i], alpha)
@@ -61,19 +61,21 @@ bc_plot_mutual <- function(
 
 #' Scatter plot of barcode count distribution per sample
 #'
-#' Draws scatter plot of barcode count distribution for each sample in a
+#' Draws barcode count distribution for each sample in a
 #' BarcodeObj object.
 #'
-#' @param barcodeObj A BarcodeObj with cleanBc element.
+#' @param barcodeObj A \code{BarcodeObj} object has a cleanBc element.
+#' @param sample_names A character vector or integer vector, specifying the
+#' samples used for plot.
 #' @param count_marks A numeric or numeric vector, specifying the read count
 #' cutoff in the scatter plot for each sample.
 #' @param highlight A character vector, specifying the barcodes need to be
 #' highlighted.
-#' @param log_coord A logical value, if TRUE (default), the x and y coordinates
+#' @param log_coord A logical value, if TRUE (default), the \code{x} and \code{y} coordinates
 #' of the scatter plot will be logarized by log10.
 #' @param alpha A numeric between 0 and 1, specifies the transparency of the
 #' dots in the scatter plot.
-#' @return Scatter plot matrix.
+#' @return 1D distribution graph matrix.
 #'
 #' @examples
 #' data(bc_obj) 
@@ -107,26 +109,27 @@ bc_plot_single <- function(
 }
 
 
-#' Barcode read count between two samples
+#' Barcode read count 2D scatter plot for given pairs
 #'
 #' Draws scatter plot for barcode read count between given pairs of samples with
-#' a barcodeObj object. This function will return scatter plot matrix contains
-#' the scatter plots for each sample pairs.
+#' a \code{BarcodeObj} object. This function will return scatter plot matrix contains
+#' the scatter plots for all given sample pairs.
 #'
-#' @param barcodeObj A BarcodeObj.
+#' @param barcodeObj A \code{BarcodeObj} object.
 #' @param sample_x A character vector or a integer vector, specifying the sample
-#' in x axis for each sub scatter plot. It can be the sample names or the sample
-#' index value.
-#' @param sample_y A character vector or a integer vector, similar to sample_x,
-#' specifying the samples used for y axis. It can be the sample names or the
-#' sample index value.  @count_marks_x A number vector used to mark the cutoff
+#' in \code{x} axis of each scatter plot. It can be the sample names in
+#' BarcodeObj or the sample index value.
+#' @param sample_y A character vector or a integer vector, similar to \code{sample_x},
+#' specifying the samples used for \code{y} axis. It can be the sample names or the
+#' sample index value.  
+#' @param count_marks_x A numeric vector used to mark the cutoff
 #' point for samples in x
 #' axis
 #' @param count_marks_y A number vector used to mark the cutoff point for
 #' samples in y axis.
 #' @param highlight A character vector, specifying the barcodes need to be
 #' highlighted.
-#' @param log_coord A logical value, if TRUE (default), the x and y coordinates
+#' @param log_coord A logical value, if TRUE (default), the \code{x} and \code{y} coordinates
 #' of the scatter will be logarized by log10.
 #' @param alpha A numeric between 0 and 1, specifies the transparency of the
 #' dots in the scatter plot.
@@ -181,8 +184,8 @@ bc_plot_pair <- function(
         sample_xy <- c(sample_x[i], sample_y[i])
         bc_sub <- barcodeObj[, sample_xy]
         d <- bc_2dt(bc_sub)
-        d <- dcast(d, barcode_seq ~ sample_name, value.var = "count")
-        d <- d[, c("barcode_seq", bc_names(bc_sub)), with=F]
+        d <- data.table::dcast(d, barcode_seq ~ sample_name, value.var = "count")
+        d <- d[, c("barcode_seq", bc_names(bc_sub)), with=FALSE]
         names(d) <- make.names(names(d))
         d[is.na(d)] <- 0
         bc_plot_draw_pair(d, log_coord, highlight, c(count_marks_x[i], count_marks_y[i]), alpha)

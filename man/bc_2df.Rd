@@ -13,30 +13,30 @@ bc_2dt(barcodeObj)
 bc_2matrix(barcodeObj)
 }
 \arguments{
-\item{barcodeObj}{A BarcodeObj.}
+\item{barcodeObj}{A \code{BarcodeObj} object.}
 }
 \value{
-A data.frame, with two columns named `barcode_seq` and `count`.
+A \code{data.frame}, with two columns: \code{barcode_seq} and \code{count}.
 
-A data.table, with two columns named `barcode_seq` and `count`.
+A \code{data.table}, with two columns: \code{barcode_seq} and \code{count}.
 
-A data matrix with sample by columns and barcode by rows.
+A \code{matrix} with sample by columns and barcode by rows.
 }
 \description{
-Transforms BarcodeObj object into data.frame, data.table or matrix.
+Transforms BarcodeObj object into \code{data.frame}, \code{data.table} or \code{matrix}.
 }
 \examples{
 data(bc_obj)
 
 bc_obj <- bc_cure_depth(bc_obj)
 
-# get data.frame
+# BarcodeObj to data.frame
 bc_2df(bc_obj)
 
-# get data.table
+# BarcodeObj to data.table
 bc_2dt(bc_obj)
 
-# get matrix
+# BarcodeObj to matrix
 bc_2matrix(bc_obj)
 
 ###

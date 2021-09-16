@@ -8,7 +8,7 @@
 \alias{bc_filterSeq.character}
 \alias{bc_filterSeq.integer}
 \alias{bc_filterSeq.list}
-\title{Filter the sequences by quality}
+\title{Remove low quality sequence}
 \usage{
 bc_filterSeq(x, ...)
 
@@ -45,19 +45,19 @@ bc_filterSeq(x, ...)
 )
 }
 \arguments{
-\item{x}{A single or a list of Fastq file, ShortReadQ, DNAStringSet,
-data.frame, integer vector.}
+\item{x}{A single or a list of Fastq file, \code{ShortReadQ}, \code{DNAStringSet},
+\code{data.frame}, integer vector.}
 
 \item{...}{Additional arguments}
 
-\item{min_average_quality}{A single or a vector of numeric, indicating the
-threshold of the minimum average base quality of a sequence.}
+\item{min_average_quality}{A numeric or a vector of numeric, specifying the
+threshold of the minimum average base quality of a sequence to be kept.}
 
-\item{min_read_length}{A single or a vector of integer, specifying the length
-threshold of a sequence.}
+\item{min_read_length}{A single or a vector of integer, specifying the
+sequence length threshold.}
 
-\item{N_threshold}{A single or a vector of integer, specifying the maximum
-\code{N} in a sequence.}
+\item{N_threshold}{A integer or a vector of integer, specifying the maximum
+\code{N} can be in a sequence.}
 
 \item{sample_name}{A string vector, specifying the sample name in the output.}
 }
@@ -66,7 +66,8 @@ A ShortReadQ or DNAStringSet object with sequences passed the
 filters.
 }
 \description{
-Applies quality filter to remove low quality sequence.
+Remove low quality sequences by base-pair quality, sequence length or unknown
+base "N".
 }
 \examples{
 library(ShortRead)

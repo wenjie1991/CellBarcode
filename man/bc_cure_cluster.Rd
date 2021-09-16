@@ -9,35 +9,34 @@ bc_cure_cluster(
   dist_thresh = 1,
   dist_method = "hamm",
   merge_method = "greedy",
-  barcode_n = 10000,
+  count_threshold = 1000,
   dist_costs = list(replace = 1, insert = 1, delete = 1)
 )
 }
 \arguments{
 \item{barcodeObj}{A BarcodeObj object.}
 
-\item{dist_thresh:}{a single integer or vector of integers with the length of sample
+\item{dist_thresh}{A single integer or vector of integers with the length of sample
 count, specifying the editing distance threshold of merging two similar
-barcode sequences. If the input is a vector, each value in vector is for
-one sample according to the sample order in BarcodeObj object.}
+barcode sequences. If the input is a vector, each value in the vector relates to one 
+sample according to the sample order in \code{BarcodeObj} object.}
 
-\item{dist_method:}{A  character string, specifying the distance algorithm for
+\item{dist_method}{A  character string, specifying the distance algorithm used for
 evaluating barcodes similarity. It can be "hamm" for Hamming distance or
 "leven" for Levenshtein distance.}
 
-\item{merge_method:}{A character string specifying the algorithm used to perform the
+\item{merge_method}{A character string specifying the algorithm used to perform the
 clustering merging of barcodes. Currently only "greedy" is available, in this
 case, the least abundant barcode is preferentially merged to the most
 abundant ones.}
 
-\item{barcode_n:}{A single integer or vector of integers, specifying the max number
-of sequences expected. When the most abundant barcode number reaches this
-number the merging finishes, and all the rest sub-abundant sequences are
-discarded.}
+\item{count_threshold}{An integer, read depth threshold to consider a
+barcode as a true barcode, when when a barcode with count higher than this
+threshold it will not be merged into more abundant barcode.}
 
-\item{dist_costs:}{A list, the cost of the events when calculating distance between
-two barcode sequences, applicable when Levenshtein distance is applied. The
-names of vector have to be “insert”, “delete” and “replace”, specifying the
+\item{dist_costs}{A list, the cost of the events of distance algorithm, 
+applicable when Levenshtein distance is applied. The
+names of vector have to be \code{insert}, \code{delete} and \code{replace}, specifying the
 weight of insertion, deletion, replacement events respectively. The default
 cost for each event is 1.}
 }
@@ -45,9 +44,9 @@ cost for each event is 1.}
 A BarcodeObj object with cleanBc element updated.
 }
 \description{
-bc_cure_cluster performs the clustering of barcodes by editing distance,
-then merge the barcodes with similar sequence. This function is only
-applicable for the BarcodeObj object with a cleanBc element.
+\code{bc_cure_cluster} performs clustering of barcodes by editing distance,
+and merging the barcodes with similar sequence. This function is only
+applicable for the BarcodeObj object with a \code{cleanBc} element.
 }
 \examples{
 data(bc_obj)

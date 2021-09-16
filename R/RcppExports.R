@@ -27,9 +27,9 @@ NULL
 #'
 #' @param seq A string vector.
 #' @param count An integer vector with the same order and length of UMI
-#' @param count_threshold An integer, read depth threshold to consider a
-#' barcode as a true barcode, when this condition satisfied the barcode is not
-#' going to merge into another barcode.
+#' @param count_threshold An integer, barcode count threshold to consider a
+#' barcode as a true barcode, when when a barcode with count higher than this
+#' threshold it will not be merged into more abundant barcode.
 #' @param dist_threshold A integer, distance threshold to consider two barcodes
 #' are related.
 #' @param dist_method A integer, if 2 the levenshtein distance will be used,

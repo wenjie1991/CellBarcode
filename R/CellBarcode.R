@@ -13,7 +13,7 @@
 # [y] bc_plot_pairwise ggplot2
 # [ ] bc_plot_single with interactive (plotly)
 # [ ] bc_plot_single with interactive (d3)
-# [ ] bc_plot_single with ggplot2
+# [y] bc_plot_single with ggplot2
 
 # [y] Draw reads per barcode between samples pairwisely between technical replicates
 #       or different samples, draw reads per barcodes between more than two samples.
@@ -37,7 +37,7 @@ ifnullelse <- function(cand1, other) {
 #' This package performs DNA Barcode (genetic lineage tracing) analysis. The
 #' package can handle all kinds of DNA barcodes, as long as the barcode within a
 #' single sequencing read and has a pattern which can be matched by a regular
-#' expression. This package can handle barcode with flexible length, with or
+#' expression. \code{CellBarcode} can handle barcode with flexible length, with or
 #' without UMI (unique molecular identifier). This tool also can be used for
 #' pre-processing of some amplicon data such as CRISPR gRNA screening, immune
 #' repertoire sequencing and meta genome data.
@@ -56,9 +56,9 @@ ifnullelse <- function(cand1, other) {
 #' @useDynLib CellBarcode
 NULL
 
-#' A dummy BarcodeObj
+#' A dummy BarcodeObj object
 #'
-#' Dataset contains a BarcodeObj
+#' Dataset contains a \code{BarcodeObj} with makeup barcode data.
 #'
 #' @name bc_obj
 #' @docType data
@@ -66,7 +66,7 @@ NULL
 #' @usage data(bc_obj)
 #'
 #' @details 
-#' This is a BarcodeObj derived from dummy data.
+#' This is a \code{BarcodeObj} object derived from makeup data by:
 #'
 #' \preformatted{
 #' d1 = data.frame(
