@@ -33,24 +33,32 @@ get_base_freq_per_cycle <- function(dnastringset) {
             variable.name = "Base"))
 }
 
-#' Performs quality control
+#' Evaluates sequences quality
 #'
-#' bc_seqQC evaluates the sequence quality.
+#' \code{bc_seqQC} evaluates sequences quality. See the return value for detail.
 #' 
 #' @param x A single or list of Fastq file, ShortReadQ object, DNAStringSet
 #' object, data.frame or named integer vector.
-#' @param file A string. Fastq file name
-#' @param sample_name A string vector with the length of sample number, rename
-#' the samples.
+#' @param file A character vector, specifying the input Fastq file.
+#' @param sample_name A character vector with the length of sample number, used
+#' to set the sample name.
 #' @param ... Additional arguments
-#' @return A barcodeQc or barcodeQcSet class. 
-#' The barcodeQc is a list with two elements, 
+#' @return A barcodeQc or a barcodeQcSet class. 
+#' The barcodeQc is a list with four elements, 
 #' \itemize{
-#'   \item base_quality_per_cycle: data.frame with sequence base-pair
-#'   location by row, and the base-pair sequencing quality summary by column.
-#'   \item base_freq_per_cycle: data.frame with three columns, \emph{Cycle}: the
-#'   sequence base-pair location (NGS sequencing cycle); \emph{Base}: DNA base;
-#'   \emph{Count}: reads count.
+#'   \item \code{top}: a \code{data.frame} with top 50 most frequency sequence, 
+#'   \item \code{distribution}: a \code{data.frame} with the distribution of read depth. It contains 
+#'   \code{nOccurrences} (depth), and \code{nReads} (unique sequence) columns.
+#'   \item \code{base_quality_per_cycle}: \code{data.frame} with base-pair
+#'   location (NGS sequencing cycle) by row, and the base-pair quality summary by column,
+#'   including Mean, P5 (5% quantile), P25 (25% quantile), Median, P75 (75%
+#'   quantile) and P95 (95% quantile).
+#'   \item \code{base_freq_per_cycle}: \code{data.frame} with three columns: 1. \code{Cycle}, the
+#'   sequence base-pair location (NGS sequencing cycle); 2. \code{Base}, DNA base;
+#'   \code{Count}: reads count.
+#'   \item{summary}: a numeric vector with following elements:
+#'   \code{total_read}, \code{median_read_length},
+#'   \code{p5_read_length}, \code{p95_read_length}.
 #' }
 #' The barcodeQcSet is a list of barcodeQc.
 #' 
@@ -80,26 +88,41 @@ get_base_freq_per_cycle <- function(dnastringset) {
 #' @export
 bc_seqQC <- function(...) UseMethod("bc_seqQC")
 
-#' @rdname bc_seqQC
-#' @export
-bc_seqQC.ShortReadQ <- function(x, ...) {
-    # output: top, distribution (nOccurrences, nReads), base_quality_per_cycle,
-    # base_freq_per_cycle
+bc_seqqc <- function(x) {
+
     output <- ShortRead::tables(x)
-    output$base_quality_per_cycle <- get_base_quality_per_cycle(x@quality)
-    output$base_freq_per_cycle <- get_base_freq_per_cycle(x@sread)
+
+    if (is(x, "ShortReadQ")) {
+        output$base_quality_per_cycle <- get_base_quality_per_cycle(x@quality)
+        output$base_freq_per_cycle <- get_base_freq_per_cycle(x@sread)
+    } else {
+        output$base_freq_per_cycle <- get_base_freq_per_cycle(x)
+    }
+
+    output$summary <- c(
+        total_read = length(x),
+        p5_read_length = quantile(width(x), 0.05)[[1]],
+        median_read_length = quantile(width(x), 0.50)[[1]],
+        p95_read_length = quantile(width(x), 0.95)[[1]]
+        )
+
     class(output) <- append(class(output), "barcodeQc")
     output
 }
 
 #' @rdname bc_seqQC
 #' @export
+bc_seqQC.ShortReadQ <- function(x, ...) {
+    # output: top, distribution (nOccurrences, nReads), base_quality_per_cycle,
+    # base_freq_per_cycle
+    bc_seqqc(x)
+}
+
+#' @rdname bc_seqQC
+#' @export
 bc_seqQC.DNAStringSet <- function(x, ...) {
     # output: top, distribution (nOccurrences, nReads), base_freq_per_cycle
-    output <- ShortRead::tables(x)
-    output$base_freq_per_cycle <- get_base_freq_per_cycle(x)
-    class(output) <- append(class(output), "barcodeQc")
-    output
+    bc_seqqc(x)
 }
 
 #' @rdname bc_seqQC
@@ -111,10 +134,7 @@ bc_seqQC.data.frame <- function(x, ...) {
     freq <- x$freq
     x <- Biostrings::DNAStringSet(rep(sequences, freq))
 
-    output <- ShortRead::tables(x)
-    output$base_freq_per_cycle <- get_base_freq_per_cycle(x)
-    class(output) <- append(class(output), "barcodeQc")
-    output
+    bc_seqqc(x)
 }
 
 #' @rdname bc_seqQC
@@ -122,10 +142,7 @@ bc_seqQC.data.frame <- function(x, ...) {
 bc_seqQC.integer <- function(x, ...) {
     x <- Biostrings::DNAStringSet(rep(names(x), x))
 
-    output <- ShortRead::tables(x)
-    output$base_freq_per_cycle <- get_base_freq_per_cycle(x)
-    class(output) <- append(class(output), "barcodeQc")
-    output
+    bc_seqqc(x)
 }
 
 #' @rdname bc_seqQC
@@ -139,7 +156,7 @@ bc_seqQC.character <- function(file, sample_name = basename(file), ...) {
     } else {
         qc_list <- lapply(file, function(f) {
             bc_seqQC(ShortRead::readFastq(f))
-})
+        })
         names(qc_list) <- sample_name
         class(qc_list) <- append(class(qc_list), "barcodeQcSet")
         qc_list
@@ -148,8 +165,12 @@ bc_seqQC.character <- function(file, sample_name = basename(file), ...) {
 
 #' @rdname bc_seqQC
 #' @export
-bc_seqQC.list <- function(x, ...) {
+bc_seqQC.list <- function(x, sample_name = names(x), ...) {
     qc_list <- lapply(x, bc_seqQC)
+    if (is.null(sample_name)) {
+        sample_name <- seq_along(x)
+    }
+    names(qc_list) <- sample_name
     class(qc_list) <- append(class(qc_list), "barcodeQcSet")
     qc_list
 }
@@ -271,4 +292,34 @@ plot.barcodeQcSet <- function(x, ...) {
         row_n <- length(g_list)
         egg::ggarrange(plots = g_list, nrow = row_n, ncol=1)
     }
+}
+
+
+#' Summary barcodeQcSet
+#'
+#' Summary the "total read count" and "read length" of each samples within
+#' a \code{BarcodeQcSet} object, and output a \code{data.frame} with sample by row and different
+#' metrics by column.
+#'
+#' @param x a barcodeQcSet object.
+#' @return A \code{data.frame} with 5 columns: \code{sample_name},
+#' \code{total_read}, \code{median_read_length}, \code{p5_read_length} and
+#' \code{p95_read_length.}
+#' 
+#' @examples
+#'
+#' fq_file <- dir(
+#'     system.file("extdata", "mef_test_data", package = "CellBarcode"),
+#'     full=TRUE)
+#'
+#' summary(bc_seqQC(fq_file))
+#' ###
+#'
+#' @export
+bc_summary_qc <- function(x) {
+    res <- lapply(x, function(x_i) {
+        as.list(x_i$summary)
+    }) %>% rbindlist(idcol = TRUE)
+    names(res)[1] <- "sample_name"
+    res
 }

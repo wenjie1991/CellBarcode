@@ -1,17 +1,18 @@
 # TODO: Trimming the sequence file remove adaptor
 
-#' Filter the sequences by quality
+#' Remove low quality sequence
 #' 
-#' Applies quality filter to remove low quality sequence.
+#' Remove low quality sequences by base-pair quality, sequence length or unknown
+#' base "N".
 #'
-#' @param x A single or a list of Fastq file, ShortReadQ, DNAStringSet,
-#' data.frame, integer vector.
-#' @param min_average_quality A single or a vector of numeric, indicating the
-#' threshold of the minimum average base quality of a sequence. 
-#' @param min_read_length A single or a vector of integer, specifying the length
-#' threshold of a sequence. 
-#' @param N_threshold A single or a vector of integer, specifying the maximum
-#' \code{N} in a sequence.
+#' @param x A single or a list of Fastq file, \code{ShortReadQ}, \code{DNAStringSet},
+#' \code{data.frame}, integer vector.
+#' @param min_average_quality A numeric or a vector of numeric, specifying the
+#' threshold of the minimum average base quality of a sequence to be kept. 
+#' @param min_read_length A single or a vector of integer, specifying the
+#' sequence length threshold.
+#' @param N_threshold A integer or a vector of integer, specifying the maximum
+#' \code{N} can be in a sequence.
 #' @param sample_name A string vector, specifying the sample name in the output.
 #' @param ... Additional arguments
 #' @return A ShortReadQ or DNAStringSet object with sequences passed the

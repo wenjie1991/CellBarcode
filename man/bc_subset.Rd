@@ -3,10 +3,11 @@
 \name{bc_subset}
 \alias{bc_subset}
 \alias{[.BarcodeObj}
+\alias{bc_merge}
 \alias{+.BarcodeObj}
 \alias{-.BarcodeObj}
 \alias{*.BarcodeObj}
-\title{Manages barcodes and samples in the BarcodeObj object}
+\title{Manages barcodes and samples in a BarcodeObj object}
 \usage{
 bc_subset(
   barcodeObj,
@@ -18,6 +19,8 @@ bc_subset(
 
 \method{[}{BarcodeObj}(barcodeObj, barcode = NULL, sample = NULL, ...)
 
+bc_merge(barcodeObj_x, barcodeObj_y)
+
 \method{+}{BarcodeObj}(barcodeObj_x, barcodeObj_y)
 
 \method{-}{BarcodeObj}(barcodeObj, black_list)
@@ -25,19 +28,19 @@ bc_subset(
 \method{*}{BarcodeObj}(barcodeObj, white_list)
 }
 \arguments{
-\item{barcodeObj}{A BarcodeObj.}
+\item{barcodeObj}{A BarcodeObj object.}
 
-\item{sample}{A vector or an expression, specifying the samples in the
-subsets. When the value is an expression, the metadata can be used as variable.}
+\item{sample}{A character vector or integer vector or an expression
+(expressio not applicable for \code{[]} operator), specifying the samples in
+the subsets. When the value is an expression, the columns in the metadata can be used as variable.}
 
 \item{barcode}{A vector of integer or string, indicating the selected
 barcode.}
 
 \item{black_list}{A character vector, specifying the black list with excluded barcodes.}
 
-\item{is_sample_quoted_exp}{A logical value. If TRUE, the
-expression in \code{sample} argument will not be evaluated before executing
-the function.}
+\item{is_sample_quoted_exp}{A logical value. If TRUE, the expression in
+\code{sample} argument will not be evaluated before executing the function.}
 
 \item{...}{Additional arguments.}
 
@@ -51,26 +54,24 @@ the function.}
 A BarcodeObj object.
 }
 \description{
-A set of functions and operators for subset and join of
+A set of functions and operators for subset or join of
 BarcodeObj object(s). 
-The bc_subset is used to select barcodes or samples in a BarcodeObj object.
-\code{*} and \code{-} are for a subset of barcodes using white list and black list
-respecrespectively.
+The \code{bc_subset}, \code{*} and \code{-} are used to select barcodes or samples in a \code{BarcodeObj} object.
 Two BarcodeObj objects can be joined by \code{+}.
 }
 \details{
-\code{bc_subset} and \code{[]}: Gets samples and barcodes subset.
+\code{bc_subset} and \code{[]}: Gets samples and barcodes subset from a
+\code{BarcodeObj} object.
 
-\code{+}: Combines two BarcodeObj objects. The \code{metadata}, \code{cleanBc} and
-\code{messyBc} in BarcodeObj elements in BarcodeObj object will be joined. 
-For the \code{metadata} element, the \code{sample_name} column will be used as the key for the
-join, and the \emph{Full outer join} (the record in either BarcodeObj object) will
-be returned. 
-The \code{messyBc} and \code{cleanBc} from two objects are combined by rows.
+\code{+}: Combines two \code{BarcodeObj} objects. The \code{metadata}, \code{cleanBc} and
+\code{messyBc} elements in the BarcodeObj objects will be joined. 
+For the \code{metadata} element, the \code{sample_name} column, and the \emph{Full outer join} (the record in either BarcodeObj object) will be performed with rownames as the key.
+The \code{messyBc} and \code{cleanBc} from two objects are combined by rows
+for the same sample from two \code{BarcodeObj} objects.
 
-\code{-}: removing barcodes in the black_list.
+\code{-}: removes barcodes in the black_list.
 
-\code{*}: selecting barcodes in the white_list.
+\code{*}: selects barcodes in the white_list.
 }
 \examples{
 data(bc_obj)
@@ -86,24 +87,22 @@ bc_meta(bc_obj)$phenotype <- c("l", "b")
 bc_meta(bc_obj)
 bc_subset(bc_obj, phenotype == "l")
 
-bc_obj[, phenotype == "l"]
-
 # Select samples by sample name
 bc_obj[, "test1"]
 bc_obj[, c("test1", "test2")]
-bc_subset(bc_obj, sample = "sample1_rep1", barcode = c("AACCTT", "AACCTT"))
+bc_subset(bc_obj, sample = "test1", barcode = c("AACCTT", "AACCTT"))
 
 # Apply barcodes black list
 bc_subset(
 bc_obj,
-    sample = c("sample1_rep1", "sample1_rep2"),
+    sample = c("test1", "test2"),
     barcode = c("AACCTT"))
 
 # Join two samples with different barcode sets
-bc_obj["AGAG", "test1"] + bc_obj["AAAG", "test1"]
+bc_obj["AGAG", "test1"] + bc_obj["AAAG", "test2"]
 
 # Join two samples with overlap barcodes
-bc_obj_join <- bc_obj["AGAG", "test1"] + bc_obj["AGAG", "test1"]
+bc_obj_join <- bc_obj["AGAG", "test1"] + bc_obj["AGAG", "test2"]
 bc_obj_join
 # The same barcode will merged after applying bc_cure_depth()
 bc_cure_depth(bc_obj_join)

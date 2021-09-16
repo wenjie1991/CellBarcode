@@ -10,21 +10,22 @@ bc_meta(barcodeObj)
 bc_meta(barcodeObj, key = NULL) <- value
 }
 \arguments{
-\item{barcodeObj}{A BarcodeObj object.}
+\item{barcodeObj}{A \code{BarcodeObj} object.}
 
 \item{key}{A string, identifying the metadata record name to be modified.}
 
-\item{value}{A string vector or a data.frame. When the "value" is a vector, it
-should have the length of sample number in the BarcodeObj object and the
-"key" variable is necessary. Otherwise, when the "value" is data.frame, the
-row name of the data.frame should be the sample name, and each column as a
-metadata record.}
+\item{value}{A string vector or a data.frame. If the \code{value} is a vector, it
+should have the same length of sample number in the BarcodeObj object. 
+Otherwise, if the \code{value} is \code{data.frame}, the
+row name of the \code{data.frame} should be the sample name, and each column as a
+metadata variable.}
 }
 \value{
 A data.frame
 }
 \description{
-Accesses and sets metadata in BarcodeObj object
+Sample information is kept in metadata. \code{bc_meta} is for accessing and
+updating metadata in \code{BarcodeObj} object
 }
 \examples{
 data(bc_obj)
@@ -38,10 +39,10 @@ bc_meta(bc_obj)$phenotype <- c("l", "b")
 # assign value to a metasta by "key" argument
 bc_meta(bc_obj, key = "sample_type") <- c("l", "b")
 
-# show the updated the metadata
+# show the updated metadata
 bc_meta(bc_obj)
 
-# assign a new data.frame as metadata
+# assign a new data.frame to metadata
 metadata <- data.frame(
     sample_name <- c("test1", "test2"),
     phenotype <- c("l", "b")

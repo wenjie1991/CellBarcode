@@ -77,6 +77,10 @@
       47    11    T     0
       48    12    T     0
       
+      $summary
+              total_read     p5_read_length median_read_length    p95_read_length 
+                       1                 12                 12                 12 
+      
       attr(,"class")
       [1] "list"      "barcodeQc"
 
@@ -143,6 +147,10 @@
       46    10    T     0
       47    11    T     0
       48    12    T     0
+      
+      $summary
+              total_read     p5_read_length median_read_length    p95_read_length 
+                       1                 12                 12                 12 
       
       attr(,"class")
       [1] "list"      "barcodeQc"
@@ -211,6 +219,10 @@
       47    11    T     0
       48    12    T     0
       
+      $summary
+              total_read     p5_read_length median_read_length    p95_read_length 
+                       1                 12                 12                 12 
+      
       attr(,"class")
       [1] "list"      "barcodeQc"
 
@@ -277,6 +289,10 @@
       46    10    T     0
       47    11    T     0
       48    12    T     0
+      
+      $summary
+              total_read     p5_read_length median_read_length    p95_read_length 
+                       1                 12                 12                 12 
       
       attr(,"class")
       [1] "list"      "barcodeQc"
@@ -346,6 +362,10 @@
       47    11    T     0
       48    12    T     0
       
+      $summary
+              total_read     p5_read_length median_read_length    p95_read_length 
+                       1                 12                 12                 12 
+      
       attr(,"class")
       [1] "list"      "barcodeQc"
       
@@ -408,6 +428,10 @@
       46    10    T     0
       47    11    T     0
       48    12    T     0
+      
+      $summary
+              total_read     p5_read_length median_read_length    p95_read_length 
+                       1                 12                 12                 12 
       
       attr(,"class")
       [1] "list"      "barcodeQc"
@@ -495,6 +519,10 @@
       47    11    T     0
       48    12    T     0
       
+      $summary
+              total_read     p5_read_length median_read_length    p95_read_length 
+                       1                 12                 12                 12 
+      
       attr(,"class")
       [1] "list"      "barcodeQc"
       
@@ -572,6 +600,10 @@
       46    10    T     0
       47    11    T     0
       48    12    T     0
+      
+      $summary
+              total_read     p5_read_length median_read_length    p95_read_length 
+                       1                 12                 12                 12 
       
       attr(,"class")
       [1] "list"      "barcodeQc"

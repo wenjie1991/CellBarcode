@@ -9,21 +9,23 @@ bc_cure_depth(barcodeObj, depth = 0, isUpdate = TRUE)
 \arguments{
 \item{barcodeObj}{A BarcodeObj object.}
 
-\item{depth}{A single or vector of numeric, specifying the threshold
-of the threshold of minimum count for a sequence to kept. If the input is a
-vector, the vector length should be the same to the sample number, and a 
-numeric per sample.}
+\item{depth}{A numeric or a vector of numeric, specifying the threshold of 
+minimum count for a barcode to kept. If the input is a
+vector, if the vector length is not the same to the sample number the element
+will be repeatedly used. And when the depth argument is a number with negative
+value, automatic cutoff point will be chosen by \code{bc_auto_cutoff} function
+for each samples. See \code{\link[CellBarcode]{bc_auto_cutoff}} for details.}
 
-\item{isUpdate}{A logical value. If TRUE, the cleanBc element in BarcodeObj
-will be used preferentially, otherwise the messyBc element will be used. If no
-cleanBc is available, messyBc will be used instead.}
+\item{isUpdate}{A logical value. If TRUE, the \code{cleanBc} element in \code{BarcodeObj}
+will be used preferentially, otherwise the \code{messyBc} element will be used. If no
+cleanBc is available, \code{messyBc} will be used instead.}
 }
 \value{
-A BarcodeObj object with cleanBc element updated.
+A \code{BarcodeObj} object with \code{cleanBc} element updated or
+created.
 }
 \description{
-bc_cure_depth filters barcodes by applying the filter on the read counts or
-the UMI counts.
+bc_cure_depth filters barcodes by the read counts or the UMI counts.
 }
 \examples{
 data(bc_obj)
@@ -55,7 +57,7 @@ bc_obj <- bc_extract(list(test = d1), pattern, sample_name=c("test"),
 (bc_cured <- bc_cure_depth(bc_obj, depth=5))
 bc_2matrix(bc_cured)
 
-# Use UMI information to filter the barcode < 5 UMI-barcode tags
+# Use UMI information, filter the barcode < 5 UMI
 bc_umi_cured <- bc_cure_umi(bc_obj, depth =0, doFish=TRUE, isUniqueUMI=TRUE)
 bc_cure_depth(bc_umi_cured, depth = 5)
 

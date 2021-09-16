@@ -3,15 +3,15 @@
 \docType{data}
 \name{bc_obj}
 \alias{bc_obj}
-\title{A dummy BarcodeObj}
+\title{A dummy BarcodeObj object}
 \usage{
 data(bc_obj)
 }
 \description{
-Dataset contains a BarcodeObj
+Dataset contains a \code{BarcodeObj} with makeup barcode data.
 }
 \details{
-This is a BarcodeObj derived from dummy data.
+This is a \code{BarcodeObj} object derived from makeup data by:
 
 \preformatted{
 d1 = data.frame(

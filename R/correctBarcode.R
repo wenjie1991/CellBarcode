@@ -1,20 +1,102 @@
 # TODO: Remove barcode reads distribution graph with log x-axis
 # Correlation between two samples w/o distribution information
 
+# bc_filter_barcode = function(count, sequence) {
+#     sequence = sequence[count != 0]
+#     count = count[count != 0]
+#     k = 2
+#     x_m = mean(count)
+#     count = log2(count + 1)
+#     x_sub = count[count > log2(x_m)]
+#     s_sub = sequence[count > log2(x_m)]
+#     d_sub = data.table(count = 2^x_sub, barcode_seq = s_sub)
+#     weight_log_reads = x_sub
+#     result = Ckmeans.1d.dp::Ckmeans.1d.dp(x_sub, k, y = weight_log_reads, method = "linear")
+#     d_res = d_sub[result$cluster == 2]
+#     d_merge = merge(x_known_barcod, d_res, all = T)
+#     count_sum = d_merge$count %>% sum(na.rm = T)
+#     d_merge[, cell_out := count / count_sum * cell_number]
+#     d_merge
+# }
+ 
+bc_find_depth_cutoff_point <- function(count, count_lower_bound = median(count[count > 0])) {
+
+    count <- count[count != 0]
+    k <- 2
+
+    count_log <- log2(count + 1)
+
+    count_sub_i <- count_log > log2(count_lower_bound + 1)
+    count_log_sub <- count_log[count_sub_i]
+    weight_log_reads <- count_log_sub
+
+    result <- Ckmeans.1d.dp::Ckmeans.1d.dp(count_log_sub, k, y = weight_log_reads, method = "linear")
+    
+    # print(count)
+    min(count[count_sub_i][result$cluster == 2])
+}
+
+#' Finds barcode count cutoff point
+#'
+#' Finds the cutoff point for the barcode count filtering based on the barcode
+#' count distribution.
+#'
+#' The one dimension kmeans clustering is applied for identify the 
+#' "true barcode" based on read count. The the algorithm detail is:
+#' 1. Remove the barcodes with count below the median of counts.
+#' 2. Transform the count by log2(x+1).
+#' 3. Apply the 1 dimension clustering to the logarized count, with
+#' the cluster number of 2 and weights of the logarized count.
+#' 4. Choose the minimum count value in the cluster with higher count as
+#' cutoff point.
+#'
+#' For more info about 1 dimension kmeans used here please refer to
+#' \code{\link[Ckmeans.1d.dp]{Ckmeans.1d.dp}, which has been used here.
+#'
+#' @param barcodeObj A \code{BarcodeObj} object.
+#' @param useCleanBc A logical value, if \code{TRUE}, the \code{cleanBc} element in the
+#' \code{BarcodeObj} object will be used, otherwise the \code{messyBc} element will be used.
+#' @return a numeric \code{vector} of the cutoff point.
+#' @examples
+#' 
+#' data(bc_obj)
+#' 
+#' bc_auto_cutoff(bc_obj)
+#' 
+#' @export
+bc_auto_cutoff <- function(barcodeObj, useCleanBc=TRUE) {
+
+    if (is.null(barcodeObj$cleanBc) | !useCleanBc) {
+        x <- barcodeObj$messyBc
+        message("-message----\nbc_auto_cutoff: messyBc is used.\n------------")
+    } else {
+        x <- barcodeObj$cleanBc
+        message("-message----\nbc_auto_cutoff: cleanBc is used.\n------------")
+    }
+
+    res <- vapply(x, function(x_i) {
+        bc_find_depth_cutoff_point(x_i$count)
+    }, c(1.0))
+    names(res) <- bc_names(barcodeObj)
+    res
+}
+
 #' Filters barcodes by counts
 #'
-#' bc_cure_depth filters barcodes by applying the filter on the read counts or
-#' the UMI counts.
+#' bc_cure_depth filters barcodes by the read counts or the UMI counts.
 #'
 #' @param barcodeObj A BarcodeObj object.
-#' @param depth A single or vector of numeric, specifying the threshold
-#' of the threshold of minimum count for a sequence to kept. If the input is a
-#' vector, the vector length should be the same to the sample number, and a 
-#' numeric per sample.
-#' @param isUpdate A logical value. If TRUE, the cleanBc element in BarcodeObj
-#' will be used preferentially, otherwise the messyBc element will be used. If no
-#' cleanBc is available, messyBc will be used instead.
-#' @return A BarcodeObj object with cleanBc element updated.
+#' @param depth A numeric or a vector of numeric, specifying the threshold of 
+#' minimum count for a barcode to kept. If the input is a
+#' vector, if the vector length is not the same to the sample number the element
+#' will be repeatedly used. And when the depth argument is a number with negative
+#' value, automatic cutoff point will be chosen by \code{bc_auto_cutoff} function
+#' for each samples. See \code{\link[CellBarcode]{bc_auto_cutoff}} for details.
+#' @param isUpdate A logical value. If TRUE, the \code{cleanBc} element in \code{BarcodeObj}
+#' will be used preferentially, otherwise the \code{messyBc} element will be used. If no
+#' cleanBc is available, \code{messyBc} will be used instead.
+#' @return A \code{BarcodeObj} object with \code{cleanBc} element updated or
+#' created.
 #'
 #' @examples
 #' data(bc_obj)
@@ -46,7 +128,7 @@
 #' (bc_cured <- bc_cure_depth(bc_obj, depth=5))
 #' bc_2matrix(bc_cured)
 #'
-#' # Use UMI information to filter the barcode < 5 UMI-barcode tags
+#' # Use UMI information, filter the barcode < 5 UMI
 #' bc_umi_cured <- bc_cure_umi(bc_obj, depth =0, doFish=TRUE, isUniqueUMI=TRUE)
 #' bc_cure_depth(bc_umi_cured, depth = 5)
 #'
@@ -58,17 +140,36 @@ bc_cure_depth <- function(
     , isUpdate = TRUE
     ){
 
-    parameter_df <- data.frame(
-        sample_names = rownames(barcodeObj$metadata)
-        , depth = depth
-    )
+    if (depth[1] < 0)
+        depth <- NULL
 
+    if (isUpdate) {
+        message("-message----\nbc_cure_depth: isUpdate is TRUE, update the cleanBc.\n------------")
+    } else {
+        message("-message----\nbc_cure_depth: isUpdate is FALSE, use messyBc as input.\n------------")
+    }
+    
     if (is.null(barcodeObj$cleanBc) | !isUpdate) {
         cleanBc <- barcodeObj$messyBc
     } else {
         cleanBc <- barcodeObj$cleanBc
     }
 
+    if (is.null(depth)) {
+        message("-message----\nbc_cure_depth: Null depth or negative provided, apply auto depth threshold.\n------------")
+        depth <- vapply(cleanBc, function(x_i) {
+                bc_find_depth_cutoff_point(x_i$count)
+        }, c(1.0))
+    }
+
+    bc_meta(barcodeObj, "depth_cutoff") <- depth
+
+    parameter_df <- data.frame(
+        sample_names = rownames(barcodeObj$metadata)
+        , depth = depth
+    )
+
+    
     ## count the reads directly
     cleanBc <- lapply(seq_along(cleanBc),
         function(i) {
@@ -89,29 +190,28 @@ bc_cure_depth <- function(
 
 #' Merges barcodes by editing distance
 #'
-#' bc_cure_cluster performs the clustering of barcodes by editing distance,
-#' then merge the barcodes with similar sequence. This function is only
-#' applicable for the BarcodeObj object with a cleanBc element.
+#' \code{bc_cure_cluster} performs clustering of barcodes by editing distance,
+#' and merging the barcodes with similar sequence. This function is only
+#' applicable for the BarcodeObj object with a \code{cleanBc} element.
 #'
 #' @param barcodeObj A BarcodeObj object.
-#' @param dist_thresh: a single integer or vector of integers with the length of sample
+#' @param dist_thresh A single integer or vector of integers with the length of sample
 #' count, specifying the editing distance threshold of merging two similar
-#' barcode sequences. If the input is a vector, each value in vector is for
-#' one sample according to the sample order in BarcodeObj object.
-#' @param dist_method: A  character string, specifying the distance algorithm for
+#' barcode sequences. If the input is a vector, each value in the vector relates to one 
+#' sample according to the sample order in \code{BarcodeObj} object.
+#' @param dist_method A  character string, specifying the distance algorithm used for
 #' evaluating barcodes similarity. It can be "hamm" for Hamming distance or
 #' "leven" for Levenshtein distance.
-#' @param merge_method: A character string specifying the algorithm used to perform the
+#' @param merge_method A character string specifying the algorithm used to perform the
 #' clustering merging of barcodes. Currently only "greedy" is available, in this
 #' case, the least abundant barcode is preferentially merged to the most
 #' abundant ones.
-#' @param barcode_n: A single integer or vector of integers, specifying the max number
-#' of sequences expected. When the most abundant barcode number reaches this
-#' number the merging finishes, and all the rest sub-abundant sequences are
-#' discarded.
-#' @param dist_costs: A list, the cost of the events when calculating distance between
-#' two barcode sequences, applicable when Levenshtein distance is applied. The
-#' names of vector have to be “insert”, “delete” and “replace”, specifying the
+#' @param count_threshold An integer, read depth threshold to consider a
+#' barcode as a true barcode, when when a barcode with count higher than this
+#' threshold it will not be merged into more abundant barcode.
+#' @param dist_costs A list, the cost of the events of distance algorithm, 
+#' applicable when Levenshtein distance is applied. The
+#' names of vector have to be \code{insert}, \code{delete} and \code{replace}, specifying the
 #' weight of insertion, deletion, replacement events respectively. The default
 #' cost for each event is 1.
 #' @return A BarcodeObj object with cleanBc element updated.
@@ -159,7 +259,7 @@ bc_cure_cluster <- function(
     , dist_thresh = 1
     , dist_method = "hamm"
     , merge_method = "greedy"
-    , barcode_n = 10000
+    , count_threshold = 1000
     , dist_costs = list("replace" = 1, "insert" = 1, "delete" = 1)
     ) {
     # TODO: Add more clustering methods
@@ -167,7 +267,7 @@ bc_cure_cluster <- function(
     parameter_df <- data.frame(
         sample_names = rownames(barcodeObj$metadata)
         , distance =dist_thresh 
-        , barcode_n = barcode_n
+        , count_threshold =count_threshold 
     )
 
     cleanBc <- barcodeObj$cleanBc
@@ -183,7 +283,7 @@ bc_cure_cluster <- function(
                 seq_correct(
                     seq_v, 
                     count_v, 
-                    parameter_df[i, "barcode_n"], 
+                    parameter_df[i, "count_threshold"], 
                     parameter_df[i, "distance"],
                     1
                 )
@@ -194,9 +294,7 @@ bc_cure_cluster <- function(
         cleanBc <- lapply(correct_out,
             function(d) {
                 ##  The result is default ordered
-                data.frame(
-                    d$seq_freq[order(d$seq_freq$count, decreasing = TRUE), ]
-                )
+                d$seq_freq[order(d$seq_freq$count, decreasing = TRUE), ]
             }
         )
 
@@ -226,7 +324,7 @@ bc_cure_cluster <- function(
                 seq_correct(
                     seq_v, 
                     count_v, 
-                    parameter_df[i, "barcode_n"], 
+                    parameter_df[i, "count_threshold"], 
                     parameter_df[i, "distance"],
                     2,
                     insert_costs,
@@ -240,7 +338,7 @@ bc_cure_cluster <- function(
         cleanBc <- lapply(correct_out,
             function(d) {
                 ##  The result is default ordered
-                data.frame(d$seq_freq[order(d$seq_freq$count, decreasing = TRUE), ])
+                d$seq_freq[order(d$seq_freq$count, decreasing = TRUE), ]
             }
         )
 
@@ -253,28 +351,29 @@ bc_cure_cluster <- function(
     barcodeObj
 }
 
-#' Filters on UMI-barcode tags counts when UMI used
+#' Filters UMI-barcode tag by counts 
 #'
-#' When the UMI is used, bc_cure_umi applies the filtering on the UMI-barcode tags counts. 
+#' When the UMI is applied, \code{bc_cure_umi} can filter the UMI-barcode tags by counts. 
 #'
 #' @param barcodeObj A BarcodeObj object.
-#' @param depth A single or a vector of numeric, specifying the UMI-sequence
-#' tags count threshold. Only the barcodes with UMI-barcode tag count larger than
-#' the threshold are considered true barcodes.
-#' @param doFish A single or a vector of logical value. If TRUE, for barcodes
-#' with UMI read depth above the threshold, “fish” for identical barcodes with
-#' UMI read depth below the threshold. The consequence of “doFish” will not
-#' increase the number of identified barcodes, but the UMI counts will increase
-#' due to including the low depth UMI barcodes. 
-#' @param isUniqueUMI A single or a vector of logical value. When a UMI
-#' relates to several barcodes. If you believe that the UMI is absolute unique,
-#' then only the dominant sequence is chosen for each UMI.
-#' @return A BarcodeObj object with cleanBc element updated (or created).
-#' @details When invoke this function, the order of each steps are:
+#' @param depth A numeric or a vector of numeric, specifying the UMI-barcode
+#' tag count threshold. Only the barcodes with UMI-barcode tag count larger than
+#' the threshold are kept. 
+#' @param doFish A logical value, if true, for barcodes with UMI read depth
+#' above the threshold, “fish” for identical barcodes with UMI read depth below
+#' the threshold. The consequence of \code{doFish} will not increase the number of
+#' identified barcodes, but the UMI counts will increase due to including the
+#' low depth UMI barcodes. 
+#' @param isUniqueUMI A logical value, In the case that a UMI
+#' relates to several barcodes, if you believe that the UMI is absolute unique,
+#' then only the UMI-barcodes tags with highest count are chosen for each UMI.
+#' @return A \code{BarcodeObj} object with \code{cleanBc} element updated (or created).
+#' @details When invoke this function, it processes the data with following
+#' steps:
 #' \enumerate{
-#'   \item (optional when isUniqueUMI is TRUE) Find dominant sequence in each UMI.
+#'   \item (if isUniqueUMI is TRUE) Find dominant sequence in each UMI.
 #'   \item UMI-barcode depth filtering.
-#'   \item (optional when doFish is TRUE) Fishing the UMI with low UMI-barcode depth.
+#'   \item (if doFish is TRUE) Fishing the UMI with low UMI-barcode depth.
 #' }
 #'
 #' @examples

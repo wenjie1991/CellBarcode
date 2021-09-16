@@ -8,8 +8,8 @@
       It contains: 
       messyBc  metadata  cleanBc
       ----------
-      $metadata: 2 meta data field(s) available
-      sample_name  id
+      $metadata: 4 meta data field(s) available
+      raw_read_count  barcode_read_count  depth_cutoff  id
       ----------
       $messyBc: 2 Samples for raw barcodes
           In sample $test11 there are: 10 Tags

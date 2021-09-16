@@ -8,7 +8,7 @@
 This package performs DNA Barcode (genetic lineage tracing) analysis. The
 package can handle all kinds of DNA barcodes, as long as the barcode within a
 single sequencing read and has a pattern which can be matched by a regular
-expression. This package can handle barcode with flexible length, with or
+expression. \code{CellBarcode} can handle barcode with flexible length, with or
 without UMI (unique molecular identifier). This tool also can be used for
 pre-processing of some amplicon data such as CRISPR gRNA screening, immune
 repertoire sequencing and meta genome data.

@@ -1,7 +1,7 @@
 Package: CellBarcode
 Type: Package
 Title: Cellular DNA Barcode Analysis toolkit
-Version: 0.99.1
+Version: 0.99.2
 Authors@R: c(
   person("Wenjie", "Sun", email = "sunwjie@gmail.com", role = "cre"),
   person("Anne-Marie", "Lyne", email = "Anne-Marie.Lyne@curie.fr", role = "aut"),
@@ -15,7 +15,7 @@ Depends: R (>= 4.0.0)
 Imports: methods, Rcpp (>= 1.0.5), data.table (>= 1.14.0), plyr (>=
         1.8.6), ggplot2 (>= 3.3.5), stringr (>= 1.4.0), magrittr (>=
         2.0.1), ShortRead (>= 1.48.0), Biostrings (>= 2.58.0), egg (>=
-        0.4.5), utils, S4Vectors
+        0.4.5), Ckmeans.1d.dp (>= 4.3.3), utils, S4Vectors
 LinkingTo: Rcpp
 RoxygenNote: 7.1.1
 Suggests: BiocStyle, testthat (>= 3.0.0), knitr, rmarkdown
