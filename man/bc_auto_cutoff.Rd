@@ -9,8 +9,9 @@ bc_auto_cutoff(barcodeObj, useCleanBc = TRUE)
 \arguments{
 \item{barcodeObj}{A \code{BarcodeObj} object.}
 
-\item{useCleanBc}{A logical value, if \code{TRUE}, the \code{cleanBc} element in the
-\code{BarcodeObj} object will be used, otherwise the \code{messyBc} element will be used.}
+\item{useCleanBc}{A logical value, if \code{TRUE}, the \code{cleanBc} element
+in the \code{BarcodeObj} object will be used, otherwise the \code{messyBc}
+element will be used.}
 }
 \value{
 a numeric \code{vector} of the cutoff point.

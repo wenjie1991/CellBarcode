@@ -21,8 +21,8 @@ cutoff in the scatter plot for each sample.}
 \item{highlight}{A character vector, specifying the barcodes to be
 highlighted.}
 
-\item{log_coord}{A logical value, if TRUE (default), the \code{x} and \code{y} coordinates
-of the scatter plot will be logarized by \code{log10.}}
+\item{log_coord}{A logical value, if TRUE (default), the \code{x} and
+\code{y} coordinates of the scatter plot will be logarized by \code{log10.}}
 
 \item{alpha}{A numeric between 0 and 1, specifies the transparency of the
 dots in the scatter plot.}
@@ -32,10 +32,11 @@ A scatter plot matrix.
 }
 \description{
 Draw barcode count scatter plot for all pairwise combination of samples
-within a \code{BarcodeObj} object. It uses \code{cleanBc} element in the \code{BarcodeObj}
-object is used to draw the figure. If the \code{BarcodeObj} object does not have a 
-cleanBc element, you have to run the \code{bc_cure*} functions in ahead, such as
-\code{\link[CellBarcode]{bc_cure_depth}}, \code{\link[CellBarcode]{bc_cure_umi}}.
+within a \code{BarcodeObj} object. It uses \code{cleanBc} element in the
+\code{BarcodeObj} object is used to draw the figure. If the \code{BarcodeObj}
+object does not have a cleanBc element, you have to run the \code{bc_cure*}
+functions in ahead, such as \code{\link[CellBarcode]{bc_cure_depth}},
+\code{\link[CellBarcode]{bc_cure_umi}}.
 }
 \examples{
 

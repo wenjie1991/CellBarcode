@@ -104,10 +104,10 @@ be used to specifying the weight of the distance calculation.}
 group. See Details.}
 
 \item{costs}{A named list, applicable when maxLDist > 0, specifying the
-weight of each mismatch events while extracting the barcodes.
-The list element name have to be \code{sub} (substitution), \code{ins} (insertion) and \code{del}
-(deletion). The default value is \code{list(sub = 1, ins = 99, del = 99)}.
-See \code{\link[utils]{aregexec}} for more detail information.}
+weight of each mismatch events while extracting the barcodes.  The list
+element name have to be \code{sub} (substitution), \code{ins} (insertion) and
+\code{del} (deletion). The default value is \code{list(sub = 1, ins = 99, del
+= 99)}.  See \code{\link[utils]{aregexec}} for more detail information.}
 
 \item{ordered}{A logical value. If the value is true, the return barcodes
 (UMI-barcode tags) are sorted by the reads counts.}
@@ -137,9 +137,10 @@ full sequence, and is unique id for each record (row), On the contrast,
 rows.
 }
 \description{
-\code{bc_extract} identifies the barcodes (and UMI) from the sequences using regular expressions.
-\code{pattern} and \code{pattern_type} arguments are necessary, which provide
-the barcode (and UMI) pattern and their location within the sequences.
+\code{bc_extract} identifies the barcodes (and UMI) from the sequences using
+regular expressions.  \code{pattern} and \code{pattern_type} arguments are
+necessary, which provide the barcode (and UMI) pattern and their location
+within the sequences.
 }
 \details{
 The \code{pattern} argument is a regular expression, the capture operation \code{()}

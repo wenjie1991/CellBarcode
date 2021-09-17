@@ -2,18 +2,19 @@
 #' Barcode read count 2D scatter plot of sample combination
 #'
 #' Draw barcode count scatter plot for all pairwise combination of samples
-#' within a \code{BarcodeObj} object. It uses \code{cleanBc} element in the \code{BarcodeObj}
-#' object is used to draw the figure. If the \code{BarcodeObj} object does not have a 
-#' cleanBc element, you have to run the \code{bc_cure*} functions in ahead, such as
-#' \code{\link[CellBarcode]{bc_cure_depth}}, \code{\link[CellBarcode]{bc_cure_umi}}. 
+#' within a \code{BarcodeObj} object. It uses \code{cleanBc} element in the
+#' \code{BarcodeObj} object is used to draw the figure. If the \code{BarcodeObj}
+#' object does not have a cleanBc element, you have to run the \code{bc_cure*}
+#' functions in ahead, such as \code{\link[CellBarcode]{bc_cure_depth}},
+#' \code{\link[CellBarcode]{bc_cure_umi}}. 
 #'
 #' @param barcodeObj A \code{BarcodeObj} object, which has a \code{cleanBc} element.
 #' @param count_marks A numeric or numeric vector, specifying the read count
 #' cutoff in the scatter plot for each sample.
 #' @param highlight A character vector, specifying the barcodes to be
 #' highlighted.
-#' @param log_coord A logical value, if TRUE (default), the \code{x} and \code{y} coordinates
-#' of the scatter plot will be logarized by \code{log10.}
+#' @param log_coord A logical value, if TRUE (default), the \code{x} and
+#' \code{y} coordinates of the scatter plot will be logarized by \code{log10.}
 #' @param alpha A numeric between 0 and 1, specifies the transparency of the
 #' dots in the scatter plot.
 #' @return A scatter plot matrix.
@@ -188,7 +189,8 @@ bc_plot_pair <- function(
         d <- d[, c("barcode_seq", bc_names(bc_sub)), with=FALSE]
         names(d) <- make.names(names(d))
         d[is.na(d)] <- 0
-        bc_plot_draw_pair(d, log_coord, highlight, c(count_marks_x[i], count_marks_y[i]), alpha)
+        bc_plot_draw_pair(d, log_coord, highlight, c(count_marks_x[i],
+                count_marks_y[i]), alpha)
     })
 
     egg::ggarrange(plots=g_list)
@@ -224,10 +226,18 @@ bc_plot_draw_pair <- function(d, log_coord, highlight, count_marks, alpha) {
         g <- g + 
             geom_hline(yintercept=count_marks[2], alpha=0.3, color='red') + 
             geom_vline(xintercept=count_marks[1], alpha=0.3, color='red') +
-            annotate(geom="text", x=count_marks[1], y=count_marks[2], label=count_left_bottom, hjust=1+1/nchar(count_left_bottom), vjust=1+1) +
-            annotate(geom="text", x=count_marks[1], y=count_marks[2], label=count_left_top, hjust=1+1/nchar(count_left_top), vjust=0-1) +
-            annotate(geom="text", x=count_marks[1], y=count_marks[2], label=count_right_bottom, hjust=0-1/nchar(count_right_bottom), vjust=1+1) +
-            annotate(geom="text", x=count_marks[1], y=count_marks[2], label=count_right_top, hjust=0-1/nchar(count_right_top), vjust=0-1)
+            annotate(geom="text", x=count_marks[1], y=count_marks[2],
+                label=count_left_bottom, hjust=1+1/nchar(count_left_bottom),
+                vjust=1+1) +
+            annotate(geom="text", x=count_marks[1], y=count_marks[2],
+                label=count_left_top, hjust=1+1/nchar(count_left_top),
+                vjust=0-1) +
+            annotate(geom="text", x=count_marks[1], y=count_marks[2],
+                label=count_right_bottom, hjust=0-1/nchar(count_right_bottom),
+                vjust=1+1) +
+            annotate(geom="text", x=count_marks[1], y=count_marks[2],
+                label=count_right_top, hjust=0-1/nchar(count_right_top),
+                vjust=0-1)
     }
 
     if (log_coord) {
@@ -257,10 +267,13 @@ bc_plot_draw_single <- function(d, log_coord, highlight, count_marks, alpha) {
         count_right <- sum(d$count >= count_marks)
         g <- g +
             geom_vline(xintercept=count_marks, alpha=0.3, color='red') +
-            annotate(geom="text", x=count_marks, y=0, label=count_left, hjust=1+1/nchar(count_left)) +
-            annotate(geom="text", x=count_marks, y=0, label=count_right, hjust=0-1/nchar(count_right))
+            annotate(geom="text", x=count_marks, y=0, label=count_left,
+                hjust=1+1/nchar(count_left)) +
+            annotate(geom="text", x=count_marks, y=0, label=count_right,
+                hjust=0-1/nchar(count_right))
     }
-    g <- g + geom_rug(aes(x=count, y=0), position=position_jitter(height=0), alpha=alpha, sides='b') +
+    g <- g + geom_rug(aes(x=count, y=0), position=position_jitter(height=0),
+        alpha=alpha, sides='b') +
         labs(y="density") + guides(color="none", size="none", alpha="none")
     g
 }

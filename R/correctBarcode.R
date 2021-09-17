@@ -54,8 +54,9 @@ bc_find_depth_cutoff_point <- function(count, count_lower_bound = median(count[c
 #' \code{\link[Ckmeans.1d.dp]{Ckmeans.1d.dp}, which has been used here.
 #'
 #' @param barcodeObj A \code{BarcodeObj} object.
-#' @param useCleanBc A logical value, if \code{TRUE}, the \code{cleanBc} element in the
-#' \code{BarcodeObj} object will be used, otherwise the \code{messyBc} element will be used.
+#' @param useCleanBc A logical value, if \code{TRUE}, the \code{cleanBc} element
+#' in the \code{BarcodeObj} object will be used, otherwise the \code{messyBc}
+#' element will be used.
 #' @return a numeric \code{vector} of the cutoff point.
 #' @examples
 #' 
@@ -86,15 +87,16 @@ bc_auto_cutoff <- function(barcodeObj, useCleanBc=TRUE) {
 #' bc_cure_depth filters barcodes by the read counts or the UMI counts.
 #'
 #' @param barcodeObj A BarcodeObj object.
-#' @param depth A numeric or a vector of numeric, specifying the threshold of 
-#' minimum count for a barcode to kept. If the input is a
-#' vector, if the vector length is not the same to the sample number the element
-#' will be repeatedly used. And when the depth argument is a number with negative
-#' value, automatic cutoff point will be chosen by \code{bc_auto_cutoff} function
-#' for each samples. See \code{\link[CellBarcode]{bc_auto_cutoff}} for details.
-#' @param isUpdate A logical value. If TRUE, the \code{cleanBc} element in \code{BarcodeObj}
-#' will be used preferentially, otherwise the \code{messyBc} element will be used. If no
-#' cleanBc is available, \code{messyBc} will be used instead.
+#' @param depth A numeric or a vector of numeric, specifying the threshold of
+#' minimum count for a barcode to kept. If the input is a vector, if the vector
+#' length is not the same to the sample number the element will be repeatedly
+#' used. And when the depth argument is a number with negative value, automatic
+#' cutoff point will be chosen by \code{bc_auto_cutoff} function for each
+#' samples. See \code{\link[CellBarcode]{bc_auto_cutoff}} for details.
+#' @param isUpdate A logical value. If TRUE, the \code{cleanBc} element in
+#' \code{BarcodeObj} will be used preferentially, otherwise the \code{messyBc}
+#' element will be used. If no cleanBc is available, \code{messyBc} will be used
+#' instead.
 #' @return A \code{BarcodeObj} object with \code{cleanBc} element updated or
 #' created.
 #'
@@ -195,20 +197,21 @@ bc_cure_depth <- function(
 #' applicable for the BarcodeObj object with a \code{cleanBc} element.
 #'
 #' @param barcodeObj A BarcodeObj object.
-#' @param dist_thresh A single integer or vector of integers with the length of sample
-#' count, specifying the editing distance threshold of merging two similar
-#' barcode sequences. If the input is a vector, each value in the vector relates to one 
-#' sample according to the sample order in \code{BarcodeObj} object.
-#' @param dist_method A  character string, specifying the distance algorithm used for
-#' evaluating barcodes similarity. It can be "hamm" for Hamming distance or
-#' "leven" for Levenshtein distance.
-#' @param merge_method A character string specifying the algorithm used to perform the
-#' clustering merging of barcodes. Currently only "greedy" is available, in this
-#' case, the least abundant barcode is preferentially merged to the most
-#' abundant ones.
-#' @param count_threshold An integer, read depth threshold to consider a
-#' barcode as a true barcode, when when a barcode with count higher than this
-#' threshold it will not be merged into more abundant barcode.
+#' @param dist_thresh A single integer or vector of integers with the length of
+#' sample count, specifying the editing distance threshold of merging two
+#' similar barcode sequences. If the input is a vector, each value in the vector
+#' relates to one sample according to the sample order in \code{BarcodeObj}
+#' object.
+#' @param dist_method A  character string, specifying the distance algorithm
+#' used for evaluating barcodes similarity. It can be "hamm" for Hamming
+#' distance or "leven" for Levenshtein distance.
+#' @param merge_method A character string specifying the algorithm used to
+#' perform the clustering merging of barcodes. Currently only "greedy" is
+#' available, in this case, the least abundant barcode is preferentially merged
+#' to the most abundant ones.
+#' @param count_threshold An integer, read depth threshold to consider a barcode
+#' as a true barcode, when when a barcode with count higher than this threshold
+#' it will not be merged into more abundant barcode.
 #' @param dist_costs A list, the cost of the events of distance algorithm, 
 #' applicable when Levenshtein distance is applied. The
 #' names of vector have to be \code{insert}, \code{delete} and \code{replace}, specifying the

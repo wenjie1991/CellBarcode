@@ -1,8 +1,8 @@
 #' Evaluate barcode diversity
 #' 
 #' \code{bc_diversity} evaluates sequence diversity metrics using the barcodes
-#' data in the \code{cleanBc} element of \code{BarcodeObj} object. It also generates Lorenz curve and
-#' barcode frequency distribution graphs.
+#' data in the \code{cleanBc} element of \code{BarcodeObj} object. It also
+#' generates Lorenz curve and barcode frequency distribution graphs.
 #'
 #' @param barcodeObj A BarcodeObj object.
 #' @param plot A logical value, if TRUE, draw the Lorenz curve and barcode

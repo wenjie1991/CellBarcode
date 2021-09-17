@@ -49,7 +49,7 @@ bc_filterSeq.ShortReadQ <- function(
 
     # good base quality filter
     goodq <- ShortRead::srFilter(function(x) { 
-        apply(methods::as(Biostrings::quality(x), "matrix"), 1, mean, na.rm=TRUE) >= 
+        apply(as(Biostrings::quality(x), "matrix"), 1, mean, na.rm=TRUE) >= 
             min_average_quality 
     }, name="GoodQualityBases")
 

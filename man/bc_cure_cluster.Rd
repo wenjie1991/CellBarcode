@@ -16,23 +16,24 @@ bc_cure_cluster(
 \arguments{
 \item{barcodeObj}{A BarcodeObj object.}
 
-\item{dist_thresh}{A single integer or vector of integers with the length of sample
-count, specifying the editing distance threshold of merging two similar
-barcode sequences. If the input is a vector, each value in the vector relates to one 
-sample according to the sample order in \code{BarcodeObj} object.}
+\item{dist_thresh}{A single integer or vector of integers with the length of
+sample count, specifying the editing distance threshold of merging two
+similar barcode sequences. If the input is a vector, each value in the vector
+relates to one sample according to the sample order in \code{BarcodeObj}
+object.}
 
-\item{dist_method}{A  character string, specifying the distance algorithm used for
-evaluating barcodes similarity. It can be "hamm" for Hamming distance or
-"leven" for Levenshtein distance.}
+\item{dist_method}{A  character string, specifying the distance algorithm
+used for evaluating barcodes similarity. It can be "hamm" for Hamming
+distance or "leven" for Levenshtein distance.}
 
-\item{merge_method}{A character string specifying the algorithm used to perform the
-clustering merging of barcodes. Currently only "greedy" is available, in this
-case, the least abundant barcode is preferentially merged to the most
-abundant ones.}
+\item{merge_method}{A character string specifying the algorithm used to
+perform the clustering merging of barcodes. Currently only "greedy" is
+available, in this case, the least abundant barcode is preferentially merged
+to the most abundant ones.}
 
-\item{count_threshold}{An integer, read depth threshold to consider a
-barcode as a true barcode, when when a barcode with count higher than this
-threshold it will not be merged into more abundant barcode.}
+\item{count_threshold}{An integer, read depth threshold to consider a barcode
+as a true barcode, when when a barcode with count higher than this threshold
+it will not be merged into more abundant barcode.}
 
 \item{dist_costs}{A list, the cost of the events of distance algorithm, 
 applicable when Levenshtein distance is applied. The

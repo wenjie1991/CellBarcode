@@ -45,9 +45,10 @@ bc_extract_metadata <- function(x, sample_name) {
 
 #' Extract barcode from sequences
 #' 
-#' \code{bc_extract} identifies the barcodes (and UMI) from the sequences using regular expressions.
-#' \code{pattern} and \code{pattern_type} arguments are necessary, which provide
-#' the barcode (and UMI) pattern and their location within the sequences.
+#' \code{bc_extract} identifies the barcodes (and UMI) from the sequences using
+#' regular expressions.  \code{pattern} and \code{pattern_type} arguments are
+#' necessary, which provide the barcode (and UMI) pattern and their location
+#' within the sequences.
 #'
 #' @param x A single or a list of fastq file, ShortReadQ, DNAStringSet,
 #' data.frame, or named integer.
@@ -68,10 +69,10 @@ bc_extract_metadata <- function(x, sample_name) {
 #' @param pattern_type A vector. It defines the barcode (and UMI) capture
 #' group. See Details.
 #' @param costs A named list, applicable when maxLDist > 0, specifying the
-#' weight of each mismatch events while extracting the barcodes.
-#' The list element name have to be \code{sub} (substitution), \code{ins} (insertion) and \code{del}
-#' (deletion). The default value is \code{list(sub = 1, ins = 99, del = 99)}.
-#' See \code{\link[utils]{aregexec}} for more detail information.
+#' weight of each mismatch events while extracting the barcodes.  The list
+#' element name have to be \code{sub} (substitution), \code{ins} (insertion) and
+#' \code{del} (deletion). The default value is \code{list(sub = 1, ins = 99, del
+#' = 99)}.  See \code{\link[utils]{aregexec}} for more detail information.
 #' @param ordered A logical value. If the value is true, the return barcodes
 #' (UMI-barcode tags) are sorted by the reads counts.
 #' @param ... Additional arguments
@@ -171,13 +172,6 @@ bc_extract_metadata <- function(x, sample_name) {
 #' @export
 bc_extract <- function(...) UseMethod("bc_extract")
 
-# report_barcode_extraction <- function(sample_name, reads_num, barcode_reads) {
-#   if (is.null(sample_name)) {
-#     cat("In this sample, ", barcode_reads, "(", round(barcode_reads / reads_num * 100, 2),"%) reads with barcode are identified from total reads of ", reads ,".\n", sep = "")
-#   } else {
-#     cat("In sample ", sample_name, ", ", barcode_reads, "(", round(barcode_reads / reads_num * 100, 2),"%) reads with barcode are identified from total reads of ", reads_num ,".\n", sep = "")
-#   }
-# }
 
 #' @rdname bc_extract
 #' @export

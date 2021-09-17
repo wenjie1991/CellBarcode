@@ -9,16 +9,17 @@ bc_cure_depth(barcodeObj, depth = 0, isUpdate = TRUE)
 \arguments{
 \item{barcodeObj}{A BarcodeObj object.}
 
-\item{depth}{A numeric or a vector of numeric, specifying the threshold of 
-minimum count for a barcode to kept. If the input is a
-vector, if the vector length is not the same to the sample number the element
-will be repeatedly used. And when the depth argument is a number with negative
-value, automatic cutoff point will be chosen by \code{bc_auto_cutoff} function
-for each samples. See \code{\link[CellBarcode]{bc_auto_cutoff}} for details.}
+\item{depth}{A numeric or a vector of numeric, specifying the threshold of
+minimum count for a barcode to kept. If the input is a vector, if the vector
+length is not the same to the sample number the element will be repeatedly
+used. And when the depth argument is a number with negative value, automatic
+cutoff point will be chosen by \code{bc_auto_cutoff} function for each
+samples. See \code{\link[CellBarcode]{bc_auto_cutoff}} for details.}
 
-\item{isUpdate}{A logical value. If TRUE, the \code{cleanBc} element in \code{BarcodeObj}
-will be used preferentially, otherwise the \code{messyBc} element will be used. If no
-cleanBc is available, \code{messyBc} will be used instead.}
+\item{isUpdate}{A logical value. If TRUE, the \code{cleanBc} element in
+\code{BarcodeObj} will be used preferentially, otherwise the \code{messyBc}
+element will be used. If no cleanBc is available, \code{messyBc} will be used
+instead.}
 }
 \value{
 A \code{BarcodeObj} object with \code{cleanBc} element updated or

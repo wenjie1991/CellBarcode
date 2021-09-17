@@ -26,8 +26,8 @@ A data.frame with following columns:
 }
 \description{
 \code{bc_diversity} evaluates sequence diversity metrics using the barcodes
-data in the \code{cleanBc} element of \code{BarcodeObj} object. It also generates Lorenz curve and
-barcode frequency distribution graphs.
+data in the \code{cleanBc} element of \code{BarcodeObj} object. It also
+generates Lorenz curve and barcode frequency distribution graphs.
 }
 \details{
 Followings are the metrics used for evaluating the barcode diversity:
