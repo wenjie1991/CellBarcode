@@ -47,10 +47,10 @@ ifnullelse <- function(cand1, other) {
 #' @importFrom magrittr %>% %<>% extract extract2
 #' @importFrom data.table data.table rbindlist .N :=
 #' @importFrom Biostrings readDNAStringSet
-#' @importFrom methods is
 #' @importFrom plyr . count
 #' @importFrom Ckmeans.1d.dp Ckmeans.1d.dp
 #' @import ShortRead
+#' @import methods
 #' @import Rcpp
 #' @import ggplot2
 #' @useDynLib CellBarcode
