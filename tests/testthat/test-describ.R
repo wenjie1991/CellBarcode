@@ -48,7 +48,8 @@ bc_obj <- bc_cure_depth(bc_obj, depth=6, isUpdate = FALSE)
 
 test_that("barcode diversity", {
  
-  expect_snapshot(bc_diversity(bc_obj, plot = FALSE))
+  expect_snapshot(
+      bc_summary_barcode(bc_obj, plot = FALSE))
 
 })
 
