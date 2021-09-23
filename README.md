@@ -22,11 +22,12 @@
 
 ## Installing
 
-1. Uses the `devtools` install package from GitHub
+### Install devel version from GitHub
 
 ```
-library(devtools)
-install_github("wenjie1991/CellBarcode")
+if(!requireNamespace("remotes", quietly = TRUE))
+    install.packages("remotes")
+remotes::install_github("wenjie1991/CellBarcode")
 ```
 
 ## Get start
@@ -62,7 +63,7 @@ bc_obj <- bc_extract(
 bc_obj
 
 # sample subset operation, select 'mixa'
-bc_sub = bc_obj[, replication == "mixa"]
+bc_sub <- bc_subset(bc_obj, sample=replication == "mixa")
 bc_sub 
 
 # filter the barcode, UMI barcode amplicon >= 2 & UMI counts >= 2

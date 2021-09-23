@@ -6,7 +6,7 @@
 \alias{BarcodeObj}
 \title{BarcodeObj object}
 \description{
-A S3 object holds the barcode data and samples' metadata. A set of operations
+A S4 object holds the barcode data and samples' metadata. A set of operations
 can be applied to the BarcodeObj object for quality control and selecting
 barcodes/samples subset.
 }

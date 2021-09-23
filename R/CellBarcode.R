@@ -21,6 +21,8 @@
 #       interactively (explore the cutoff point interactively).
 # [y] Merge technical repeats by merge sample function (subsetting barcodeObj ->
 #       change samle names -> combine two or more barcodeObj).
+# [ ] If no barcodes in the object, give errors when processing it with
+# BarcodeObj methods.
 
 # global help function
 
