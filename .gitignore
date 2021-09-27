@@ -33,7 +33,7 @@ unsrturl.bst
 devtools.R
 .Rproj.user
 inst/doc
-data
+./data
 .clangd
 /doc/
 /Meta/

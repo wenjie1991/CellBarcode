@@ -66,8 +66,8 @@ NULL
 #' @docType data
 #' @keywords dataset
 #' @usage data(bc_obj)
-#'
-#' @details 
+#' @format This is a BarcodeObj object
+#' @source
 #' This is a \code{BarcodeObj} object derived from makeup data by:
 #'
 #' \preformatted{
@@ -119,4 +119,4 @@ NULL
 #' # save(bc_obj, file = "./data/bc_obj.RData")
 #' ###
 #' }
-NULL
+"bc_obj"
