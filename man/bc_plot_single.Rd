@@ -35,8 +35,8 @@ cutoff in the scatter plot for each sample.}
 \item{highlight}{A character vector, specifying the barcodes need to be
 highlighted.}
 
-\item{log_coord}{A logical value, if TRUE (default), the \code{x} and \code{y} coordinates
-of the scatter plot will be logarized by log10.}
+\item{log_coord}{A logical value, if TRUE (default), the \code{x} and
+\code{y} coordinates of the scatter plot will be logarized by log10.}
 
 \item{alpha}{A numeric between 0 and 1, specifies the transparency of the
 dots in the scatter plot.}

@@ -13,7 +13,7 @@ get_base_quality_per_cycle <- function(bstringset) {
 })
 
     quality_stat <- vapply(y, function(x) {
-        quantile_result <- stats::quantile(x, c(0.05, 0.25, 0.5, 0.75, 0.95))
+        quantile_result <- quantile(x, c(0.05, 0.25, 0.5, 0.75, 0.95))
         names(quantile_result) <- c("P5", "P25", "Median", "P75", "P95")
         c(Mean = mean(x), quantile_result)
 }, c(Mean = 0, P5 = 0, P25 = 0, Median = 0, P75 = 0, P95 = 0)) 
@@ -78,7 +78,7 @@ plot_reads_depth_distribution <- function(distribution) {
 
 plot_base_percentage_distribution <- function(base_freq_per_cycle) {
 
-    Cycle <- Count <- Base <- NULL
+    Cycle <- Count <- Base <- all_base_per_cycle  <- base_percent <- NULL
 
     # base_freq_per_cycle is data.frame with three columns "Cycle", "Count" and
     # "Base"

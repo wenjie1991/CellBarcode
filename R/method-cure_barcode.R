@@ -26,10 +26,10 @@ setMethod("bc_auto_cutoff", c("BarcodeObj"), function(barcodeObj, useCleanBc=TRU
 
     if (is.null(barcodeObj@cleanBc) | !useCleanBc) {
         x <- barcodeObj@messyBc
-        message("-message----\nbc_auto_cutoff: messyBc is used.\n------------")
+        message("------------\nbc_auto_cutoff: messyBc is used.\n------------")
     } else {
         x <- barcodeObj@cleanBc
-        message("-message----\nbc_auto_cutoff: cleanBc is used.\n------------")
+        message("------------\nbc_auto_cutoff: cleanBc is used.\n------------")
     }
 
     res <- vapply(x, function(x_i) {
@@ -51,9 +51,9 @@ setMethod("bc_cure_depth", c("BarcodeObj"), function(
         depth <- NULL
 
     if (isUpdate) {
-        message("-message----\nbc_cure_depth: isUpdate is TRUE, update the cleanBc.\n------------")
+        message("------------\nbc_cure_depth: isUpdate is TRUE, update the cleanBc.\n------------")
     } else {
-        message("-message----\nbc_cure_depth: isUpdate is FALSE, use messyBc as input.\n------------")
+        message("------------\nbc_cure_depth: isUpdate is FALSE, use messyBc as input.\n------------")
     }
     
     if (is.null(barcodeObj@cleanBc) | !isUpdate) {
@@ -63,7 +63,7 @@ setMethod("bc_cure_depth", c("BarcodeObj"), function(
     }
 
     if (is.null(depth)) {
-        message("-message----\nbc_cure_depth: Null depth or negative provided, apply auto depth threshold.\n------------")
+        message("------------\nbc_cure_depth: Null depth or negative provided, apply auto depth threshold.\n------------")
         depth <- vapply(cleanBc, function(x_i) {
                 bc_find_depth_cutoff_point(x_i$count)
         }, c(1.0))

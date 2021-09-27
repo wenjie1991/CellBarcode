@@ -25,10 +25,12 @@ bc_2matrix(barcodeObj)
 \item{barcodeObj}{A \code{BarcodeObj} object.}
 }
 \value{
-A \code{data.frame}, with two columns: \code{barcode_seq} and \code{count}.
+A \code{data.frame}, with two columns: \code{barcode_seq} and
+\code{count}.
 }
 \description{
-Transforms BarcodeObj object into \code{data.frame}, \code{data.table} or \code{matrix}.
+Transforms BarcodeObj object into \code{data.frame}, \code{data.table} or
+\code{matrix}.
 }
 \examples{
 data(bc_obj)

@@ -18,8 +18,8 @@ the threshold are kept.}
 
 \item{doFish}{A logical value, if true, for barcodes with UMI read depth
 above the threshold, “fish” for identical barcodes with UMI read depth below
-the threshold. The consequence of \code{doFish} will not increase the number of
-identified barcodes, but the UMI counts will increase due to including the
+the threshold. The consequence of \code{doFish} will not increase the number
+of identified barcodes, but the UMI counts will increase due to including the
 low depth UMI barcodes.}
 
 \item{isUniqueUMI}{A logical value, In the case that a UMI
@@ -27,10 +27,12 @@ relates to several barcodes, if you believe that the UMI is absolute unique,
 then only the UMI-barcodes tags with highest count are chosen for each UMI.}
 }
 \value{
-A \code{BarcodeObj} object with \code{cleanBc} slot updated (or created).
+A \code{BarcodeObj} object with \code{cleanBc} slot updated (or
+created).
 }
 \description{
-When the UMI is applied, \code{bc_cure_umi} can filter the UMI-barcode tags by counts.
+When the UMI is applied, \code{bc_cure_umi} can filter the UMI-barcode tags
+by counts.
 }
 \details{
 When invoke this function, it processes the data with following

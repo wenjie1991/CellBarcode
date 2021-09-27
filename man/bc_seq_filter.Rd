@@ -48,8 +48,8 @@ bc_seq_filter(
 )
 }
 \arguments{
-\item{x}{A single or a list of Fastq file, \code{ShortReadQ}, \code{DNAStringSet},
-\code{data.frame}, integer vector.}
+\item{x}{A single or a list of Fastq file, \code{ShortReadQ},
+\code{DNAStringSet}, \code{data.frame}, integer vector.}
 
 \item{min_average_quality}{A numeric or a vector of numeric, specifying the
 threshold of the minimum average base quality of a sequence to be kept.}

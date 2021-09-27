@@ -2,7 +2,8 @@
 #'
 #' A set of functions and operators for subset or join of
 #' BarcodeObj object(s). 
-#' The \code{bc_subset}, \code{*} and \code{-} are used to select barcodes or samples in a \code{BarcodeObj} object.
+#' The \code{bc_subset}, \code{*} and \code{-} are used to select barcodes or
+#' samples in a \code{BarcodeObj} object.
 #' Two BarcodeObj objects can be joined by \code{+}.
 #'
 #' @param barcodeObj A BarcodeObj object.
@@ -10,8 +11,10 @@
 #' barcode.
 #' @param sample A character vector or integer vector or an expression
 #' (expressio not applicable for \code{[]} operator), specifying the samples in
-#' the subsets. When the value is an expression, the columns in the metadata can be used as variable.
-#' @param black_list A character vector, specifying the black list with excluded barcodes.
+#' the subsets. When the value is an expression, the columns in the metadata can
+#' be used as variable.
+#' @param black_list A character vector, specifying the black list with excluded
+#' barcodes.
 #' @param white_list A character vector, giving the barcode white list. 
 #' @param barcodeObj_x A BarcodeObj object.
 #' @param barcodeObj_y A BarcodeObj object.
@@ -23,9 +26,12 @@
 #' \code{bc_subset} and \code{[]}: Gets samples and barcodes subset from a
 #' \code{BarcodeObj} object.
 #'
-#' \code{+}: Combines two \code{BarcodeObj} objects. The \code{metadata}, \code{cleanBc} and
+#' \code{+}: Combines two \code{BarcodeObj} objects. The \code{metadata},
+#' \code{cleanBc} and
 #' \code{messyBc} slot in the BarcodeObj objects will be joined. 
-#' For the \code{metadata} slot, the \code{sample_name} column, and the \emph{Full outer join} (the record in either BarcodeObj object) will be performed with rownames as the key.
+#' For the \code{metadata} slot, the \code{sample_name} column, and the
+#' \emph{Full outer join} (the record in either BarcodeObj object) will be
+#' performed with rownames as the key.
 #' The \code{messyBc} and \code{cleanBc} from two objects are combined by rows
 #' for the same sample from two \code{BarcodeObj} objects.
 #' 
@@ -88,24 +94,29 @@ setGeneric("bc_subset",
     }
 )
 
-# setGeneric("[", function(barcodeObj, barcode, sample) { standardGeneric("[") })
-# setGeneric("+", function(barcodeObj_x, barcodeObj_y) { standardGeneric("+") })
+# setGeneric("[", function(barcodeObj, barcode, sample) { standardGeneric("[") 
+# })
+# setGeneric("+", function(barcodeObj_x, barcodeObj_y) { standardGeneric("+") 
+# })
 # setGeneric("-", function(barcodeObj, black_list) { standardGeneric("-") })
 # setGeneric("*", function(barcodeObj, white_list) { standardGeneric("*") })
 
 #' @rdname bc_subset
 #' @export
-setGeneric("bc_merge", function(barcodeObj_x, barcodeObj_y) { standardGeneric("bc_merge") })
+setGeneric("bc_merge", function(barcodeObj_x, barcodeObj_y) {
+    standardGeneric("bc_merge") })
 
 #' Gets barcode sequences
 #'
-#' \code{bc_barcodes} used to get the barcode sequences in \code{BarcodeObj} object. The input 
-#' \code{BarcodesObj} object should be pre-processed by \code{bc_cure_*} functions, such as \code{bc_cure_depth}, \code{bc_cure_umi}.
+#' \code{bc_barcodes} used to get the barcode sequences in \code{BarcodeObj}
+#' object. The input 
+#' \code{BarcodesObj} object should be pre-processed by \code{bc_cure_*}
+#' functions, such as \code{bc_cure_depth}, \code{bc_cure_umi}.
 #'
 #' @param barcodeObj A \code{BarcodeObj} object.
-#' @param unlist A logical value. If TRUE, the function returns a vector
-#' of unique barcode list from all samples; otherwise a list will be
-#' returned. In the later case, each element of the list contains the barcodes of a sample.
+#' @param unlist A logical value. If TRUE, the function returns a vector of
+#' unique barcode list from all samples; otherwise a list will be returned. In
+#' the later case, each element of the list contains the barcodes of a sample.
 #' @return A character vector or a list.
 #' @examples
 #' data(bc_obj)
@@ -119,15 +130,16 @@ setGeneric("bc_merge", function(barcodeObj_x, barcodeObj_y) { standardGeneric("b
 #' ###
 #' @rdname bc_barcodes
 #' @export
-setGeneric("bc_barcodes", function(barcodeObj, unlist=TRUE) { standardGeneric("bc_barcodes") })
+setGeneric("bc_barcodes", function(barcodeObj, unlist=TRUE) {
+    standardGeneric("bc_barcodes") })
 
 #' Access & update sample names in BarcodeObj & and BarcodeQcSet
 #'
 #' Get or update sample names in BarcodeObj object and BarcodeQcSet.
 #'
 #' @param x A \code{BarcodeObj} object or a \code{BarcodeQcSet} object.
-#' @param value A character vector setting the new sample names, with the length of the samples number in
-#' \code{BarcodeObj} or \code{BarcodeQcSet} object.
+#' @param value A character vector setting the new sample names, with the length
+#' of the samples number in \code{BarcodeObj} or \code{BarcodeQcSet} object.
 #' @return A character vector
 #' @examples
 #' data(bc_obj)
@@ -150,10 +162,10 @@ setGeneric("bc_names<-", function(x, value) { standardGeneric("bc_names<-") })
 #'
 #' @param barcodeObj A \code{BarcodeObj} object.
 #' @param key A string, identifying the metadata record name to be modified.
-#' @param value A string vector or a data.frame. If the \code{value} is a vector, it
-#' should have the same length of sample number in the BarcodeObj object. 
-#' Otherwise, if the \code{value} is \code{data.frame}, the
-#' row name of the \code{data.frame} should be the sample name, and each column as a
+#' @param value A string vector or a data.frame. If the \code{value} is a
+#' vector, it should have the same length of sample number in the BarcodeObj
+#' object.  Otherwise, if the \code{value} is \code{data.frame}, the row name of
+#' the \code{data.frame} should be the sample name, and each column as a
 #' metadata variable. 
 #' @return A data.frame
 #' @examples
@@ -185,14 +197,17 @@ setGeneric("bc_meta", function(barcodeObj) { standardGeneric("bc_meta") })
 
 #' @rdname bc_meta
 #' @export
-setGeneric("bc_meta<-", function(barcodeObj, key=NULL, value) { standardGeneric("bc_meta<-") })
+setGeneric("bc_meta<-", function(barcodeObj, key=NULL, value) {
+    standardGeneric("bc_meta<-") })
 
 #' Transforms BarcodeObj object into other data type
 #'
-#' Transforms BarcodeObj object into \code{data.frame}, \code{data.table} or \code{matrix}.
+#' Transforms BarcodeObj object into \code{data.frame}, \code{data.table} or
+#' \code{matrix}.
 #'
 #' @param barcodeObj A \code{BarcodeObj} object.
-#' @return A \code{data.frame}, with two columns: \code{barcode_seq} and \code{count}.
+#' @return A \code{data.frame}, with two columns: \code{barcode_seq} and
+#' \code{count}.
 #' @examples
 #' data(bc_obj)
 #'
@@ -236,9 +251,9 @@ setGeneric("bc_2matrix", function(barcodeObj) { standardGeneric("bc_2matrix") })
 #' data.frame, or named integer.
 #' @param pattern A string, specifying the regular expression
 #' with capture. It matchs the barcode (and UMI) with capture pattern.
-#' @param sample_name A string vector, applicable when \code{x} is a list or fastq file
-#' vector. This argument specifies the sample names. If not
-#' provided, the function will look for sample name in the rownames of metadata,
+#' @param sample_name A string vector, applicable when \code{x} is a list or
+#' fastq file vector. This argument specifies the sample names. If not provided,
+#' the function will look for sample name in the rownames of metadata,
 #' the fastqfile name or the \code{list} names.
 #' @param metadata A \code{data.frame} with sample names as the row names, and
 #' each metadata record by column, specifying the sample characteristics. 
@@ -257,9 +272,9 @@ setGeneric("bc_2matrix", function(barcodeObj) { standardGeneric("bc_2matrix") })
 #' @param ordered A logical value. If the value is true, the return barcodes
 #' (UMI-barcode tags) are sorted by the reads counts.
 #' @details
-#' The \code{pattern} argument is a regular expression, the capture operation \code{()}
-#' identifying the barcode or UMI. \code{pattern_type} argument annotates 
-#' capture, denoting the UMI or the barcode captured pattern. In the
+#' The \code{pattern} argument is a regular expression, the capture operation
+#' \code{()} identifying the barcode or UMI. \code{pattern_type} argument
+#' annotates capture, denoting the UMI or the barcode captured pattern. In the
 #' example:
 #' \preformatted{
 #' ([ACTG]{3})TCGATCGATCGA([ACTG]+)ATCGATCGATC
@@ -272,17 +287,19 @@ setGeneric("bc_2matrix", function(barcodeObj) { standardGeneric("bc_2matrix") })
 #' In UMI part \code{[ACGT]{3}}, \code{[ACGT]} means it can be one of
 #' the "A", "C", "G" and "T", and \code{{3}} means it repeats 3 times. 
 #' In the barcode pattern \code{[ACGT]+}, the \code{+} denotes
-#' that there is at least one of the \code{A} or \code{C} or \code{G} or \code{T.}
+#' that there is at least one of the \code{A} or \code{C} or \code{G} or
+#' \code{T.}
 #' 
 #' @return 
 #' This function returns a BarcodeObj object if the input is a \code{list} or a
-#' \code{vector} of Fastq files, otherwise it returns a \code{data.frame.} In the later case
+#' \code{vector} of Fastq files, otherwise it returns a \code{data.frame.} In
+#' the later case
 #' the \code{data.frame} has 5 columns:
 #' \enumerate{
 #'   \item \code{reads_seq}: full sequence.
 #'   \item \code{match_seq}: part of the full sequence matched by pattern.
-#'   \item \code{umi_seq} (optional): UMI sequence, applicable when there is UMI in
-#'      `pattern` and `pattern_type` argument.
+#'   \item \code{umi_seq} (optional): UMI sequence, applicable when there is UMI
+#'     in `pattern` and `pattern_type` argument.
 #'   \item \code{barcode_seq}: barcode sequence.
 #'   \item \code{count}: reads number.
 #' }
@@ -481,9 +498,9 @@ setGeneric("bc_cure_depth",
 #' it will not be merged into more abundant barcode.
 #' @param dist_costs A list, the cost of the events of distance algorithm, 
 #' applicable when Levenshtein distance is applied. The
-#' names of vector have to be \code{insert}, \code{delete} and \code{replace}, specifying the
-#' weight of insertion, deletion, replacement events respectively. The default
-#' cost for each event is 1.
+#' names of vector have to be \code{insert}, \code{delete} and \code{replace},
+#' specifying the weight of insertion, deletion, replacement events
+#' respectively. The default cost for each event is 1.
 #' @return A BarcodeObj object with cleanBc slot updated.
 #' @examples
 #' data(bc_obj)
@@ -537,7 +554,8 @@ setGeneric("bc_cure_cluster",
 
 #' Filters UMI-barcode tag by counts 
 #'
-#' When the UMI is applied, \code{bc_cure_umi} can filter the UMI-barcode tags by counts. 
+#' When the UMI is applied, \code{bc_cure_umi} can filter the UMI-barcode tags
+#' by counts. 
 #'
 #' @param barcodeObj A BarcodeObj object.
 #' @param depth A numeric or a vector of numeric, specifying the UMI-barcode
@@ -545,13 +563,14 @@ setGeneric("bc_cure_cluster",
 #' the threshold are kept. 
 #' @param doFish A logical value, if true, for barcodes with UMI read depth
 #' above the threshold, “fish” for identical barcodes with UMI read depth below
-#' the threshold. The consequence of \code{doFish} will not increase the number of
-#' identified barcodes, but the UMI counts will increase due to including the
+#' the threshold. The consequence of \code{doFish} will not increase the number
+#' of identified barcodes, but the UMI counts will increase due to including the
 #' low depth UMI barcodes. 
 #' @param isUniqueUMI A logical value, In the case that a UMI
 #' relates to several barcodes, if you believe that the UMI is absolute unique,
 #' then only the UMI-barcodes tags with highest count are chosen for each UMI.
-#' @return A \code{BarcodeObj} object with \code{cleanBc} slot updated (or created).
+#' @return A \code{BarcodeObj} object with \code{cleanBc} slot updated (or
+#' created).
 #' @details When invoke this function, it processes the data with following
 #' steps:
 #' \enumerate{
@@ -613,7 +632,8 @@ setGeneric("bc_cure_umi", function(
 #' \itemize{
 #'   \item \code{total_reads}: total read number.
 #'   \item \code{uniq_barcode}: how many barcodes in the dataset.
-#'   \item \code{shannon_index}: Shannon's diversity index or Shannon–Wiener index.
+#'   \item \code{shannon_index}: Shannon's diversity index or Shannon–Wiener
+#'     index.
 #'   \item \code{equitability_index}: Shannon's equitability.
 #'   \item \code{bit_index}: Shannon bit information.
 #' }
@@ -621,8 +641,8 @@ setGeneric("bc_cure_umi", function(
 #' @details
 #' Followings are the metrics used for evaluating the barcode diversity:
 #'
-#' \emph{Richness}: The unique barcodes number \eqn{R}, it evaluates the richness of
-#' the barcodes.
+#' \emph{Richness}: The unique barcodes number \eqn{R}, it evaluates the
+#' richness of the barcodes.
 #'
 #' \emph{Shannon index}: Shannon diversity index is weighted geometric
 #' average of the proportion \eqn{p} of barcodes.
@@ -702,8 +722,8 @@ setGeneric("bc_plot_mutual", function(
 #' cutoff in the scatter plot for each sample.
 #' @param highlight A character vector, specifying the barcodes need to be
 #' highlighted.
-#' @param log_coord A logical value, if TRUE (default), the \code{x} and \code{y} coordinates
-#' of the scatter plot will be logarized by log10.
+#' @param log_coord A logical value, if TRUE (default), the \code{x} and
+#' \code{y} coordinates of the scatter plot will be logarized by log10.
 #' @param alpha A numeric between 0 and 1, specifies the transparency of the
 #' dots in the scatter plot.
 #' @return 1D distribution graph matrix.
@@ -728,15 +748,16 @@ setGeneric("bc_plot_single", function(
 #' Barcode read count 2D scatter plot for given pairs
 #'
 #' Draws scatter plot for barcode read count between given pairs of samples with
-#' a \code{BarcodeObj} object. This function will return scatter plot matrix contains
-#' the scatter plots for all given sample pairs.
+#' a \code{BarcodeObj} object. This function will return scatter plot matrix
+#' contains the scatter plots for all given sample pairs.
 #'
 #' @param barcodeObj A \code{BarcodeObj} object.
 #' @param sample_x A character vector or a integer vector, specifying the sample
 #' in \code{x} axis of each scatter plot. It can be the sample names in
 #' BarcodeObj or the sample index value.
-#' @param sample_y A character vector or a integer vector, similar to \code{sample_x},
-#' specifying the samples used for \code{y} axis. It can be the sample names or the
+#' @param sample_y A character vector or a integer vector, similar to
+#' \code{sample_x}, specifying the samples used for \code{y} axis. It can be the
+#' sample names or the
 #' sample index value.  
 #' @param count_marks_x A numeric vector used to mark the cutoff
 #' point for samples in x
@@ -745,7 +766,8 @@ setGeneric("bc_plot_single", function(
 #' samples in y axis.
 #' @param highlight A character vector, specifying the barcodes need to be
 #' highlighted.
-#' @param log_coord A logical value, if TRUE (default), the \code{x} and \code{y} coordinates
+#' @param log_coord A logical value, if TRUE (default), the \code{x} and
+#' \code{y} coordinates
 #' of the scatter will be logarized by log10.
 #' @param alpha A numeric between 0 and 1, specifies the transparency of the
 #' dots in the scatter plot.
@@ -785,18 +807,20 @@ setGeneric("bc_plot_pair", function(
 #' The barcodeQc is a list with four slots, 
 #' \itemize{
 #'   \item \code{top}: a \code{data.frame} with top 50 most frequency sequence, 
-#'   \item \code{distribution}: a \code{data.frame} with the distribution of read depth. It contains 
-#'   \code{nOccurrences} (depth), and \code{nReads} (unique sequence) columns.
+#'   \item \code{distribution}: a \code{data.frame} with the distribution of
+#'     read depth. It contains \code{nOccurrences} (depth), and \code{nReads}
+#'     (unique sequence) columns.
 #'   \item \code{base_quality_per_cycle}: \code{data.frame} with base-pair
-#'   location (NGS sequencing cycle) by row, and the base-pair quality summary by column,
-#'   including Mean, P5 (5% quantile), P25 (25% quantile), Median, P75 (75%
-#'   quantile) and P95 (95% quantile).
-#'   \item \code{base_freq_per_cycle}: \code{data.frame} with three columns: 1. \code{Cycle}, the
-#'   sequence base-pair location (NGS sequencing cycle); 2. \code{Base}, DNA base;
-#'   \code{Count}: reads count.
+#'     location (NGS sequencing cycle) by row, and the base-pair quality summary
+#'     by column, including Mean, P5 (5% quantile), P25 (25% quantile), Median,
+#'     P75 (75% quantile) and P95 (95% quantile).
+#'   \item \code{base_freq_per_cycle}: \code{data.frame} with three columns: 1.
+#'     \code{Cycle}, the sequence base-pair location (NGS sequencing cycle); 2.
+#'     \code{Base}, DNA base;
+#'     \code{Count}: reads count.
 #'   \item{summary}: a numeric vector with following elements:
-#'   \code{total_read}, \code{median_read_length},
-#'   \code{p5_read_length}, \code{p95_read_length}.
+#'     \code{total_read}, \code{median_read_length},
+#'     \code{p5_read_length}, \code{p95_read_length}.
 #' }
 #' The barcodeQcSet is a list of barcodeQc.
 #' 
@@ -825,7 +849,8 @@ setGeneric("bc_plot_pair", function(
 #' ###
 #' @rdname bc_seq_qc
 #' @export
-setGeneric("bc_seq_qc", function(x, sample_name=NULL) { standardGeneric("bc_seq_qc") })
+setGeneric("bc_seq_qc", function(x, sample_name=NULL) {
+    standardGeneric("bc_seq_qc") })
 
 #' @rdname bc_seq_qc
 #' @export
@@ -834,8 +859,8 @@ setGeneric("bc_plot_seqQc", function(x) { standardGeneric("bc_plot_seqQc") })
 #' Summary barcodeQcSet
 #'
 #' Summary the "total read count" and "read length" of each samples within
-#' a \code{BarcodeQcSet} object, and output a \code{data.frame} with sample by row and different
-#' metrics by column.
+#' a \code{BarcodeQcSet} object, and output a \code{data.frame} with sample by
+#' row and different metrics by column.
 #'
 #' @param x a barcodeQcSet object.
 #' @return A \code{data.frame} with 5 columns: \code{sample_name},
@@ -860,8 +885,8 @@ setGeneric("bc_summary_seqQc", function(x) { standardGeneric("bc_summary_seqQc")
 #' Remove low quality sequences by base-pair quality, sequence length or unknown
 #' base "N".
 #'
-#' @param x A single or a list of Fastq file, \code{ShortReadQ}, \code{DNAStringSet},
-#' \code{data.frame}, integer vector.
+#' @param x A single or a list of Fastq file, \code{ShortReadQ},
+#' \code{DNAStringSet}, \code{data.frame}, integer vector.
 #' @param min_average_quality A numeric or a vector of numeric, specifying the
 #' threshold of the minimum average base quality of a sequence to be kept. 
 #' @param min_read_length A single or a vector of integer, specifying the

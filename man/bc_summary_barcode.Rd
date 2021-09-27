@@ -22,7 +22,8 @@ A data.frame with following columns:
 \itemize{
   \item \code{total_reads}: total read number.
   \item \code{uniq_barcode}: how many barcodes in the dataset.
-  \item \code{shannon_index}: Shannon's diversity index or Shannon–Wiener index.
+  \item \code{shannon_index}: Shannon's diversity index or Shannon–Wiener
+    index.
   \item \code{equitability_index}: Shannon's equitability.
   \item \code{bit_index}: Shannon bit information.
 }
@@ -35,8 +36,8 @@ also generates Lorenz curve and barcode frequency distribution graphs.
 \details{
 Followings are the metrics used for evaluating the barcode diversity:
 
-\emph{Richness}: The unique barcodes number \eqn{R}, it evaluates the richness of
-the barcodes.
+\emph{Richness}: The unique barcodes number \eqn{R}, it evaluates the
+richness of the barcodes.
 
 \emph{Shannon index}: Shannon diversity index is weighted geometric
 average of the proportion \eqn{p} of barcodes.

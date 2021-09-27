@@ -149,7 +149,7 @@ setMethod("bc_merge", c("BarcodeObj", "BarcodeObj"), function(barcodeObj_x, barc
     # if the messyBc do not have the same header, do not merge them
     flag_remove_umi <- FALSE
     if (!all(names(barcodeObj_x@messyBc) == names(barcodeObj_y@messyBc))) {
-        message("-message----\n+.BarcodeObj: You are merge data with UMI to data without UMI. The UMI info are discarded.\n------------")
+        message("------------\n+.BarcodeObj: You are merge data with UMI to data without UMI. The UMI info are discarded.\n------------")
         flag_remove_umi <- TRUE
     }
 
@@ -185,7 +185,7 @@ setMethod("bc_merge", c("BarcodeObj", "BarcodeObj"), function(barcodeObj_x, barc
 
         names(barcodeObj_x@cleanBc) <- rownames(metadata_xy)
     } else if (is.null(barcodeObj_x@cleanBc) + is.null(barcodeObj_y@cleanBc) == 1) {
-        message("-message----\n+.BarcodeObj: One of the BarcodesObj does not have cleanBc, discard the cleanBc while merging.\n------------")
+        message("------------\n+.BarcodeObj: One of the BarcodesObj does not have cleanBc, discard the cleanBc while merging.\n------------")
         barcodeObj_x@cleanBc <- NULL
         bc_meta(barcodeObj_x, "depth_cutoff") <- NULL
     }

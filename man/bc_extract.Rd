@@ -90,9 +90,9 @@ data.frame, or named integer.}
 \item{pattern}{A string, specifying the regular expression
 with capture. It matchs the barcode (and UMI) with capture pattern.}
 
-\item{sample_name}{A string vector, applicable when \code{x} is a list or fastq file
-vector. This argument specifies the sample names. If not
-provided, the function will look for sample name in the rownames of metadata,
+\item{sample_name}{A string vector, applicable when \code{x} is a list or
+fastq file vector. This argument specifies the sample names. If not provided,
+the function will look for sample name in the rownames of metadata,
 the fastqfile name or the \code{list} names.}
 
 \item{metadata}{A \code{data.frame} with sample names as the row names, and
@@ -118,13 +118,14 @@ element name have to be \code{sub} (substitution), \code{ins} (insertion) and
 }
 \value{
 This function returns a BarcodeObj object if the input is a \code{list} or a
-\code{vector} of Fastq files, otherwise it returns a \code{data.frame.} In the later case
+\code{vector} of Fastq files, otherwise it returns a \code{data.frame.} In
+the later case
 the \code{data.frame} has 5 columns:
 \enumerate{
   \item \code{reads_seq}: full sequence.
   \item \code{match_seq}: part of the full sequence matched by pattern.
-  \item \code{umi_seq} (optional): UMI sequence, applicable when there is UMI in
-     `pattern` and `pattern_type` argument.
+  \item \code{umi_seq} (optional): UMI sequence, applicable when there is UMI
+    in `pattern` and `pattern_type` argument.
   \item \code{barcode_seq}: barcode sequence.
   \item \code{count}: reads number.
 }
@@ -142,9 +143,9 @@ necessary, which provide the barcode (and UMI) pattern and their location
 within the sequences.
 }
 \details{
-The \code{pattern} argument is a regular expression, the capture operation \code{()}
-identifying the barcode or UMI. \code{pattern_type} argument annotates 
-capture, denoting the UMI or the barcode captured pattern. In the
+The \code{pattern} argument is a regular expression, the capture operation
+\code{()} identifying the barcode or UMI. \code{pattern_type} argument
+annotates capture, denoting the UMI or the barcode captured pattern. In the
 example:
 \preformatted{
 ([ACTG]{3})TCGATCGATCGA([ACTG]+)ATCGATCGATC
@@ -157,7 +158,8 @@ example:
 In UMI part \code{[ACGT]{3}}, \code{[ACGT]} means it can be one of
 the "A", "C", "G" and "T", and \code{{3}} means it repeats 3 times. 
 In the barcode pattern \code{[ACGT]+}, the \code{+} denotes
-that there is at least one of the \code{A} or \code{C} or \code{G} or \code{T.}
+that there is at least one of the \code{A} or \code{C} or \code{G} or
+\code{T.}
 }
 \examples{
 fq_file <- system.file("extdata", "simple.fq", package="CellBarcode")

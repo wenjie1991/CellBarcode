@@ -20,10 +20,10 @@ bc_meta(barcodeObj, key = NULL) <- value
 
 \item{key}{A string, identifying the metadata record name to be modified.}
 
-\item{value}{A string vector or a data.frame. If the \code{value} is a vector, it
-should have the same length of sample number in the BarcodeObj object. 
-Otherwise, if the \code{value} is \code{data.frame}, the
-row name of the \code{data.frame} should be the sample name, and each column as a
+\item{value}{A string vector or a data.frame. If the \code{value} is a
+vector, it should have the same length of sample number in the BarcodeObj
+object.  Otherwise, if the \code{value} is \code{data.frame}, the row name of
+the \code{data.frame} should be the sample name, and each column as a
 metadata variable.}
 }
 \value{

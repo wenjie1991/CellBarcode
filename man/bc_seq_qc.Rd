@@ -51,18 +51,20 @@ A barcodeQc or a barcodeQcSet class.
 The barcodeQc is a list with four slots, 
 \itemize{
   \item \code{top}: a \code{data.frame} with top 50 most frequency sequence, 
-  \item \code{distribution}: a \code{data.frame} with the distribution of read depth. It contains 
-  \code{nOccurrences} (depth), and \code{nReads} (unique sequence) columns.
+  \item \code{distribution}: a \code{data.frame} with the distribution of
+    read depth. It contains \code{nOccurrences} (depth), and \code{nReads}
+    (unique sequence) columns.
   \item \code{base_quality_per_cycle}: \code{data.frame} with base-pair
-  location (NGS sequencing cycle) by row, and the base-pair quality summary by column,
-  including Mean, P5 (5% quantile), P25 (25% quantile), Median, P75 (75%
-  quantile) and P95 (95% quantile).
-  \item \code{base_freq_per_cycle}: \code{data.frame} with three columns: 1. \code{Cycle}, the
-  sequence base-pair location (NGS sequencing cycle); 2. \code{Base}, DNA base;
-  \code{Count}: reads count.
+    location (NGS sequencing cycle) by row, and the base-pair quality summary
+    by column, including Mean, P5 (5% quantile), P25 (25% quantile), Median,
+    P75 (75% quantile) and P95 (95% quantile).
+  \item \code{base_freq_per_cycle}: \code{data.frame} with three columns: 1.
+    \code{Cycle}, the sequence base-pair location (NGS sequencing cycle); 2.
+    \code{Base}, DNA base;
+    \code{Count}: reads count.
   \item{summary}: a numeric vector with following elements:
-  \code{total_read}, \code{median_read_length},
-  \code{p5_read_length}, \code{p95_read_length}.
+    \code{total_read}, \code{median_read_length},
+    \code{p5_read_length}, \code{p95_read_length}.
 }
 The barcodeQcSet is a list of barcodeQc.
 }

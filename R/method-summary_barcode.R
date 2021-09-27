@@ -19,6 +19,8 @@ plot_lorenz_curve <- function(x) {
 
 plot_reads_per_barcode_distribution <- function(x) {
 
+    sample_name <- NULL
+
     # x is data.table with columns: count, barcode_seq, sample_name
     g <- ggplot(x) + aes(x = count, color = sample_name) + geom_density() + theme_bw()
     g <- g + labs(x = "Reads Count", y = "Density", color = "Sample", fill = "Sample")

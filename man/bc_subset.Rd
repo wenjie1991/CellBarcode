@@ -41,12 +41,14 @@ bc_merge(barcodeObj_x, barcodeObj_y)
 
 \item{sample}{A character vector or integer vector or an expression
 (expressio not applicable for \code{[]} operator), specifying the samples in
-the subsets. When the value is an expression, the columns in the metadata can be used as variable.}
+the subsets. When the value is an expression, the columns in the metadata can
+be used as variable.}
 
 \item{barcode}{A vector of integer or string, indicating the selected
 barcode.}
 
-\item{black_list}{A character vector, specifying the black list with excluded barcodes.}
+\item{black_list}{A character vector, specifying the black list with excluded
+barcodes.}
 
 \item{is_sample_quoted_exp}{A logical value. If TRUE, the expression in
 \code{sample} argument will not be evaluated before executing the function.}
@@ -63,16 +65,20 @@ A BarcodeObj object.
 \description{
 A set of functions and operators for subset or join of
 BarcodeObj object(s). 
-The \code{bc_subset}, \code{*} and \code{-} are used to select barcodes or samples in a \code{BarcodeObj} object.
+The \code{bc_subset}, \code{*} and \code{-} are used to select barcodes or
+samples in a \code{BarcodeObj} object.
 Two BarcodeObj objects can be joined by \code{+}.
 }
 \details{
 \code{bc_subset} and \code{[]}: Gets samples and barcodes subset from a
 \code{BarcodeObj} object.
 
-\code{+}: Combines two \code{BarcodeObj} objects. The \code{metadata}, \code{cleanBc} and
+\code{+}: Combines two \code{BarcodeObj} objects. The \code{metadata},
+\code{cleanBc} and
 \code{messyBc} slot in the BarcodeObj objects will be joined. 
-For the \code{metadata} slot, the \code{sample_name} column, and the \emph{Full outer join} (the record in either BarcodeObj object) will be performed with rownames as the key.
+For the \code{metadata} slot, the \code{sample_name} column, and the
+\emph{Full outer join} (the record in either BarcodeObj object) will be
+performed with rownames as the key.
 The \code{messyBc} and \code{cleanBc} from two objects are combined by rows
 for the same sample from two \code{BarcodeObj} objects.
 

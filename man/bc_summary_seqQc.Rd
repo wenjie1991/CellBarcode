@@ -19,8 +19,8 @@ A \code{data.frame} with 5 columns: \code{sample_name},
 }
 \description{
 Summary the "total read count" and "read length" of each samples within
-a \code{BarcodeQcSet} object, and output a \code{data.frame} with sample by row and different
-metrics by column.
+a \code{BarcodeQcSet} object, and output a \code{data.frame} with sample by
+row and different metrics by column.
 }
 \examples{
 

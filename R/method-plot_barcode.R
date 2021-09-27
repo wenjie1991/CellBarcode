@@ -2,6 +2,9 @@
 ###########################
 bc_plot_draw_pair <- function(d, log_coord, highlight, count_marks, alpha) {
 
+    # d: data.frame with two columns, barcode_seq and count
+    barcode_seq  <- NULL
+
     sample_name_x <- names(d)[2]
     sample_name_y <- names(d)[3]
 
@@ -52,7 +55,8 @@ bc_plot_draw_pair <- function(d, log_coord, highlight, count_marks, alpha) {
 
 bc_plot_draw_single <- function(d, log_coord, highlight, count_marks, alpha) {
     # d: data.frame with two columns, barcode_seq and count
-    #
+    barcode_seq  <- NULL
+
     g <- ggplot(d) +
         geom_density(aes(x=count), fill=NA, color='black')
 
@@ -101,7 +105,7 @@ setMethod("bc_plot_mutual", c("BarcodeObj"), function(
 
     if (!is.null(count_marks) & length(count_marks) < length(sample_names)) {
         count_marks <- rep_len(count_marks, length(sample_names))
-        message("-message----\nbc_plot_mutual: count_marks is less than sample number, it will be repeatedly used.\n------------")
+        message("------------\nbc_plot_mutual: count_marks is less than sample number, it will be repeatedly used.\n------------")
     }
 
     if (length(sample_names) < 2) {
@@ -132,7 +136,7 @@ setMethod("bc_plot_single", c("BarcodeObj"), function(
 
     if (!is.null(count_marks) & length(count_marks) < length(sample_names)) {
         count_marks <- rep_len(count_marks, length(sample_names))
-        message("-message----\nbc_plot_single: count_marks is less than sample number, it will be repeatedly used.\n------------")
+        message("------------\nbc_plot_single: count_marks is less than sample number, it will be repeatedly used.\n------------")
     }
 
     g_list <- lapply(seq_along(sample_names), function(i) {
@@ -161,24 +165,24 @@ setMethod("bc_plot_pair", c("BarcodeObj"), function(
         stop("No cleanBc available please run bc_cure* first.")
 
     if (length(sample_y) > length(sample_x)) {
-        message("-message----\nbc_plot_pair: sample_x is shorter than sample_y, sample_x will be repeatedly used.\n------------")
+        message("------------\nbc_plot_pair: sample_x is shorter than sample_y, sample_x will be repeatedly used.\n------------")
         sample_x <- rep_len(sample_x, length(sample_y))
     } 
 
     if (length(sample_x) > length(sample_y)) {
-        message("-message----\nbc_plot_pair: sample_y is shorter than sample_x, sample_y will be repeatedly used.\n------------")
+        message("------------\nbc_plot_pair: sample_y is shorter than sample_x, sample_y will be repeatedly used.\n------------")
         sample_y <- rep_len(sample_y, length(sample_x))
     }
 
     if (!is.null(count_marks_x)) {
         if (length(count_marks_x) < length(sample_x)) {
             count_marks_x <- rep_len(count_marks_x, length(sample_x))
-            message("-message----\nbc_plot_pair: count_marks_x length is less than sample number, it will be repeatedly used.\n------------")
+            message("------------\nbc_plot_pair: count_marks_x length is less than sample number, it will be repeatedly used.\n------------")
         }
 
         if (length(count_marks_y) < length(sample_y)) {
             count_marks_y <- rep_len(count_marks_y, length(sample_y))
-            message("-message----\nbc_plot_pair: count_marks_y length is less than sample number, it will be repeatedly used.\n------------")
+            message("------------\nbc_plot_pair: count_marks_y length is less than sample number, it will be repeatedly used.\n------------")
         }
     }
 

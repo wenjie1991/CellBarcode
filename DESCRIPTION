@@ -1,7 +1,7 @@
 Package: CellBarcode
 Type: Package
 Title: Cellular DNA Barcode Analysis toolkit
-Version: 0.99.5
+Version: 0.99.6
 Authors@R: c(
   person("Wenjie", "Sun", email = "sunwjie@gmail.com", role = "cre"),
   person("Anne-Marie", "Lyne", email = "Anne-Marie.Lyne@curie.fr", role = "aut"),
@@ -17,9 +17,10 @@ Description:
   repertoire sequencing and meta genome data.
 License: MIT + file LICENSE
 Encoding: UTF-8
-Depends: R (>= 4.0.0)
+Depends: R (>= 4.1.0)
 Imports: 
   methods, 
+  stats,
   Rcpp (>= 1.0.5), 
   data.table (>= 1.12.6), 
   plyr, 

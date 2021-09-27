@@ -25,8 +25,8 @@ bc_names(x) <- value
 \arguments{
 \item{x}{A \code{BarcodeObj} object or a \code{BarcodeQcSet} object.}
 
-\item{value}{A character vector setting the new sample names, with the length of the samples number in
-\code{BarcodeObj} or \code{BarcodeQcSet} object.}
+\item{value}{A character vector setting the new sample names, with the length
+of the samples number in \code{BarcodeObj} or \code{BarcodeQcSet} object.}
 }
 \value{
 A character vector

@@ -55,6 +55,7 @@ ifnullelse <- function(cand1, other) {
 #' @importFrom stringr str_glue str_match str_split_fixed str_c
 #' @importFrom utils combn aregexec
 #' @import ShortRead
+#' @import stats
 #' @import methods
 #' @import Rcpp
 #' @import ggplot2

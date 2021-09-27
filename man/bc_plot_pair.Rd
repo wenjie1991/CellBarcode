@@ -34,8 +34,9 @@ bc_plot_pair(
 in \code{x} axis of each scatter plot. It can be the sample names in
 BarcodeObj or the sample index value.}
 
-\item{sample_y}{A character vector or a integer vector, similar to \code{sample_x},
-specifying the samples used for \code{y} axis. It can be the sample names or the
+\item{sample_y}{A character vector or a integer vector, similar to
+\code{sample_x}, specifying the samples used for \code{y} axis. It can be the
+sample names or the
 sample index value.}
 
 \item{count_marks_x}{A numeric vector used to mark the cutoff
@@ -48,7 +49,8 @@ samples in y axis.}
 \item{highlight}{A character vector, specifying the barcodes need to be
 highlighted.}
 
-\item{log_coord}{A logical value, if TRUE (default), the \code{x} and \code{y} coordinates
+\item{log_coord}{A logical value, if TRUE (default), the \code{x} and
+\code{y} coordinates
 of the scatter will be logarized by log10.}
 
 \item{alpha}{A numeric between 0 and 1, specifies the transparency of the
@@ -59,8 +61,8 @@ Scatter plot matrix.
 }
 \description{
 Draws scatter plot for barcode read count between given pairs of samples with
-a \code{BarcodeObj} object. This function will return scatter plot matrix contains
-the scatter plots for all given sample pairs.
+a \code{BarcodeObj} object. This function will return scatter plot matrix
+contains the scatter plots for all given sample pairs.
 }
 \examples{
 
