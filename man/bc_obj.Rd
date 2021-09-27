@@ -4,13 +4,10 @@
 \name{bc_obj}
 \alias{bc_obj}
 \title{A dummy BarcodeObj object}
-\usage{
-data(bc_obj)
+\format{
+This is a BarcodeObj object
 }
-\description{
-Dataset contains a \code{BarcodeObj} with makeup barcode data.
-}
-\details{
+\source{
 This is a \code{BarcodeObj} object derived from makeup data by:
 
 \preformatted{
@@ -62,5 +59,11 @@ bc_obj = bc_cure_depth(bc_obj, depth=5)
 # save(bc_obj, file = "./data/bc_obj.RData")
 ###
 }
+}
+\usage{
+data(bc_obj)
+}
+\description{
+Dataset contains a \code{BarcodeObj} with makeup barcode data.
 }
 \keyword{dataset}

@@ -51,6 +51,9 @@ ifnullelse <- function(cand1, other) {
 #' @importFrom Biostrings readDNAStringSet
 #' @importFrom plyr . count
 #' @importFrom Ckmeans.1d.dp Ckmeans.1d.dp
+#' @importFrom egg ggarrange
+#' @importFrom stringr str_glue str_match str_split_fixed str_c
+#' @importFrom utils combn aregexec
 #' @import ShortRead
 #' @import methods
 #' @import Rcpp
