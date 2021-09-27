@@ -1,14 +1,20 @@
 Package: CellBarcode
 Type: Package
 Title: Cellular DNA Barcode Analysis toolkit
-Version: 0.99.3
+Version: 0.99.4
 Authors@R: c(
   person("Wenjie", "Sun", email = "sunwjie@gmail.com", role = "cre"),
   person("Anne-Marie", "Lyne", email = "Anne-Marie.Lyne@curie.fr", role = "aut"),
   person("Leila", "Perie", email = "leila.perie@curie.fr", role = "aut")
   )
 Description: 
-  This package performs Cellular DNA Barcode (genetic lineage tracing) analysis. The package can handle all kinds of DNA barcodes, as long as the barcode within a single sequencing read and has a pattern which can be matched by a regular expression. This package can handle barcode with flexible length, with or without UMI (unique molecular identifier). This tool also can be used for pre-processing of some amplicon data such as CRISPR gRNA screening, immune repertoire sequencing and meta genome data.
+  This package performs Cellular DNA Barcode (genetic lineage tracing) analysis.
+  The package can handle all kinds of DNA barcodes, as long as the barcode
+  within a single sequencing read and has a pattern which can be matched by a
+  regular expression. This package can handle barcode with flexible length, with
+  or without UMI (unique molecular identifier). This tool also can be used for
+  pre-processing of some amplicon data such as CRISPR gRNA screening, immune
+  repertoire sequencing and meta genome data.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Depends: R (>= 4.0.0)
@@ -23,7 +29,6 @@ biocViews: Preprocessing, QualityControl, Sequencing, CRISPR
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 NeedsCompilation: yes
-Packaged: 2021-08-26 12:20:54 UTC; wsun
 Author: Wenjie Sun [cre],
   Anne-Marie Lyne [aut],
   Leila Perie [aut]
