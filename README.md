@@ -81,21 +81,6 @@ head(bc_2df(bc_sub))
 head(bc_2matrix(bc_sub))
 ```
 
-## Depends
-
-R (>= 4.0.0)
-methods,
-Rcpp (>= 1.0.5),
-data.table (>= 1.14.0),
-plyr (>= 1.8.6),
-ggplot2 (>= 3.3.5),
-stringr (>= 1.4.0),
-magrittr (>= 2.0.1),
-ShortRead (>= 1.48.0),
-Biostrings (>= 2.58.0),
-egg (>= 0.4.5),
-utils,
-S4Vectors
 
 ## License
 
