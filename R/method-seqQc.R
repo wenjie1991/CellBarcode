@@ -86,7 +86,7 @@ plot_base_percentage_distribution <- function(base_freq_per_cycle) {
     d[, all_base_per_cycle := sum(Count), by = .(Cycle)]
     d[, base_percent := Count / all_base_per_cycle, by = .(Cycle, Base)]
     g <- ggplot(d) + aes(x = Cycle, y = base_percent, color = Base) + 
-        geom_point() + geom_line() + theme_bw()
+        geom_point() + geom_line() + theme_bw() + labs(y = "Base Percentage")
     g
 }
 
@@ -106,7 +106,7 @@ plot_base_quality_distribution <- function(base_quality_per_cycle) {
             ymax = P95,
             ymin = P5,
             group = Cycle) + 
-        geom_boxplot(stat = "identity") + theme_bw()
+        geom_boxplot(stat = "identity") + theme_bw() + labs(y = "Sequence quality")
     g
 }
 
@@ -225,7 +225,7 @@ setMethod("bc_plot_seqQc", c("BarcodeQcSet"), function(x) {
         g_list <- list()
 
         d <- lapply(
-            seq_along(x),
+            seq_along(x@qc_list),
             function(i) {
                 data.table(x@qc_list[[i]]@base_freq_per_cycle, fileName = names(x@qc_list)[i]) 
             }) %>% rbindlist()
@@ -238,7 +238,7 @@ setMethod("bc_plot_seqQc", c("BarcodeQcSet"), function(x) {
         g_list <- append(g_list, list(p1))
 
         if (!is.null(names(x@qc_list[[1]]@base_quality_per_cycle))) {
-            d <- lapply(seq_along(x), function(i) { 
+            d <- lapply(seq_along(x@qc_list), function(i) { 
                 data.table(x@qc_list[[i]]@base_quality_per_cycle, sample_name = names(x@qc_list)[i]) 
             }) %>% rbindlist()
 
