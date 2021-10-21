@@ -383,13 +383,13 @@ Select slot by accesors:
 
 ```{r}
 # Access messyBc slot
-head(bc_messyBc(bc_obj_umi)[[1]])
+head(bc_messyBc(bc_obj_umi)[[1]], n=2)
 # return a data.frame
-head(bc_messyBc(bc_obj_umi, isList=FALSE))
+head(bc_messyBc(bc_obj_umi, isList=FALSE), n=2)
 
 # Access cleanBc slot
 # return a data.frame
-head(bc_cleanBc(bc_obj_umi, isList=FALSE))
+head(bc_cleanBc(bc_obj_umi, isList=FALSE), n=2)
 ```
 
 Select sample by sample names
