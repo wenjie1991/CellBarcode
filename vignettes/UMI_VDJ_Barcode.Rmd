@@ -280,8 +280,13 @@ In the regular expression, the UMI pattern is retrieved with `[ACGT]{12}`. The `
 pattern `[ACGT]+`, again `[ACGT]` means match "A", "C", "G" or "T" and the `+` says to match at least one `[ACGT]`.
 
 The `bc_extract` function is used to extract the barcode(s) from the sequences. It returns a `BarcodeObj` object if the input is a list
-or a vector of Fastq files. The `BarcodeObj` created by `bc_extract` is a R S4 class with three slots, and can be accessed by `@` operator:
-`messyBc`, `metadata` and `cleanBc` (which is NULL in the `bc_extract` output). `messyBc` is a list, where each element is a `data.table` corresponding to the successive samples. 
+or a vector of Fastq files. The `BarcodeObj` created by `bc_extract` is a R S4 class with three slots:
+`messyBc`, `metadata` and `cleanBc` (which is NULL in the `bc_extract` output). , They can be accessed by `@` operator or corresponding accesors:
+  - `bc_messyBc`: return the `messyBc` slot.
+  - `bc_cleanBc`: return the `cleanBc` slot.
+  - `bc_meta`: return the `metadata` slot.
+
+`messyBc` is a list, where each element is a `data.table` corresponding to the successive samples. 
 Each `data.table` has 5 columns:
 
 1. reads_seq: full read sequence before parsing.
@@ -319,7 +324,7 @@ bc_obj <- bc_extract(
   pattern_type = c(barcode = 1))
 
 bc_obj
-names(bc_obj@messyBc[[1]])
+names(bc_messyBc(bc_obj)[[1]])
 ```
 
 Here the regular expression matches a constant sequence at the beginning and the end and the barcode 
@@ -352,7 +357,7 @@ bc_obj_umi
 
 You can use the ratio of `barcode_read_count` versus `raw_read_count` to check the successfulness of the sequencing or correctness of the pattern given to the `bc_extract`.
 
-```{r}
+```{r, fig.width=5, fig.height=5}
 # select two samples from bc_obj_umi
 bc_obj_umi_sub <- bc_obj_umi[, c("781_mixa", "781_mixb")]
 # get the metadata matrix
@@ -374,10 +379,17 @@ object. You can easily select one or several samples by their names,
 indices or metadata.
 
 
-Select slot by `@` operation
+Select slot by accesors:
 
 ```{r}
-bc_obj_umi@messyBc
+# Access messyBc slot
+head(bc_messyBc(bc_obj_umi)[[1]])
+# return a data.frame
+head(bc_messyBc(bc_obj_umi, isList=FALSE))
+
+# Access cleanBc slot
+# return a data.frame
+head(bc_cleanBc(bc_obj_umi, isList=FALSE))
 ```
 
 Select sample by sample names
@@ -553,13 +565,13 @@ We provides `bc_plot_single`, `bc_plot_mutual` and `bc_plot_pair` functions for 
 
 `bc_plot_single` can be used for exploring barcode count distribution sample wise. It uses the `cleanBc` slot in the BarcodeObj bc_obj_umi_sub.
 
-```{r}
+```{r, fig.width=5}
 bc_plot_single(bc_obj_umi_sub)
 ```
 
 The `bc_plot_single` function provides arguments for showing the potential cutoff point and highlighting specific barcodes.
 
-```{r}
+```{r, fig.width=5}
 # re-do the filtering using depth threshold 0 to include all barcodes.
 bc_obj_umi_sub_neo <- bc_cure_depth(bc_obj_umi_sub, depth=0, isUpdate=FALSE)
 
@@ -575,7 +587,7 @@ bc_plot_single(bc_obj_umi_sub_neo, count_marks=10,
 
 The `bc_plot_mutual` generates a scatter plot matrix which contains all the pairwise sample combination in the provided BarcodeObj object.
 
-```{r}
+```{r, fig.height=7}
 # create a new BarcodeObj for following visualization
 # use depth as 0 to include all the barcodes.
 bc_obj_umi_neo <- bc_cure_depth(bc_obj_umi[, 1:4], depth=0)
@@ -587,7 +599,7 @@ bc_plot_mutual(bc_obj_umi_neo, count_marks=c(10, 20, 30, 40),
 
 And the `bc_plot_pair` only draws the scatter plot for the given sample pairs. 
 
-```{r}
+```{r, fig.width=5}
 # create a new BarcodeObj for following visualization
 # use depth as 0 to include all the barcodes.
 bc_obj_umi_neo <- bc_cure_depth(bc_obj_umi[, 1:4], depth=0)

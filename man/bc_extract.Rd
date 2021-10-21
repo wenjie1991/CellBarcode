@@ -174,7 +174,7 @@ sr <- readFastq(fq_file)  # ShortReadQ
 bc_extract(sr, pattern = "AAAAA(.*)CCCCC")
 
 # barcode from DNAStringSet object
-ds <- sr@sread  # DNAStringSet
+ds <- sread(sr)  # DNAStringSet
 bc_extract(ds, pattern = "AAAAA(.*)CCCCC")
 
 # barcode from integer vector

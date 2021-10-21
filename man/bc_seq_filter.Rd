@@ -84,7 +84,7 @@ sr <- readFastq(fq_file[1])
 bc_seq_filter(sr)
 
 # get DNAStringSet object
-ds <- sr@sread
+ds <- sread(sr)
 # apply sequencing quality filter to DNAStringSet
 bc_seq_filter(ds)
 

@@ -82,7 +82,7 @@ sr <- readFastq(fq_file[1])
 bc_seq_qc(sr)
 
 # DNAStringSet
-ds <- sr@sread
+ds <- sread(sr)
 bc_seq_qc(ds)
 
 # List of DNAStringSet

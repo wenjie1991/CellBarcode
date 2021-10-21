@@ -155,6 +155,80 @@ setGeneric("bc_names", function(x) { standardGeneric("bc_names") })
 #' @export
 setGeneric("bc_names<-", function(x, value) { standardGeneric("bc_names<-") })
 
+#' Accesses messyBc slot in the BarcodeObj object
+#'
+#' \code{messyBc} slot of BarcodeObj object contains the raw barcode reads
+#' frequency data. For more detail about the \code{messyBc} slot, see
+#' \code{\link[CellBarcode]{BarcodeObj}}. \code{bc_messyBc} is used to access
+#' the `messyBc` slot in the \code{BarcodeObj}.
+#'
+#' @param barcodeObj A \code{BarcodeObj} objects.
+#' @param isList A logical value, if TRUE (default), the return is a list with each
+#' sample as a element. Otherwise, the function will return a \code{data.frame}
+#' contains the data from all the samples with a column named \code{sample_name}
+#' to keep the sample information.
+#' @return
+#' If a \code{list} is requested, in the \code{list} each element is a
+#' \code{data.frame} corresponding to the successive samples. Each
+#' \code{data.frame} has 5 columns: 1. \code{reads_seq}: full read sequence
+#' before parsing. 2. \code{match_seq}: the sequence matched by pattern given to
+#' \code{bc_extract}. 3. \code{umi_seq} (optional): UMI sequence. 4.
+#' \code{barcode_seq}: barcode sequence. 5. \code{count}: how many reads a full
+#' sequence has. In this table, \code{barcode_seq} value can be duplicated, as
+#' two different full read sequences can contain the same barcode sequence, due
+#' to the diversity of the UMI or mutations in the constant region.
+#'
+#'#' If a \code{data.frame} is requested, the \code{data.frame} in the list
+#' described above are combined into one \code{data.frame} by row, with an extra
+#' column named \code{sample_name} for identifying sample.
+#'
+#' @examples
+#'
+#'  data(bc_obj)
+#' # get the data in messyBc slot
+#' # default the return value is a list
+#' bc_messyBc(bc_obj)
+#'
+#' # the return value can be a data.frame
+#' bc_messyBc(bc_obj, isList=FALSE)
+#' ###
+setGeneric("bc_messyBc", function(barcodeObj, isList=TRUE){ standardGeneric("bc_messyBc") })
+
+#' Accesses cleanBc slot in the BarcodeObj object
+#'
+#' \code{cleanBc} slot of BarcodeObj object contains the processed barcode reads
+#' frequency data. For more detail about the \code{cleanBc} slot, see
+#' \code{\link[CellBarcode]{BarcodeObj}}. \code{bc_cleanBc} is used to access
+#' the `cleanBc` slot in the \code{BarcodeObj}.
+#'
+#' @param barcodeObj A \code{BarcodeObj} objects.
+#' @param isList A logical value, if TRUE (default), the return is a list with each sample
+#' as a element. Otherwise, the function will return a \code{data.frame}
+#' contains the data from all the samples with a column named \code{sample_name}
+#' to keep the sample information.
+#' @return
+#' If a \code{list} is requested, each \code{list} element a code{data.frame}
+#' for each sample. In a code{data.frame}, there are 2 columns 1.
+#' \code{barcode_seq}: barcode sequence 2. \code{counts}: reads count, or UMI
+#' count if the \code{cleanBc} was created by \code{bc_cure_umi}.
+#'
+#' If a \code{data.frame} is requested, the \code{data.frame} in the list
+#' described above are combined into one \code{data.frame} by row, with an extra
+#' column named \code{sample_name} for identifying sample.
+#'
+#' @examples
+#'
+#'  data(bc_obj)
+#' # get the data in cleanBc slot
+#' # default the return value is a list
+#' bc_cleanBc(bc_obj)
+#'
+#' # the return value can be a data.frame
+#' bc_cleanBc(bc_obj, isList=FALSE)
+#' ###
+setGeneric("bc_cleanBc", function(barcodeObj, isList=TRUE){ standardGeneric("bc_cleanBc") })
+
+
 #' Accesses and sets metadata in BarcodeObj object
 #'
 #' Sample information is kept in metadata. \code{bc_meta} is for accessing and
@@ -223,7 +297,8 @@ setGeneric("bc_meta<-", function(barcodeObj, key=NULL, value) {
 #' bc_2matrix(bc_obj)
 #'
 #' ###
-#' #' @rdname bc_2df
+ 
+#' @rdname bc_2df
 #' @export
 setGeneric("bc_2df", function(barcodeObj) { standardGeneric("bc_2df") })
 
@@ -323,7 +398,7 @@ setGeneric("bc_2matrix", function(barcodeObj) { standardGeneric("bc_2matrix") })
 #' bc_extract(sr, pattern = "AAAAA(.*)CCCCC")
 #'
 #' # barcode from DNAStringSet object
-#' ds <- sr@sread  # DNAStringSet
+#' ds <- sread(sr)  # DNAStringSet
 #' bc_extract(ds, pattern = "AAAAA(.*)CCCCC")
 #'
 #' # barcode from integer vector
@@ -390,6 +465,7 @@ setGeneric("bc_extract",
 #' in the \code{BarcodeObj} object will be used, otherwise the \code{messyBc}
 #' slot will be used.
 #' @return a numeric \code{vector} of the cutoff point.
+#'
 #' @details The one dimension kmeans clustering is applied for identify the 
 #' "true barcode" based on read count. The the algorithm detail is:
 #' 1. Remove the barcodes with count below the median of counts.
@@ -835,7 +911,7 @@ setGeneric("bc_plot_pair", function(
 #' bc_seq_qc(sr)
 #'
 #' # DNAStringSet
-#' ds <- sr@sread
+#' ds <- sread(sr)
 #' bc_seq_qc(ds)
 #'
 #' # List of DNAStringSet
@@ -910,7 +986,7 @@ setGeneric("bc_summary_seqQc", function(x) { standardGeneric("bc_summary_seqQc")
 #' bc_seq_filter(sr)
 #'
 #' # get DNAStringSet object
-#' ds <- sr@sread
+#' ds <- sread(sr)
 #' # apply sequencing quality filter to DNAStringSet
 #' bc_seq_filter(ds)
 #'

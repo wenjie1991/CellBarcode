@@ -5,7 +5,7 @@ setClassUnion("listOrNull", c("list", "NULL"))
 ## validity checker
 ###########################
 check_sample_name <- function(object) {
-    metaname <- rownames(object@metadata)
+    metaname <- bc_names(object)
 
     # metadata v.s. messyBc
     if (all(metaname != names(object@messyBc)))
@@ -45,7 +45,7 @@ check_sample_name <- function(object) {
 #' full read sequences can contain the same barcode sequence, due to the
 #' diversity of the UMI or mutations in the constant region.
 #'
-#' Slot \code{cleanBc} is a list holds the barcodes sequence after applying filtering,
+#' Slot \code{cleanBc} is a \code{list} holds the barcodes sequence after applying filtering,
 #' where each element is a \code{data.table} corresponding to the successive samples.
 #' The "cleanBc" slot contains 2 columns 1. \code{barcode_seq}: barcode sequence
 #' 2. \code{counts}: reads count, or UMI count if the \code{cleanBc} was created by

@@ -256,6 +256,28 @@ setMethod("bc_names<-", c("BarcodeObj", "character"), function(x, value) {
     x
 })
 
+#' @rdname bc_messyBc
+#' @exportMethod bc_messyBc
+setMethod("bc_messyBc", c("BarcodeObj"), function(barcodeObj, isList=TRUE) {
+    if (isList) {
+        res <- lapply(barcodeObj@messyBc, as.data.frame)
+    } else {
+        res <- rbindlist(barcodeObj@messyBc, idcol="sample_name")
+    }
+    res
+})
+
+#' @rdname bc_cleanBc
+#' @exportMethod bc_cleanBc
+setMethod("bc_cleanBc", c("BarcodeObj"), function(barcodeObj, isList=TRUE) {
+    if (isList) {
+        res <- lapply(barcodeObj@messyBc, as.data.frame)
+    } else {
+        res <- rbindlist(barcodeObj@messyBc, idcol="sample_nmae")
+    }
+    res
+})
+
 #' @rdname bc_meta
 #' @exportMethod bc_meta
 setMethod("bc_meta", c("BarcodeObj"), function(barcodeObj) {

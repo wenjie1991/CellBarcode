@@ -47,5 +47,4 @@ bc_2dt(bc_obj)
 bc_2matrix(bc_obj)
 
 ###
-#' @rdname bc_2df
 }

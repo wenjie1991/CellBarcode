@@ -27,7 +27,7 @@ has. In this table, \code{barcode_seq} value can be duplicated, as two different
 full read sequences can contain the same barcode sequence, due to the
 diversity of the UMI or mutations in the constant region.
 
-Slot \code{cleanBc} is a list holds the barcodes sequence after applying filtering,
+Slot \code{cleanBc} is a \code{list} holds the barcodes sequence after applying filtering,
 where each element is a \code{data.table} corresponding to the successive samples.
 The "cleanBc" slot contains 2 columns 1. \code{barcode_seq}: barcode sequence
 2. \code{counts}: reads count, or UMI count if the \code{cleanBc} was created by
