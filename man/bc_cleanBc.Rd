@@ -13,7 +13,7 @@ bc_cleanBc(barcodeObj, isList = TRUE)
 \item{barcodeObj}{A \code{BarcodeObj} objects.}
 
 \item{isList}{A logical value, if TRUE (default), the return is a list with each sample
-as a element. Otherwise, the function will return a \code{data.frame}
+as an element. Otherwise, the function will return a \code{data.frame}
 contains the data from all the samples with a column named \code{sample_name}
 to keep the sample information.}
 }
