@@ -1,7 +1,7 @@
 Package: CellBarcode
 Type: Package
 Title: Cellular DNA Barcode Analysis toolkit
-Version: 0.99.9
+Version: 1.0.0
 Authors@R: c(
   person("Wenjie", "Sun", email = "sunwjie@gmail.com", role = "cre"),
   person("Anne-Marie", "Lyne", email = "Anne-Marie.Lyne@curie.fr", role = "aut"),
