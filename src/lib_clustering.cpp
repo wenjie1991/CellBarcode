@@ -82,6 +82,9 @@ bool sortbycount(const std::pair<std::string, int> &a, const std::pair<std::stri
 //' @param count_threshold An integer, barcode count threshold to consider a
 //' barcode as a true barcode, when when a barcode with count higher than this
 //' threshold it will not be merged into more abundant barcode.
+//' @param depth_fold_threshold An numeric, control the fold cange threshold
+//' between the ' major barcodes and the potential contamination that need to be
+//' removed.
 //' @param dist_threshold A integer, distance threshold to consider two barcodes
 //' are related.
 //' @param dist_method A integer, if 2 the levenshtein distance will be used,
@@ -100,6 +103,7 @@ List seq_correct(
         IntegerVector count, 
         int count_threshold, 
         int dist_threshold, 
+        double depth_fold_threshold = 1,
         int dist_method = 1, 
         int insert_cost = 1,
         int delete_cost = 1,
@@ -156,7 +160,6 @@ List seq_correct(
         } else {
 
             // is tiptoe is connect to big nodes
-            bool flag_is_connetcted = false;
             int min_dist = 2147483646;
             int h_dist;
             std::vector<std::pair<std::string, int>>::iterator min_it;
@@ -188,9 +191,10 @@ List seq_correct(
                 it++;
             }
 
-            if (min_dist <= dist_threshold) {
-                // add the tiptoe to the branch node
-                min_it->second += tiptoe->second;
+            if (min_dist <= dist_threshold && (min_it->second * 1.0 / tiptoe->second) >= depth_fold_threshold) {
+                // add the tiptoe to the branch node; not add the error sequence
+                // frequency
+                // min_it->second += tiptoe->second;
                 //std::cout<<min_it->second<<std::endl;
                 // record the nodes
                 merge_from.push_back(tiptoe->first);
@@ -200,22 +204,20 @@ List seq_correct(
 
                 // remove the tiptoe
                 cand.pop_back();
-                // flag: if tiptoe is connect to branch
-                flag_is_connetcted = true;
 
                 // update the order of the nodes using updated count
-                std::vector<std::pair<std::string, int>>::iterator it_in_rank = min_it;
-                while (it_in_rank != cand.begin()) {
-                    it_in_rank--;
-                    if (it_in_rank->second >= min_it->second) {
-                        break;
-                    }
-                }
+                // std::vector<std::pair<std::string, int>>::iterator it_in_rank = min_it;
+                // while (it_in_rank != cand.begin()) {
+                //    it_in_rank--;
+                //    if (it_in_rank->second >= min_it->second) {
+                //        break;
+                //    }
+                // }
+                // if (min_it != it_in_rank) {
+                //    cand.insert(it_in_rank + 1, *it);
+                //     cand.erase(min_it);
+                // }
 
-                if (min_it != it_in_rank) {
-                    cand.insert(it_in_rank + 1, *it);
-                    cand.erase(min_it);
-                }
             } else {
                 // if tiptoe is not connect to any branch
                 res.push_back(*tiptoe);

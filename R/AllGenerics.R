@@ -550,11 +550,13 @@ setGeneric("bc_cure_depth",
         isUpdate=TRUE
         ) { standardGeneric("bc_cure_depth") })
 
-#' Merges barcodes by editing distance
+#' Clean barcodes by editing distance
 #'
 #' \code{bc_cure_cluster} performs clustering of barcodes by editing distance,
 #' and merging the barcodes with similar sequence. This function is only
-#' applicable for the BarcodeObj object with a \code{cleanBc} slot 
+#' applicable for the BarcodeObj object with a \code{cleanBc} slot. The barcode
+#' with smaller reads count will be deplicated, and the reads are not be
+#' counted.
 #'
 #' @param barcodeObj A BarcodeObj object.
 #' @param dist_thresh A single integer or vector of integers with the length of
@@ -562,6 +564,9 @@ setGeneric("bc_cure_depth",
 #' similar barcode sequences. If the input is a vector, each value in the vector
 #' relates to one sample according to the sample order in \code{BarcodeObj}
 #' object.
+#' @param depth_fold_threshold A single numeric or vector of numeric with the length of
+#' sample count, specifying the depth fold change threshold of merging two
+#' barcode.
 #' @param dist_method A  character string, specifying the distance algorithm
 #' used for evaluating barcodes similarity. It can be "hamm" for Hamming
 #' distance or "leven" for Levenshtein distance.
@@ -622,6 +627,7 @@ setGeneric("bc_cure_cluster",
     function(
         barcodeObj,
         dist_thresh=1,
+        depth_fold_threshold=1,
         dist_method="hamm",
         merge_method="greedy",
         count_threshold=1000,

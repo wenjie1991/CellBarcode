@@ -3,11 +3,12 @@
 \name{bc_cure_cluster}
 \alias{bc_cure_cluster}
 \alias{bc_cure_cluster,BarcodeObj-method}
-\title{Merges barcodes by editing distance}
+\title{Clean barcodes by editing distance}
 \usage{
 bc_cure_cluster(
   barcodeObj,
   dist_thresh = 1,
+  depth_fold_threshold = 1,
   dist_method = "hamm",
   merge_method = "greedy",
   count_threshold = 1000,
@@ -17,6 +18,7 @@ bc_cure_cluster(
 \S4method{bc_cure_cluster}{BarcodeObj}(
   barcodeObj,
   dist_thresh = 1,
+  depth_fold_threshold = 1,
   dist_method = "hamm",
   merge_method = "greedy",
   count_threshold = 1000,
@@ -31,6 +33,10 @@ sample count, specifying the editing distance threshold of merging two
 similar barcode sequences. If the input is a vector, each value in the vector
 relates to one sample according to the sample order in \code{BarcodeObj}
 object.}
+
+\item{depth_fold_threshold}{A single numeric or vector of numeric with the length of
+sample count, specifying the depth fold change threshold of merging two
+barcode.}
 
 \item{dist_method}{A  character string, specifying the distance algorithm
 used for evaluating barcodes similarity. It can be "hamm" for Hamming
@@ -57,7 +63,9 @@ A BarcodeObj object with cleanBc slot updated.
 \description{
 \code{bc_cure_cluster} performs clustering of barcodes by editing distance,
 and merging the barcodes with similar sequence. This function is only
-applicable for the BarcodeObj object with a \code{cleanBc} slot
+applicable for the BarcodeObj object with a \code{cleanBc} slot. The barcode
+with smaller reads count will be deplicated, and the reads are not be
+counted.
 }
 \examples{
 data(bc_obj)
