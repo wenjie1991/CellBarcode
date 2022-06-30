@@ -251,8 +251,15 @@ setMethod("bc_extract", "character", function(
         sample_name <- bc_process_sample_name(sample_name, metadata, input_names)
 
         messyBc <- lapply(seq_along(x), function(i) {
+            if (grepl(".fq$", x[i]) | grepl(".fastq$", x[i])) {
+                barcode_df = read_fastq(x[i])
+            } else if (grepl(".fq.gz$", x[i]) | grepl(".fastq.gz$", x[i])) {
+                barcode_df = read_fastq_gz(x[i])
+            } else {
+                stop("The input is not Fastq file. Please check the input.")
+            }
             bc_extract(
-                ShortRead::readFastq(x[i]), 
+                barcode_df,
                 sample_name = sample_name[i], 
                 pattern = pattern, 
                 maxLDist = maxLDist, 
@@ -271,8 +278,15 @@ setMethod("bc_extract", "character", function(
         return(output)
     } else {
         # if one fastq file as input
+        if (grepl(".fq$", x) | grepl(".fastq$", x)) {
+            barcode_df = read_fastq(x)
+        } else if (grepl(".fq.gz$", x) | grepl(".fastq.gz", x)) {
+            barcode_df = read_fastq_gz(x)
+        } else {
+            stop("The input is not Fastq file. Please check the input.")
+        }
         bc_extract(
-            ShortRead::readFastq(x), 
+            barcode_df,
             sample_name = sample_name[i], 
             pattern = pattern,
             maxLDist = maxLDist,

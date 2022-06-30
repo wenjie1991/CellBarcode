@@ -30,6 +30,9 @@ NULL
 #' @param count_threshold An integer, barcode count threshold to consider a
 #' barcode as a true barcode, when when a barcode with count higher than this
 #' threshold it will not be merged into more abundant barcode.
+#' @param depth_fold_threshold An numeric, control the fold cange threshold
+#' between the ' major barcodes and the potential contamination that need to be
+#' removed.
 #' @param dist_threshold A integer, distance threshold to consider two barcodes
 #' are related.
 #' @param dist_method A integer, if 2 the levenshtein distance will be used,
@@ -42,7 +45,21 @@ NULL
 #' corrected ' sequence reads; link_tab: data table record for the clustering
 #' process with ' first column of barcode be merged and second column of barcode
 #' that merge to.
-seq_correct <- function(seq, count, count_threshold, dist_threshold, dist_method = 1L, insert_cost = 1L, delete_cost = 1L, replace_cost = 1L) {
-    .Call('_CellBarcode_seq_correct', PACKAGE = 'CellBarcode', seq, count, count_threshold, dist_threshold, dist_method, insert_cost, delete_cost, replace_cost)
+seq_correct <- function(seq, count, count_threshold, dist_threshold, depth_fold_threshold = 1, dist_method = 1L, insert_cost = 1L, delete_cost = 1L, replace_cost = 1L) {
+    .Call('_CellBarcode_seq_correct', PACKAGE = 'CellBarcode', seq, count, count_threshold, dist_threshold, depth_fold_threshold, dist_method, insert_cost, delete_cost, replace_cost)
+}
+
+#' Read the Fastq file and output frequency table
+#'
+#' This function read in fastq.gz file and output the sequences frequency
+#' data.frame with two columns, freq and seq.
+NULL
+
+read_fastq_gz <- function(in_file_path) {
+    .Call('_CellBarcode_read_fastq_gz', PACKAGE = 'CellBarcode', in_file_path)
+}
+
+read_fastq <- function(in_file_path) {
+    .Call('_CellBarcode_read_fastq', PACKAGE = 'CellBarcode', in_file_path)
 }
 
