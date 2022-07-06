@@ -105,20 +105,37 @@ setMethod("bc_extract", "data.frame", function(
 
     # captured UMI
     if ("UMI" %in% names(pattern_type)) {
-        d <- data.table(
-            reads_seq = reads_seq, 
-            match_seq = seq_v, 
-            umi_seq = umi_v, 
-            barcode_seq = barcode_v, 
-            count = reads_freq
-        )
+        # TODO: save space option
+        if (F) {
+            d <- data.table(
+                reads_seq = reads_seq, 
+                match_seq = seq_v, 
+                umi_seq = umi_v, 
+                barcode_seq = barcode_v, 
+                count = reads_freq
+            )
+        } else {
+            d <- data.table(
+                umi_seq = umi_v, 
+                barcode_seq = barcode_v, 
+                count = reads_freq
+            )[, .(count = sum(count)), by = .(umi_seq, barcode_seq)]
+        }
     } else {
-        d <- data.table(
-            reads_seq = reads_seq, 
-            match_seq = seq_v, 
-            barcode_seq = barcode_v, 
-            count = reads_freq
-        ) 
+        # TODO: save space option
+        if (F) {
+            d <- data.table(
+                reads_seq = reads_seq, 
+                match_seq = seq_v, 
+                barcode_seq = barcode_v, 
+                count = reads_freq
+            ) 
+        } else {
+            d <- data.table(
+                barcode_seq = barcode_v, 
+                count = reads_freq
+            )[, .(count = sum(count)), by = barcode_seq]
+        }
     }
 
     # order the data by counts
