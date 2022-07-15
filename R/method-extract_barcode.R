@@ -267,6 +267,9 @@ setMethod("bc_extract", "character", function(
         input_names <- basename(x)
         sample_name <- bc_process_sample_name(sample_name, metadata, input_names)
 
+        pattern = rep(pattern, length.out = length(x))
+        maxLDist = rep(maxLDist, length.out = length(x))
+
         messyBc <- lapply(seq_along(x), function(i) {
             if (grepl(".fq$", x[i]) | grepl(".fastq$", x[i])) {
                 barcode_df = read_fastq(x[i])
@@ -278,8 +281,8 @@ setMethod("bc_extract", "character", function(
             bc_extract(
                 barcode_df,
                 sample_name = sample_name[i], 
-                pattern = pattern, 
-                maxLDist = maxLDist, 
+                pattern = pattern[i], 
+                maxLDist = maxLDist[i], 
                 pattern_type = pattern_type, 
                 costs = costs, 
                 ordered = ordered)
@@ -329,12 +332,15 @@ setMethod("bc_extract", "list", function(
     input_names <- ifnullelse(names(x), seq_along(x))
     sample_name <- bc_process_sample_name(sample_name, metadata, input_names)
 
+    pattern = rep(pattern, length.out = length(x))
+    maxLDist = rep(maxLDist, length.out = length(x))
+
     lapply(seq_along(x), function(i) {
         bc_extract(
             x[[i]],
-            pattern = pattern,
+            pattern = pattern[i],
             sample_name = sample_name[i],
-            maxLDist = maxLDist,
+            maxLDist = maxLDist[i],
             pattern_type = pattern_type,
             costs = costs,
             ordered = ordered)
