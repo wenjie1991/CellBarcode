@@ -10,6 +10,18 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// parse_10x_bam
+DataFrame parse_10x_bam(std::string in_file_path, std::string regex_str);
+RcppExport SEXP _CellBarcode_parse_10x_bam(SEXP in_file_pathSEXP, SEXP regex_strSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type in_file_path(in_file_pathSEXP);
+    Rcpp::traits::input_parameter< std::string >::type regex_str(regex_strSEXP);
+    rcpp_result_gen = Rcpp::wrap(parse_10x_bam(in_file_path, regex_str));
+    return rcpp_result_gen;
+END_RCPP
+}
 // seq_correct
 List seq_correct(std::vector<std::string> seq, IntegerVector count, int count_threshold, int dist_threshold, double depth_fold_threshold, int dist_method, int insert_cost, int delete_cost, int replace_cost);
 RcppExport SEXP _CellBarcode_seq_correct(SEXP seqSEXP, SEXP countSEXP, SEXP count_thresholdSEXP, SEXP dist_thresholdSEXP, SEXP depth_fold_thresholdSEXP, SEXP dist_methodSEXP, SEXP insert_costSEXP, SEXP delete_costSEXP, SEXP replace_costSEXP) {
@@ -53,6 +65,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_CellBarcode_parse_10x_bam", (DL_FUNC) &_CellBarcode_parse_10x_bam, 2},
     {"_CellBarcode_seq_correct", (DL_FUNC) &_CellBarcode_seq_correct, 9},
     {"_CellBarcode_read_fastq_gz", (DL_FUNC) &_CellBarcode_read_fastq_gz, 1},
     {"_CellBarcode_read_fastq", (DL_FUNC) &_CellBarcode_read_fastq, 1},
