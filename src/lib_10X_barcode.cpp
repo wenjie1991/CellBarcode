@@ -63,7 +63,7 @@ DataFrame parse_10x_bam(std::string in_file_path, std::string regex_str) {
             }
         }
 
-        if (boost::regex_match(seq, sm, str_expr)) {
+        if (boost::regex_search(seq, sm, str_expr)) {
 
             // std::cout 
             //     << "seq:" << seq << std::endl
@@ -113,6 +113,7 @@ DataFrame parse_10x_bam(std::string in_file_path, std::string regex_str) {
     return DataFrame::create(
             _["cell_barcode"] = cell_barcode_v,
             _["umi"] = umi_v,
+            _["barcode_seq"] = barcode_v,
             _["count"] = count_v
         );
 }
