@@ -81,7 +81,7 @@ bool sortbycount(const std::pair<std::string, int> &a, const std::pair<std::stri
 //' @param count An integer vector with the same order and length of UMI
 //' @param count_threshold An integer, barcode count threshold to consider a
 //' barcode as a true barcode, when when a barcode with count higher than this
-//' threshold it will not be merged into more abundant barcode.
+//' threshold it will not be removed.
 //' @param depth_fold_threshold An numeric, control the fold cange threshold
 //' between the ' major barcodes and the potential contamination that need to be
 //' removed.
@@ -95,8 +95,8 @@ bool sortbycount(const std::pair<std::string, int> &a, const std::pair<std::stri
 //' applied.
 //' @return a list with two data.frame. seq_freq_tab: table with barcode and
 //' corrected ' sequence reads; link_tab: data table record for the clustering
-//' process with ' first column of barcode be merged and second column of barcode
-//' that merge to.
+//' process with ' first column of barcode be removed and second column of the majority 
+//' barcode barcode.
 // [[Rcpp::export]]
 List seq_correct(
         std::vector<std::string> seq, 
@@ -116,12 +116,12 @@ List seq_correct(
     std::vector<std::pair<std::string, int>> res;
 
 
-    // the small node be merged
-    std::vector<std::string> merge_from;
-    std::vector<int> merge_from_size;
+    // the small node be removed
+    std::vector<std::string> remove_from;
+    std::vector<int> remove_from_size;
     // the big node be merged
-    std::vector<std::string> merge_to;
-    std::vector<int> merge_to_size;
+    std::vector<std::string> remove_by;
+    std::vector<int> remove_by_size;
 
     // Sort by the frequency of seq
     for (auto i=0; i<seq.size(); i++) {
@@ -197,10 +197,10 @@ List seq_correct(
                 // min_it->second += tiptoe->second;
                 //std::cout<<min_it->second<<std::endl;
                 // record the nodes
-                merge_from.push_back(tiptoe->first);
-                merge_from_size.push_back(tiptoe->second);
-                merge_to.push_back(min_it->first);
-                merge_to_size.push_back(min_it->second);
+                remove_from.push_back(tiptoe->first);
+                remove_from_size.push_back(tiptoe->second);
+                remove_by.push_back(min_it->first);
+                remove_by_size.push_back(min_it->second);
 
                 // remove the tiptoe
                 cand.pop_back();
@@ -239,10 +239,10 @@ List seq_correct(
 
     // link table
     DataFrame link_tab = DataFrame::create(
-            Named("seq_from") = merge_from, 
-            Named("seq_to") = merge_to, 
-            _["from_size"] = merge_from_size, 
-            _["to_size"] = merge_to_size
+            Named("seq_from") = remove_from, 
+            Named("seq_to") = remove_by, 
+            _["from_size"] = remove_from_size, 
+            _["to_size"] = remove_by_size
             );
 
     List L = List::create(

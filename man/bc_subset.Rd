@@ -117,7 +117,7 @@ bc_obj["AGAG", "test1"] + bc_obj["AAAG", "test2"]
 # Join two samples with overlap barcodes
 bc_obj_join <- bc_obj["AGAG", "test1"] + bc_obj["AGAG", "test2"]
 bc_obj_join
-# The same barcode will merged after applying bc_cure_depth()
+# The same barcode will removed after applying bc_cure_depth()
 bc_cure_depth(bc_obj_join)
 
 # Remove barcodes

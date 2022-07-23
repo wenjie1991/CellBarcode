@@ -87,8 +87,9 @@ bc_extract(
 \item{x}{A single or a list of fastq file, ShortReadQ, DNAStringSet,
 data.frame, or named integer.}
 
-\item{pattern}{A string, specifying the regular expression
-with capture. It matchs the barcode (and UMI) with capture pattern.}
+\item{pattern}{A string or a string vector with the same number of files,
+specifying the regular expression with capture. It matchs the barcode (and
+UMI) with capture pattern.}
 
 \item{sample_name}{A string vector, applicable when \code{x} is a list or
 fastq file vector. This argument specifies the sample names. If not provided,

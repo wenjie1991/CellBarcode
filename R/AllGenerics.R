@@ -70,7 +70,7 @@
 #' # Join two samples with overlap barcodes
 #' bc_obj_join <- bc_obj["AGAG", "test1"] + bc_obj["AGAG", "test2"]
 #' bc_obj_join
-#' # The same barcode will merged after applying bc_cure_depth()
+#' # The same barcode will removed after applying bc_cure_depth()
 #' bc_cure_depth(bc_obj_join)
 #'
 #' # Remove barcodes
@@ -170,15 +170,11 @@ setGeneric("bc_names<-", function(x, value) { standardGeneric("bc_names<-") })
 #' @return
 #' If a \code{list} is requested, in the \code{list} each element is a
 #' \code{data.frame} corresponding to the successive samples. Each
-#' \code{data.frame} has 5 columns: 1. \code{reads_seq}: full read sequence
-#' before parsing. 2. \code{match_seq}: the sequence matched by pattern given to
-#' \code{bc_extract}. 3. \code{umi_seq} (optional): UMI sequence. 4.
-#' \code{barcode_seq}: barcode sequence. 5. \code{count}: how many reads a full
-#' sequence has. In this table, \code{barcode_seq} value can be duplicated, as
-#' two different full read sequences can contain the same barcode sequence, due
-#' to the diversity of the UMI or mutations in the constant region.
+#' \code{data.frame} has at most 3 columns: 1. \code{umi_seq} (optional): UMI
+#' sequence. 2. \code{barcode_seq}: barcode sequence. 3. \code{count}: how many
+#' reads a full sequence has. 
 #'
-#'#' If a \code{data.frame} is requested, the \code{data.frame} in the list
+#' If a \code{data.frame} is requested, the \code{data.frame} in the list
 #' described above are combined into one \code{data.frame} by row, with an extra
 #' column named \code{sample_name} for identifying sample.
 #'
@@ -324,8 +320,9 @@ setGeneric("bc_2matrix", function(barcodeObj) { standardGeneric("bc_2matrix") })
 #'
 #' @param x A single or a list of fastq file, ShortReadQ, DNAStringSet,
 #' data.frame, or named integer.
-#' @param pattern A string, specifying the regular expression
-#' with capture. It matchs the barcode (and UMI) with capture pattern.
+#' @param pattern A string or a string vector with the same number of files,
+#' specifying the regular expression with capture. It matchs the barcode (and
+#' UMI) with capture pattern.
 #' @param sample_name A string vector, applicable when \code{x} is a list or
 #' fastq file vector. This argument specifies the sample names. If not provided,
 #' the function will look for sample name in the rownames of metadata,
@@ -553,30 +550,33 @@ setGeneric("bc_cure_depth",
 #' Clean barcodes by editing distance
 #'
 #' \code{bc_cure_cluster} performs clustering of barcodes by editing distance,
-#' and merging the barcodes with similar sequence. This function is only
-#' applicable for the BarcodeObj object with a \code{cleanBc} slot. The barcode
-#' with smaller reads count will be deplicated, and the reads are not be
-#' counted.
+#' and remove the minority barcodes with similar sequence. This function is only
+#' applicable for the BarcodeObj object with a \code{cleanBc} slot. The barcodes
+#' with smaller reads count will be removed. And thier reads will add to the
+#' similar sequence.
 #'
 #' @param barcodeObj A BarcodeObj object.
 #' @param dist_thresh A single integer or vector of integers with the length of
-#' sample count, specifying the editing distance threshold of merging two
+#' sample count, specifying the editing distance threshold of defining two
 #' similar barcode sequences. If the input is a vector, each value in the vector
 #' relates to one sample according to the sample order in \code{BarcodeObj}
 #' object.
 #' @param depth_fold_threshold A single numeric or vector of numeric with the length of
-#' sample count, specifying the depth fold change threshold of merging two
-#' barcode.
+#' sample count, specifying the depth fold change threshold of removing the
+#' similar minority barcode. The majority barcode should have a list
+#' depth_fold_threshold times of reads of the similar minotiry one, in order to
+#' remove the minority similar barcode.
 #' @param dist_method A  character string, specifying the distance algorithm
 #' used for evaluating barcodes similarity. It can be "hamm" for Hamming
 #' distance or "leven" for Levenshtein distance.
-#' @param merge_method A character string specifying the algorithm used to
-#' perform the clustering merging of barcodes. Currently only "greedy" is
-#' available, in this case, the least abundant barcode is preferentially merged
-#' to the most abundant ones.
+#' @param cluster_method A character string specifying the algorithm used to
+#' perform the clustering of barcodes. Currently only "greedy" is
+#' available, in this case, the least abundant barcode is preferentially
+#' removed. 
 #' @param count_threshold An integer, read depth threshold to consider a barcode
 #' as a true barcode, when when a barcode with count higher than this threshold
-#' it will not be merged into more abundant barcode.
+#' it will not be removeg. Default is 1e7, which is a
+#' big number that makes not limitation of read depth threshold in reality.
 #' @param dist_costs A list, the cost of the events of distance algorithm, 
 #' applicable when Levenshtein distance is applied. The
 #' names of vector have to be \code{insert}, \code{delete} and \code{replace},
@@ -612,7 +612,7 @@ setGeneric("bc_cure_depth",
 #' # Remove barcodes with depth < 5
 #' (bc_cured <- bc_cure_depth(bc_obj, depth=5))
 #' 
-#' # Do the clustering, merge the less abundent barcodes to the more abundent
+#' # Do the clustering, remove the less abundent barcodes
 #' # one by hamming distance <= 1 
 #' bc_cure_cluster(bc_cured, dist_thresh = 1)
 #' 
@@ -629,8 +629,8 @@ setGeneric("bc_cure_cluster",
         dist_thresh=1,
         depth_fold_threshold=1,
         dist_method="hamm",
-        merge_method="greedy",
-        count_threshold=1000,
+        cluster_method="greedy",
+        count_threshold=1e7,
         dist_costs=list("replace"=1, "insert"=1, "delete"=1)
         ) { standardGeneric("bc_cure_cluster") })
 

@@ -10,8 +10,8 @@ bc_cure_cluster(
   dist_thresh = 1,
   depth_fold_threshold = 1,
   dist_method = "hamm",
-  merge_method = "greedy",
-  count_threshold = 1000,
+  cluster_method = "greedy",
+  count_threshold = 1e+07,
   dist_costs = list(replace = 1, insert = 1, delete = 1)
 )
 
@@ -20,8 +20,8 @@ bc_cure_cluster(
   dist_thresh = 1,
   depth_fold_threshold = 1,
   dist_method = "hamm",
-  merge_method = "greedy",
-  count_threshold = 1000,
+  cluster_method = "greedy",
+  count_threshold = 1e+07,
   dist_costs = list(replace = 1, insert = 1, delete = 1)
 )
 }
@@ -29,27 +29,30 @@ bc_cure_cluster(
 \item{barcodeObj}{A BarcodeObj object.}
 
 \item{dist_thresh}{A single integer or vector of integers with the length of
-sample count, specifying the editing distance threshold of merging two
+sample count, specifying the editing distance threshold of defining two
 similar barcode sequences. If the input is a vector, each value in the vector
 relates to one sample according to the sample order in \code{BarcodeObj}
 object.}
 
 \item{depth_fold_threshold}{A single numeric or vector of numeric with the length of
-sample count, specifying the depth fold change threshold of merging two
-barcode.}
+sample count, specifying the depth fold change threshold of removing the
+similar minority barcode. The majority barcode should have a list
+depth_fold_threshold times of reads of the similar minotiry one, in order to
+remove the minority similar barcode.}
 
 \item{dist_method}{A  character string, specifying the distance algorithm
 used for evaluating barcodes similarity. It can be "hamm" for Hamming
 distance or "leven" for Levenshtein distance.}
 
-\item{merge_method}{A character string specifying the algorithm used to
-perform the clustering merging of barcodes. Currently only "greedy" is
-available, in this case, the least abundant barcode is preferentially merged
-to the most abundant ones.}
+\item{cluster_method}{A character string specifying the algorithm used to
+perform the clustering of barcodes. Currently only "greedy" is
+available, in this case, the least abundant barcode is preferentially
+removed.}
 
 \item{count_threshold}{An integer, read depth threshold to consider a barcode
 as a true barcode, when when a barcode with count higher than this threshold
-it will not be merged into more abundant barcode.}
+it will not be removeg. Default is 1e7, which is a
+big number that makes not limitation of read depth threshold in reality.}
 
 \item{dist_costs}{A list, the cost of the events of distance algorithm, 
 applicable when Levenshtein distance is applied. The
@@ -62,10 +65,10 @@ A BarcodeObj object with cleanBc slot updated.
 }
 \description{
 \code{bc_cure_cluster} performs clustering of barcodes by editing distance,
-and merging the barcodes with similar sequence. This function is only
-applicable for the BarcodeObj object with a \code{cleanBc} slot. The barcode
-with smaller reads count will be deplicated, and the reads are not be
-counted.
+and remove the minority barcodes with similar sequence. This function is only
+applicable for the BarcodeObj object with a \code{cleanBc} slot. The barcodes
+with smaller reads count will be removed. And thier reads will add to the
+similar sequence.
 }
 \examples{
 data(bc_obj)
@@ -96,7 +99,7 @@ bc_obj <- bc_extract(list(test = d1), pattern, sample_name=c("test"),
 # Remove barcodes with depth < 5
 (bc_cured <- bc_cure_depth(bc_obj, depth=5))
 
-# Do the clustering, merge the less abundent barcodes to the more abundent
+# Do the clustering, remove the less abundent barcodes
 # one by hamming distance <= 1 
 bc_cure_cluster(bc_cured, dist_thresh = 1)
 

@@ -10,15 +10,17 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// parse_10x_bam
-DataFrame parse_10x_bam(std::string in_file_path, std::string regex_str);
-RcppExport SEXP _CellBarcode_parse_10x_bam(SEXP in_file_pathSEXP, SEXP regex_strSEXP) {
+// parse_10x_scSeq
+DataFrame parse_10x_scSeq(std::string in_file_path, std::string regex_str, std::string cell_barcode_tag, std::string umi_tag);
+RcppExport SEXP _CellBarcode_parse_10x_scSeq(SEXP in_file_pathSEXP, SEXP regex_strSEXP, SEXP cell_barcode_tagSEXP, SEXP umi_tagSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string >::type in_file_path(in_file_pathSEXP);
     Rcpp::traits::input_parameter< std::string >::type regex_str(regex_strSEXP);
-    rcpp_result_gen = Rcpp::wrap(parse_10x_bam(in_file_path, regex_str));
+    Rcpp::traits::input_parameter< std::string >::type cell_barcode_tag(cell_barcode_tagSEXP);
+    Rcpp::traits::input_parameter< std::string >::type umi_tag(umi_tagSEXP);
+    rcpp_result_gen = Rcpp::wrap(parse_10x_scSeq(in_file_path, regex_str, cell_barcode_tag, umi_tag));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -65,7 +67,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_CellBarcode_parse_10x_bam", (DL_FUNC) &_CellBarcode_parse_10x_bam, 2},
+    {"_CellBarcode_parse_10x_scSeq", (DL_FUNC) &_CellBarcode_parse_10x_scSeq, 4},
     {"_CellBarcode_seq_correct", (DL_FUNC) &_CellBarcode_seq_correct, 9},
     {"_CellBarcode_read_fastq_gz", (DL_FUNC) &_CellBarcode_read_fastq_gz, 1},
     {"_CellBarcode_read_fastq", (DL_FUNC) &_CellBarcode_read_fastq, 1},

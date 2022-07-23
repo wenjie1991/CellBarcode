@@ -23,7 +23,7 @@ seq_correct(
 
 \item{count_threshold}{An integer, barcode count threshold to consider a
 barcode as a true barcode, when when a barcode with count higher than this
-threshold it will not be merged into more abundant barcode.}
+threshold it will not be removed.}
 
 \item{dist_threshold}{A integer, distance threshold to consider two barcodes
 are related.}
@@ -45,8 +45,8 @@ applied.}
 \value{
 a list with two data.frame. seq_freq_tab: table with barcode and
 corrected ' sequence reads; link_tab: data table record for the clustering
-process with ' first column of barcode be merged and second column of barcode
-that merge to.
+process with ' first column of barcode be removed and second column of the majority 
+barcode barcode.
 }
 \description{
 This function will merge the UMIs by using the 

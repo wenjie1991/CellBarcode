@@ -17,15 +17,29 @@ struct Barcode {
     long count;
 };
 
+//' @param sam A string, define the un-mapped sequences 
+//' @param pattern A string, define the regular expression to match the barcode
+//' sequence. The barcode sequence should be in the first catch. Please see the
+//' \code{\link[CellBarcode]{bc_extract}} for detail.
+//' @param cell_barcode_tag A string, define the tag of 10X cell barcode field in sam
+//' file. The default is "CR".
+//' @param umi_tag A string, define the tag of UMI field in the sam file.
+//' @return 
+//' A data.frame with 4 columns:
+//' \enumerate{
+//'   \item \code{cell_barcode}: 10X cellular barcode.
+//'   \item \code{umi}: UMI sequence.
+//'   \item \code{barcode_seq}: lineage barcode.
+//'   \item \code{count}: reads count.
 // [[Rcpp::export]]
-DataFrame parse_10x_bam(std::string in_file_path, std::string regex_str) {
+DataFrame parse_10x_scSeq(
+    std::string in_file_path, 
+    std::string regex_str, 
+    std::string cell_barcode_tag = "CR",
+    std::string umi_tag = "UR"
+) {
 
     // INPUT
-    // std::string in_file_path = "./data/test_sub.sam";
-    // std::string in_file_path = "./data/test.sam";
-    // std::regex str_expr ("CGTCAACTAGAACACTCGAGATCAG(.*)TGTGGTATGATGTATCATCTGAGTA");
-    // std::regex str_expr (".*AGATCAG(.*)TGTGGTAT.*");
-    // boost::regex str_expr (".*AGATCAG(.*)TGTGGTAT.*");
     boost::regex str_expr (regex_str);
     
     FILE * infile = fopen(in_file_path.c_str(), "r");
@@ -56,9 +70,9 @@ DataFrame parse_10x_bam(std::string in_file_path, std::string regex_str) {
         // seq = parts[9];
         strcpy(seq, parts[9].c_str());
         for (int j=11; j<parts.size(); j++) {
-            if (parts[j].substr(0, 2) == "CR") {
+            if (parts[j].substr(0, 2) == cell_barcode_tag) {
                 cell_barcode = parts[j].substr(5);
-            } else if (parts[j].substr(0, 2) == "UR") {
+            } else if (parts[j].substr(0, 2) == umi_tag) {
                 umi_seq = parts[j].substr(5);
             }
         }
