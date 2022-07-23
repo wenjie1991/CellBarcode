@@ -1,0 +1,118 @@
+---
+title: "Get barcode from 10X Genomics scRNASeq data"
+author: 
+- name: Wenjie Sun
+package: CellBarcode
+output: 
+  BiocStyle::html_document:
+    toc_float: true
+  BiocStyle::pdf_document: default
+vignette: >
+  %\VignetteIndexEntry{UMI_Barcode}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}  
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  message = FALSE,
+  error = FALSE,
+  warn = FALSE,
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(data.table)
+library(ggplot2)
+library(CellBarcode)
+```
+
+# Preprocess of CellRanger output bam file
+
+**The the information in the bam file**. There are RNA sequence, Cell barcode and UMI in the bam file. We need to get the barcode in the RNA sequence together with the Cell barcode
+and UMI.
+
+**Where to find the bam file**. Usually, the bam file in in following location of the CellRanger output.
+
+`CellRanger Output fold/outs/possorted_genome_bam.bam`
+
+**Why preprocess**. We need get the sam file as input. And in some cases we can do some filtering to make the input file smaller, for reducing the running time.
+
+**Example 1 get the sam file**
+
+```{bash, eval=F}
+samtools view possorted_genome_bam.bam > scRNASeq_10X.sam
+```
+
+**Example 2 get the sam file only contain un mapped reads**
+
+In most of the time, the barcodes are designed not overlap with the genome sequence, so those barcodes sequences are not mapped to the reference genome. Add a simple parameter, we can get the un-mapped reads to significantly reduce the running time of the barcode extraction procedure. In the following example, the `scRNASeq_10X.sam` file only contains the un-mapped reads.
+
+```{bash, eval=F}
+samtools view -f 4 possorted_genome_bam.bam > scRNASeq_10X.sam
+```
+
+# Extract lineage barcode
+
+Extract lineage barcode with cell-barcode, UMI information.
+
+The parameters:
+
+- sam: The location of sam format file derived from CellRanger output bam file.
+
+- pattern: A regular expression, that matchs the lineage barcode. The first capture will be extract as lineage barcode. Please check next section to know more about how to define a pattern.
+
+- cell_barcode_tag: The cell barcode field tag in the sam file, the default is "CR" in the Cell Ranger output. You do not need to modify it, unless you know what you are doing.
+
+- umi_tag: The UMI field tag in the sam file, the default is "UR" in the Cell Ranger output. You do not need to modify it, unless you know what you are doing.
+
+```{r}
+sam_file <- system.file("extdata", "scRNASeq_10X.sam", package = "CellBarcode")
+
+d = bc_extract_10X_scSeq(
+   sam = sam_file,
+   pattern = "AGATCAG(.*)TGTGGTA",
+   cell_barcode_tag = "CR",
+   umi_tag = "UR"
+)
+head(d)
+```
+
+The output is a `data.frame`. It contains 3 columns:
+
+- cell_barcode: It is unique identificaiton for each cell. One `cell_barcode` corresponding to a cell.
+
+- umi: It is used to label the molecular before PCR, a unique UMI means one molecular.
+
+- barcode_seq: Depends on the experiment design, it usually labels the lineage.
+
+- count: The reads number of a specifc cell-barcode, UMI, lineage barcode combination.
+
+# More about the `pattern`
+
+The `pattern` is a regular expression, it tells the function where
+to find the barcode. In the pattern, we define the barcode backbone, and label the barcode sequence by bracket `()`.
+
+For example, the pattern `ATCG(.{21})TCGG` tells the barcode is surrounded by constant sequence of `ATCG`, and `TCGG`. Following are some examples to define the constant region and barcode sequence.
+
+**Example 1**
+
+`ATCG(.{21})`
+
+21 bases barcode after a constant sequence of "ATCG".
+
+**Example 2**
+
+`(.{15})TCGA`
+
+15 bases barcode before a constant sequence of "TCGA".
+
+**Example 3**
+
+`ATCG(.*)TCGA`
+
+A flexible length barcode between constant regions of "ATCG" and "TCGA".
+
+**Need more helps**: About more complex barcode pattern, please ask the package author, then the exmaple will be apear here.

@@ -57,5 +57,9 @@ bc_extract_10X_scSeq <- function(
     if(!file.exists(sam)) {
         stop("The input bam file is not exist.")
     }
-    parse_10x_scSeq(sam, pattern)
+    d = parse_10x_scSeq(sam, pattern)
+    setDT(d)
+    d = d[, .(count = sum(count)), by = .(cell_barcode, umi, barcode_seq)]
+
+    as.data.frame(d)
 }
