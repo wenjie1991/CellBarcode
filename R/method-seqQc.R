@@ -113,28 +113,39 @@ plot_base_quality_distribution <- function(base_quality_per_cycle) {
 
 #' @rdname bc_seq_qc
 #' @exportMethod bc_seq_qc
-setMethod("bc_seq_qc", c("ShortReadQ"), function(x) {
+setMethod("bc_seq_qc", c("ShortReadQ"), function(x, reads_sample_size = 1e5) {
     # output: top, distribution (nOccurrences, nReads), base_quality_per_cycle,
     # base_freq_per_cycle
-    bc_seqqc(x)
+
+    reads_sample_size <- min(reads_sample_size, length(x))
+
+    bc_seqqc(x[1:reads_sample_size])
 })
 
 
 #' @rdname bc_seq_qc
 #' @exportMethod bc_seq_qc
-setMethod("bc_seq_qc", c("DNAStringSet"), function(x) {
+setMethod("bc_seq_qc", c("DNAStringSet"), function(x, reads_sample_size = 1e5) {
     # output: top, distribution (nOccurrences, nReads), base_freq_per_cycle
-    bc_seqqc(x)
+
+    reads_sample_size <- min(reads_sample_size, length(x))
+
+    bc_seqqc(x[1:reads_sample_size])
 })
 
 #' @rdname bc_seq_qc
 #' @exportMethod bc_seq_qc
-setMethod("bc_seq_qc", c("data.frame"), function(x) {
+setMethod("bc_seq_qc", c("data.frame"), function(x, reads_sample_size = 1e5) {
     ## Input: data.frame(seq, freq)
     ## convert data.frame to DNAStringSet
     sequences <- x$seq
     freq <- x$freq
-    x <- Biostrings::DNAStringSet(rep(sequences, freq))
+
+    reads_sample_size <- min(sum(freq), reads_sample_size)
+
+    x <- Biostrings::DNAStringSet(
+        sample(sequences, reads_sample_size, replace = T, prob = freq / sum(freq))
+    )
 
     bc_seqqc(x)
 })
@@ -142,8 +153,13 @@ setMethod("bc_seq_qc", c("data.frame"), function(x) {
 
 #' @rdname bc_seq_qc
 #' @exportMethod bc_seq_qc
-setMethod("bc_seq_qc", c("integer"), function(x) {
-    x <- Biostrings::DNAStringSet(rep(names(x), x))
+setMethod("bc_seq_qc", c("integer"), function(x, reads_sample_size = 1e5) {
+
+    reads_sample_size <- min(sum(x), reads_sample_size)
+
+    x <- Biostrings::DNAStringSet(
+        sample(names(x), reads_sample_size, replace = T, prob =  x / sum(x))
+    )
 
     bc_seqqc(x)
 })
@@ -151,15 +167,25 @@ setMethod("bc_seq_qc", c("integer"), function(x) {
 
 #' @rdname bc_seq_qc
 #' @exportMethod bc_seq_qc
-setMethod("bc_seq_qc", c("character"), function(x, sample_name = basename(x)) {
-    # TODO: use qa to do fast check for the quality
+setMethod("bc_seq_qc", c("character"), function(
+        x, 
+        sample_name = basename(x), 
+        reads_sample_size = 1e5
+        ) {
     ## generate reads quality information
     # TODO: Create a new function to check the quality of fastq file.
+
     if (length(x) == 1) {
-        bc_seq_qc(ShortRead::readFastq(x))
+        fs <- ShortRead::FastqSampler(x, reads_sample_size)
+        fq <- ShortRead::yield(fs)
+        close(fs)
+        bc_seq_qc(fq)
     } else {
         qc_list <- lapply(x, function(f) {
-            bc_seq_qc(ShortRead::readFastq(f))
+            fs <- ShortRead::FastqSampler(f, reads_sample_size)
+            fq <- ShortRead::yield(fs)
+            close(fs)
+            bc_seq_qc(fq)
         })
         names(qc_list) <- sample_name
         output <- BarcodeQcSet(qc_list=qc_list)

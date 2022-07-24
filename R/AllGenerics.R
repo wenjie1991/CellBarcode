@@ -885,6 +885,9 @@ setGeneric("bc_plot_pair", function(
 #' object, data.frame or named integer vector.
 #' @param sample_name A character vector with the length of sample number, used
 #' to set the sample name.
+#' @param reads_sample_size A integer value define the sample size of the
+#' sequences for quality control analysis. If the there are less sequences comparing
+#' to this value, all the sequences will be used. The default is 1e5.
 #' @return A barcodeQc or a barcodeQcSet class. 
 #' The barcodeQc is a list with four slots, 
 #' \itemize{
@@ -931,7 +934,7 @@ setGeneric("bc_plot_pair", function(
 #' ###
 #' @rdname bc_seq_qc
 #' @export
-setGeneric("bc_seq_qc", function(x, sample_name=NULL) {
+setGeneric("bc_seq_qc", function(x, sample_name=NULL, reads_sample_size = 1e5) {
     standardGeneric("bc_seq_qc") })
 
 #' @rdname bc_seq_qc

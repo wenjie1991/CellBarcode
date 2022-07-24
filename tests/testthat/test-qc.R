@@ -4,7 +4,7 @@ fq_file <- system.file("extdata", "simple.fq", package="CellBarcode")
 sr <- readFastq(fq_file)
 ds <- sr@sread
 iv <- tables(ds, n = Inf)$top
-df <- data.frame(seq = names(iv), freq = as.character(iv))
+df <- data.frame(seq = names(iv), freq = iv)
 
 l_ds <- list(sample1 = ds, sample2 = ds)
 l_sr <- list(sample1 = sr, sample2 = sr)
