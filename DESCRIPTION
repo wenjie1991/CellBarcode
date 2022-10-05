@@ -32,9 +32,10 @@ Imports:
   egg,
   Ckmeans.1d.dp,
   utils, 
-  S4Vectors
+  S4Vectors,
+  seqinr
 LinkingTo: Rcpp
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.1
 Suggests: BiocStyle, testthat (>= 3.0.0), knitr, rmarkdown
 biocViews: Preprocessing, QualityControl, Sequencing, CRISPR
 Config/testthat/edition: 3
