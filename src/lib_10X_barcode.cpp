@@ -31,6 +31,7 @@ struct Barcode {
 //'   \item \code{umi}: UMI sequence.
 //'   \item \code{barcode_seq}: lineage barcode.
 //'   \item \code{count}: reads count.
+//' }
 // [[Rcpp::export]]
 DataFrame parse_10x_scSeq(
     std::string in_file_path, 

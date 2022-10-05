@@ -19,7 +19,13 @@ file. The default is "CR".}
 \item{umi_tag}{A string, define the tag of UMI field in the sam file.}
 }
 \value{
-
+A data.frame with 4 columns:
+\enumerate{
+  \item \code{cell_barcode}: 10X cellular barcode.
+  \item \code{umi}: UMI sequence.
+  \item \code{barcode_seq}: lineage barcode.
+  \item \code{count}: reads count.
+  }
 }
 \description{
 \code{bc_extract_10XscSeq} can extract cell barcode, UMI and lineage barcode
