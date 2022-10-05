@@ -3,10 +3,10 @@
 #include <vector>
 using namespace Rcpp;
 
-//' Levenshtein distance
-//'
-//' This function return Levenshtein distance between two string.
-//' source: https://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance#C++
+// Levenshtein distance
+//
+// This function return Levenshtein distance between two string.
+// source: https://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance#C++
 int generalized_levenshtein_distance(
         const std::string source, 
         const std::string target,
@@ -44,13 +44,13 @@ int generalized_levenshtein_distance(
     return lev_dist[min_size];
 }
 
-//' Hamming Distance
-//' 
-//' This function return hamming distance between two string.
-//' If the two string do not have the same length, it will
-//' return 999.
-//'
-//' @param s1, s2 two string
+// Hamming Distance
+// 
+// This function return hamming distance between two string.
+// If the two string do not have the same length, it will
+// return 999.
+//
+// @param s1, s2 two string
 int hamm_dist(std::string s1, std::string s2) {
     if (s1.length() != s2.length()) {
         return 999;

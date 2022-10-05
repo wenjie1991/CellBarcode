@@ -5,10 +5,10 @@
 #include <zlib.h>
 using namespace Rcpp;
 
-//' Read the Fastq file and output frequency table
-//'
-//' This function read in fastq.gz file and output the sequences frequency
-//' data.frame with two columns, freq and seq.
+// Read the Fastq file and output frequency table
+//
+// This function read in fastq.gz file and output the sequences frequency
+// data.frame with two columns, freq and seq.
 // read the fastq.gz
 // write the fastq.gz
 

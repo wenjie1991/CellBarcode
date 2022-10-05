@@ -15,24 +15,10 @@
 #'   \item \code{umi}: UMI sequence.
 #'   \item \code{barcode_seq}: lineage barcode.
 #'   \item \code{count}: reads count.
+#' }
 parse_10x_scSeq <- function(in_file_path, regex_str, cell_barcode_tag = "CR", umi_tag = "UR") {
     .Call('_CellBarcode_parse_10x_scSeq', PACKAGE = 'CellBarcode', in_file_path, regex_str, cell_barcode_tag, umi_tag)
 }
-
-#' Levenshtein distance
-#'
-#' This function return Levenshtein distance between two string.
-#' source: https://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance#C++
-NULL
-
-#' Hamming Distance
-#' 
-#' This function return hamming distance between two string.
-#' If the two string do not have the same length, it will
-#' return 999.
-#'
-#' @param s1, s2 two string
-NULL
 
 #' Sequence clustering
 #' 
@@ -66,12 +52,6 @@ NULL
 seq_correct <- function(seq, count, count_threshold, dist_threshold, depth_fold_threshold = 1, dist_method = 1L, insert_cost = 1L, delete_cost = 1L, replace_cost = 1L) {
     .Call('_CellBarcode_seq_correct', PACKAGE = 'CellBarcode', seq, count, count_threshold, dist_threshold, depth_fold_threshold, dist_method, insert_cost, delete_cost, replace_cost)
 }
-
-#' Read the Fastq file and output frequency table
-#'
-#' This function read in fastq.gz file and output the sequences frequency
-#' data.frame with two columns, freq and seq.
-NULL
 
 read_fastq_gz <- function(in_file_path) {
     .Call('_CellBarcode_read_fastq_gz', PACKAGE = 'CellBarcode', in_file_path)
