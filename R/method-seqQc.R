@@ -463,6 +463,18 @@ setMethod("show", c("BarcodeQcSet"), function(object) {
 #' qc_noFilter <- bc_seq_qc(fq_files) 
 #' qc_noFilter[1:3]
 #'
+#' @rdname subset
+#' @exportMethod [
+setMethod("subset", c("BarcodeQcSet"), function(x, i, drop=TRUE) {
+    if (length(i) == 1) {
+        x@qc_list[[i]]
+    } else {
+        BarcodeQcSet(qc_list=x@qc_list[i])
+    }
+})
+
+
+#' @rdname subset
 #' @exportMethod [
 setMethod("[", c("BarcodeQcSet"), function(x, i, drop=TRUE) {
     if (length(i) == 1) {

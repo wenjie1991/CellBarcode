@@ -27,7 +27,7 @@
 #'   \item \code{umi}: UMI sequence.
 #'   \item \code{barcode_seq}: lineage barcode.
 #'   \item \code{count}: reads count.
-#'
+#'   }
 #' @examples
 #' ## NOT run
 #' # In the case that when the barcode sequence is not mapped to 
