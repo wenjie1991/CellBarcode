@@ -261,6 +261,12 @@ setMethod("bc_extract", "character", function(
         stop("metadata should be a data.frame.")
     }
 
+    ## check input file
+    if (!all(file.exists(x))) {
+        stop(paste0("Input file(s) do not exist."))
+    }
+
+
     # if more than one fastq file as input
     if (length(x) > 1) {
 
@@ -271,10 +277,6 @@ setMethod("bc_extract", "character", function(
         maxLDist = rep(maxLDist, length.out = length(x))
 
         messyBc <- lapply(seq_along(x), function(i) {
-            ## check input file
-            if (!dir.exists(x[i])) {
-                stop(paste0("The input file ", x[i], " does not exist."))
-            }
             if (grepl(".fq$", x[i]) | grepl(".fastq$", x[i])) {
                 barcode_df = read_fastq(x[i])
             } else if (grepl(".fq.gz$", x[i]) | grepl(".fastq.gz$", x[i])) {
@@ -301,10 +303,6 @@ setMethod("bc_extract", "character", function(
         output <- BarcodeObj(metadata=metadata, messyBc=messyBc)
         return(output)
     } else {
-        ## check input file
-        if (!dir.exists(x)) {
-            stop(paste0("The input file ", x, " does not exist."))
-        }
         # if one fastq file as input
         if (grepl(".fq$", x) | grepl(".fastq$", x)) {
             barcode_df = read_fastq(x)
