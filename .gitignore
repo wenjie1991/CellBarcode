@@ -38,3 +38,11 @@ inst/doc
 /doc/
 /Meta/
 docs
+_pkgdown.yml
+compile_commands.json.bk
+inst/extdata/Meghan_batch1_test/L345R11.R1.fastq.gz
+inst/extdata/Meghan_batch1_test/L345R12.R1.fastq.gz
+*.idx
+*.o
+*.so
+src/compile_commands.json

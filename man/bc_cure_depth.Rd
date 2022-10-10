@@ -21,8 +21,7 @@ samples. See \code{\link[CellBarcode]{bc_auto_cutoff}} for details.}
 
 \item{isUpdate}{A logical value. If TRUE, the \code{cleanBc} slot in
 \code{BarcodeObj} will be used preferentially, otherwise the \code{messyBc}
-slot will be used. If no cleanBc is available, \code{messyBc} will be used
-instead.}
+slot will be used. If no cleanBc is available, \code{messyBc} will be used.}
 }
 \value{
 A \code{BarcodeObj} object with \code{cleanBc} slot updated or

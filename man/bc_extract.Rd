@@ -87,19 +87,20 @@ bc_extract(
 \item{x}{A single or a list of fastq file, ShortReadQ, DNAStringSet,
 data.frame, or named integer.}
 
-\item{pattern}{A string, specifying the regular expression
-with capture. It matchs the barcode (and UMI) with capture pattern.}
+\item{pattern}{A string or a string vector with the same number of files,
+specifying the regular expression with capture. It matchs the barcode (and
+UMI) with capture pattern.}
 
 \item{sample_name}{A string vector, applicable when \code{x} is a list or
 fastq file vector. This argument specifies the sample names. If not provided,
 the function will look for sample name in the rownames of metadata,
 the fastqfile name or the \code{list} names.}
 
-\item{metadata}{A \code{data.frame} with sample names as the row names, and
+\item{metadata}{A \code{data.frame} with sample names as the row names, with 
 each metadata record by column, specifying the sample characteristics.}
 
-\item{maxLDist}{A integer. The mismatch threshold for barcode matching, when
-maxLDist is 0, the \code{\link[stringr]{str_match}}  is
+\item{maxLDist}{An integer. The minimun mismatch threshold for barcode
+matching, when maxLDist is 0, the \code{\link[stringr]{str_match}}  is
 invoked for barcode matching which is faster, otherwise
 \code{\link[utils]{aregexec}} is invoked and the \code{costs} parameters can
 be used to specifying the weight of the distance calculation.}
@@ -120,21 +121,13 @@ element name have to be \code{sub} (substitution), \code{ins} (insertion) and
 This function returns a BarcodeObj object if the input is a \code{list} or a
 \code{vector} of Fastq files, otherwise it returns a \code{data.frame.} In
 the later case
-the \code{data.frame} has 5 columns:
+the \code{data.frame} has columns:
 \enumerate{
-  \item \code{reads_seq}: full sequence.
-  \item \code{match_seq}: part of the full sequence matched by pattern.
   \item \code{umi_seq} (optional): UMI sequence, applicable when there is UMI
     in `pattern` and `pattern_type` argument.
   \item \code{barcode_seq}: barcode sequence.
   \item \code{count}: reads number.
 }
-
-The \code{match_seq} is part of \code{reads_seq}; The \code{umi_seq} and
-\code{barcode_seq} are part of \code{match_seq}. The \code{reads_seq} is the
-full sequence, and is unique id for each record (row), On the contrast,
-\code{match_seq}, \code{umi_seq} or \code{barcode_seq} may duplicated between
-rows.
 }
 \description{
 \code{bc_extract} identifies the barcodes (and UMI) from the sequences using

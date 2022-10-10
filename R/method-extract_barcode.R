@@ -105,20 +105,37 @@ setMethod("bc_extract", "data.frame", function(
 
     # captured UMI
     if ("UMI" %in% names(pattern_type)) {
-        d <- data.table(
-            reads_seq = reads_seq, 
-            match_seq = seq_v, 
-            umi_seq = umi_v, 
-            barcode_seq = barcode_v, 
-            count = reads_freq
-        )
+        # TODO: save space option
+        if (F) {
+            d <- data.table(
+                reads_seq = reads_seq, 
+                match_seq = seq_v, 
+                umi_seq = umi_v, 
+                barcode_seq = barcode_v, 
+                count = reads_freq
+            )
+        } else {
+            d <- data.table(
+                umi_seq = umi_v, 
+                barcode_seq = barcode_v, 
+                count = reads_freq
+            )[, .(count = sum(count)), by = .(umi_seq, barcode_seq)]
+        }
     } else {
-        d <- data.table(
-            reads_seq = reads_seq, 
-            match_seq = seq_v, 
-            barcode_seq = barcode_v, 
-            count = reads_freq
-        ) 
+        # TODO: save space option
+        if (F) {
+            d <- data.table(
+                reads_seq = reads_seq, 
+                match_seq = seq_v, 
+                barcode_seq = barcode_v, 
+                count = reads_freq
+            ) 
+        } else {
+            d <- data.table(
+                barcode_seq = barcode_v, 
+                count = reads_freq
+            )[, .(count = sum(count)), by = barcode_seq]
+        }
     }
 
     # order the data by counts
@@ -250,12 +267,22 @@ setMethod("bc_extract", "character", function(
         input_names <- basename(x)
         sample_name <- bc_process_sample_name(sample_name, metadata, input_names)
 
+        pattern = rep(pattern, length.out = length(x))
+        maxLDist = rep(maxLDist, length.out = length(x))
+
         messyBc <- lapply(seq_along(x), function(i) {
+            if (grepl(".fq$", x[i]) | grepl(".fastq$", x[i])) {
+                barcode_df = read_fastq(x[i])
+            } else if (grepl(".fq.gz$", x[i]) | grepl(".fastq.gz$", x[i])) {
+                barcode_df = read_fastq_gz(x[i])
+            } else {
+                stop("The input is not Fastq file. Please check the input.")
+            }
             bc_extract(
-                ShortRead::readFastq(x[i]), 
+                barcode_df,
                 sample_name = sample_name[i], 
-                pattern = pattern, 
-                maxLDist = maxLDist, 
+                pattern = pattern[i], 
+                maxLDist = maxLDist[i], 
                 pattern_type = pattern_type, 
                 costs = costs, 
                 ordered = ordered)
@@ -271,8 +298,15 @@ setMethod("bc_extract", "character", function(
         return(output)
     } else {
         # if one fastq file as input
+        if (grepl(".fq$", x) | grepl(".fastq$", x)) {
+            barcode_df = read_fastq(x)
+        } else if (grepl(".fq.gz$", x) | grepl(".fastq.gz", x)) {
+            barcode_df = read_fastq_gz(x)
+        } else {
+            stop("The input is not Fastq file. Please check the input.")
+        }
         bc_extract(
-            ShortRead::readFastq(x), 
+            barcode_df,
             sample_name = sample_name[i], 
             pattern = pattern,
             maxLDist = maxLDist,
@@ -298,12 +332,15 @@ setMethod("bc_extract", "list", function(
     input_names <- ifnullelse(names(x), seq_along(x))
     sample_name <- bc_process_sample_name(sample_name, metadata, input_names)
 
+    pattern = rep(pattern, length.out = length(x))
+    maxLDist = rep(maxLDist, length.out = length(x))
+
     lapply(seq_along(x), function(i) {
         bc_extract(
             x[[i]],
-            pattern = pattern,
+            pattern = pattern[i],
             sample_name = sample_name[i],
-            maxLDist = maxLDist,
+            maxLDist = maxLDist[i],
             pattern_type = pattern_type,
             costs = costs,
             ordered = ordered)

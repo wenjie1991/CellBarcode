@@ -19,16 +19,12 @@ to keep the sample information.}
 }
 \value{
 If a \code{list} is requested, in the \code{list} each element is a
-\code{data.frame} corresponding to the successive samples. Each
-\code{data.frame} has 5 columns: 1. \code{reads_seq}: full read sequence
-before parsing. 2. \code{match_seq}: the sequence matched by pattern given to
-\code{bc_extract}. 3. \code{umi_seq} (optional): UMI sequence. 4.
-\code{barcode_seq}: barcode sequence. 5. \code{count}: how many reads a full
-sequence has. In this table, \code{barcode_seq} value can be duplicated, as
-two different full read sequences can contain the same barcode sequence, due
-to the diversity of the UMI or mutations in the constant region.
+ \code{data.frame} corresponding to the successive samples. Each
+ \code{data.frame} has at most 3 columns: 1. \code{umi_seq} (optional): UMI
+sequence. 2. \code{barcode_seq}: barcode sequence. 3. \code{count}: how many
+reads a full sequence has. 
 
-#' If a \code{data.frame} is requested, the \code{data.frame} in the list
+If a \code{data.frame} is requested, the \code{data.frame} in the list
 described above are combined into one \code{data.frame} by row, with an extra
 column named \code{sample_name} for identifying sample.
 }

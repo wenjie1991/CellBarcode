@@ -3,47 +3,58 @@
 \name{bc_cure_cluster}
 \alias{bc_cure_cluster}
 \alias{bc_cure_cluster,BarcodeObj-method}
-\title{Merges barcodes by editing distance}
+\title{Clean barcodes by editing distance}
 \usage{
 bc_cure_cluster(
   barcodeObj,
-  dist_thresh = 1,
+  dist_threshold = 1,
+  depth_fold_threshold = 1,
   dist_method = "hamm",
-  merge_method = "greedy",
-  count_threshold = 1000,
+  cluster_method = "greedy",
+  count_threshold = 1e+09,
   dist_costs = list(replace = 1, insert = 1, delete = 1)
 )
 
 \S4method{bc_cure_cluster}{BarcodeObj}(
   barcodeObj,
-  dist_thresh = 1,
+  dist_threshold = 1,
+  depth_fold_threshold = 1,
   dist_method = "hamm",
-  merge_method = "greedy",
-  count_threshold = 1000,
+  cluster_method = "greedy",
+  count_threshold = 1e+07,
   dist_costs = list(replace = 1, insert = 1, delete = 1)
 )
 }
 \arguments{
 \item{barcodeObj}{A BarcodeObj object.}
 
-\item{dist_thresh}{A single integer or vector of integers with the length of
-sample count, specifying the editing distance threshold of merging two
+\item{dist_threshold}{A single integer, or vector of integers with the length of
+sample number, specifying the editing distance threshold for defining two
 similar barcode sequences. If the input is a vector, each value in the vector
-relates to one sample according to the sample order in \code{BarcodeObj}
-object.}
+relates to one sample according to its order in \code{BarcodeObj} object.
+The sequences with editing distance equal or less than the threshold will be
+considered similar barcodes.}
 
-\item{dist_method}{A  character string, specifying the distance algorithm
+\item{depth_fold_threshold}{A single numeric or vector of numeric with the
+length of sample number, specifying the depth fold change threshold of
+removing the similar minority barcode. The majority barcode should have at
+least \code{depth_fold_threshold} times of reads of the similar minotiry
+one, in order to remove the minority similar barcode. (TODO: more preciouse
+description)}
+
+\item{dist_method}{A  character string, specifying the editing distance 
 used for evaluating barcodes similarity. It can be "hamm" for Hamming
 distance or "leven" for Levenshtein distance.}
 
-\item{merge_method}{A character string specifying the algorithm used to
-perform the clustering merging of barcodes. Currently only "greedy" is
-available, in this case, the least abundant barcode is preferentially merged
-to the most abundant ones.}
+\item{cluster_method}{A character string specifying the algorithm used to
+perform the clustering of barcodes. Currently only "greedy" is
+available, in this case, The most and the least abundant barcode will
+be used for comparing, the least abundant barcode is preferentially removed.}
 
 \item{count_threshold}{An integer, read depth threshold to consider a barcode
-as a true barcode, when when a barcode with count higher than this threshold
-it will not be merged into more abundant barcode.}
+as a true barcode. If a barcode with count higher than this threshold
+it will not be removeg, even the barcode is similar to more abundant one.
+Default is 1e9.}
 
 \item{dist_costs}{A list, the cost of the events of distance algorithm, 
 applicable when Levenshtein distance is applied. The
@@ -56,8 +67,9 @@ A BarcodeObj object with cleanBc slot updated.
 }
 \description{
 \code{bc_cure_cluster} performs clustering of barcodes by editing distance,
-and merging the barcodes with similar sequence. This function is only
-applicable for the BarcodeObj object with a \code{cleanBc} slot
+and remove the minority barcodes with similar sequence. This function is only
+applicable for the BarcodeObj object with a \code{cleanBc} slot. The barcodes
+with smaller reads count will be removed.
 }
 \examples{
 data(bc_obj)
@@ -88,12 +100,12 @@ bc_obj <- bc_extract(list(test = d1), pattern, sample_name=c("test"),
 # Remove barcodes with depth < 5
 (bc_cured <- bc_cure_depth(bc_obj, depth=5))
 
-# Do the clustering, merge the less abundent barcodes to the more abundent
+# Do the clustering, remove the less abundent barcodes
 # one by hamming distance <= 1 
-bc_cure_cluster(bc_cured, dist_thresh = 1)
+bc_cure_cluster(bc_cured, dist_threshold = 1)
 
 # Levenshtein distance <= 1
-bc_cure_cluster(bc_cured, dist_thresh = 2, dist_method = "leven",
+bc_cure_cluster(bc_cured, dist_threshold = 2, dist_method = "leven",
     dist_costs = list("insert" = 2, "replace" = 1, "delete" = 2))
 
 ###

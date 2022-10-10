@@ -100,23 +100,25 @@ setMethod("bc_cure_depth", c("BarcodeObj"), function(
 #' @exportMethod bc_cure_cluster
 setMethod("bc_cure_cluster", c("BarcodeObj"), function(
     barcodeObj
-    , dist_thresh = 1
+    , dist_threshold = 1
+    , depth_fold_threshold = 1
     , dist_method = "hamm"
-    , merge_method = "greedy"
-    , count_threshold = 1000
+    , cluster_method = "greedy"
+    , count_threshold = 1e7
     , dist_costs = list("replace" = 1, "insert" = 1, "delete" = 1)
     ) {
     # TODO: Add more clustering methods
 
     parameter_df <- data.frame(
         sample_names = rownames(barcodeObj@metadata)
-        , distance =dist_thresh 
+        , distance =dist_threshold
+        , depth_fold_threshold = depth_fold_threshold
         , count_threshold =count_threshold 
     )
 
     cleanBc <- barcodeObj@cleanBc
 
-    if (dist_method == "hamm" & merge_method == "greedy") {
+    if (dist_method == "hamm" & cluster_method == "greedy") {
         correct_out <- lapply(seq_along(cleanBc),
             function(i) {
                 d <- cleanBc[[i]]
@@ -129,6 +131,7 @@ setMethod("bc_cure_cluster", c("BarcodeObj"), function(
                     count_v, 
                     parameter_df[i, "count_threshold"], 
                     parameter_df[i, "distance"],
+                    parameter_df[i, "depth_fold_threshold"], 
                     1
                 )
             }
@@ -152,7 +155,7 @@ setMethod("bc_cure_cluster", c("BarcodeObj"), function(
         names(cleanBc) <- rownames(barcodeObj@metadata)
         # TODO: The cleanProc data structure
         #     names(cleanProc) <- rownames(barcodeObj@metadata)
-    } else if (dist_method == "leven" & merge_method == "greedy") {
+    } else if (dist_method == "leven" & cluster_method == "greedy") {
 
         insert_costs = ifelse(is.null(dist_costs$insert), 1, dist_costs$insert)
         delete_costs = ifelse(is.null(dist_costs$delete), 1, dist_costs$delete)
@@ -170,6 +173,7 @@ setMethod("bc_cure_cluster", c("BarcodeObj"), function(
                     count_v, 
                     parameter_df[i, "count_threshold"], 
                     parameter_df[i, "distance"],
+                    parameter_df[i, "depth_fold_threshold"], 
                     2,
                     insert_costs,
                     delete_costs,
@@ -188,7 +192,7 @@ setMethod("bc_cure_cluster", c("BarcodeObj"), function(
 
         names(cleanBc) <- rownames(barcodeObj@metadata)
     } else {
-        stop("dist_method or merge_method is not valid.")
+        stop("dist_method or cluster_method is not valid.")
     }
 
     barcodeObj@cleanBc <- cleanBc
@@ -200,7 +204,7 @@ setMethod("bc_cure_cluster", c("BarcodeObj"), function(
 #' @exportMethod bc_cure_umi
 setMethod("bc_cure_umi", c("BarcodeObj"), function(
     barcodeObj
-    , depth = 2
+    , depth = 1
     , doFish = FALSE
     , isUniqueUMI = FALSE
     ) {

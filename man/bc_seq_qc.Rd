@@ -19,19 +19,19 @@
 \alias{bc_plot_seqQc,BarcodeQcSet-method}
 \title{Evaluates sequences quality}
 \usage{
-bc_seq_qc(x, sample_name = NULL)
+bc_seq_qc(x, sample_name = NULL, reads_sample_size = 1e+05)
 
 bc_plot_seqQc(x)
 
-\S4method{bc_seq_qc}{ShortReadQ}(x)
+\S4method{bc_seq_qc}{ShortReadQ}(x, reads_sample_size = 1e+05)
 
-\S4method{bc_seq_qc}{DNAStringSet}(x)
+\S4method{bc_seq_qc}{DNAStringSet}(x, reads_sample_size = 1e+05)
 
-\S4method{bc_seq_qc}{data.frame}(x)
+\S4method{bc_seq_qc}{data.frame}(x, reads_sample_size = 1e+05)
 
-\S4method{bc_seq_qc}{integer}(x)
+\S4method{bc_seq_qc}{integer}(x, reads_sample_size = 1e+05)
 
-\S4method{bc_seq_qc}{character}(x, sample_name = basename(x))
+\S4method{bc_seq_qc}{character}(x, sample_name = basename(x), reads_sample_size = 1e+05)
 
 \S4method{bc_seq_qc}{list}(x, sample_name = names(x))
 
@@ -45,6 +45,10 @@ object, data.frame or named integer vector.}
 
 \item{sample_name}{A character vector with the length of sample number, used
 to set the sample name.}
+
+\item{reads_sample_size}{A integer value define the sample size of the
+sequences for quality control analysis. If the there are less sequences comparing
+to this value, all the sequences will be used. The default is 1e5.}
 }
 \value{
 A barcodeQc or a barcodeQcSet class. 

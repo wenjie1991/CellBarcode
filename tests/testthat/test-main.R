@@ -30,15 +30,21 @@ test_that("Senerio1: Backbone no error, Depth cutoff >= 6", {
 test_that("Senerio1.1: Backbone no error, Depth cutoff >= 6, hamming dist 1", {
   pattern <- "TCGATCGATCGA([ACTG]+)ATCGATCGATC"
   bc_obj <- bc_extract(list(test = d1), pattern, sample_name=c("test"))
-  bc_obj <- bc_cure_cluster(bc_cure_depth(bc_obj, depth=6), dist_thresh = 1)
-  expect_equal(bc_2df(bc_obj), data.frame(sample_name = "test", barcode_seq = c("AGAG", "AGAAG"), count = c(104 + 50, 14 + 6), stringsAsFactors=FALSE))
+  bc_obj <- bc_cure_cluster(bc_cure_depth(bc_obj, depth=6), dist_threshold = 1)
+  ## Merge the minority reads
+  # expect_equal(bc_2df(bc_obj), data.frame(sample_name = "test", barcode_seq = c("AGAG", "AGAAG"), count = c(104 + 50, 14 + 6), stringsAsFactors=FALSE))
+  ## Do not merge the monority reads
+  expect_equal(bc_2df(bc_obj), data.frame(sample_name = "test", barcode_seq = c("AGAG", "AGAAG"), count = c(104, 14), stringsAsFactors=FALSE))
 })
 
 test_that("Senerio1.2: Backbone no error, Depth cutoff >= 6, levenshtein dist 1", {
   pattern <- "TCGATCGATCGA([ACTG]+)ATCGATCGATC"
   bc_obj <- bc_extract(list(test = d1), pattern, sample_name=c("test"))
-  bc_obj <- bc_cure_cluster(bc_cure_depth(bc_obj, depth=6), dist_thresh = 1, dist_method = "leven")
-  expect_equal(bc_2df(bc_obj), data.frame(sample_name = "test", barcode_seq = c("AGAG"), count = c(104 + 50 + 14 + 6), stringsAsFactors=FALSE))
+  bc_obj <- bc_cure_cluster(bc_cure_depth(bc_obj, depth=6), dist_threshold = 1, dist_method = "leven")
+  ## Merge the minority reads
+  # expect_equal(bc_2df(bc_obj), data.frame(sample_name = "test", barcode_seq = c("AGAG"), count = c(104 + 50 + 14 + 6), stringsAsFactors=FALSE))
+  ## Do not merge the monority reads
+  expect_equal(bc_2df(bc_obj), data.frame(sample_name = "test", barcode_seq = c("AGAG"), count = c(104), stringsAsFactors=FALSE))
 })
 
 

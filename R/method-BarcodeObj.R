@@ -148,7 +148,7 @@ setMethod("bc_merge", c("BarcodeObj", "BarcodeObj"), function(barcodeObj_x, barc
     # merge messyBc
     # if the messyBc do not have the same header, do not merge them
     flag_remove_umi <- FALSE
-    if (!all(names(barcodeObj_x@messyBc) == names(barcodeObj_y@messyBc))) {
+    if (("umi_seq" %in% (names(barcodeObj_x@messyBc)) != ("umi_seq" %in% names(barcodeObj_y@messyBc)))) {
         message("------------\n+.BarcodeObj: You are merge data with UMI to data without UMI. The UMI info are discarded.\n------------")
         flag_remove_umi <- TRUE
     }

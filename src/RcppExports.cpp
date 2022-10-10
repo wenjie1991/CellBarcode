@@ -10,9 +10,23 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// parse_10x_scSeq
+DataFrame parse_10x_scSeq(std::string in_file_path, std::string regex_str, std::string cell_barcode_tag, std::string umi_tag);
+RcppExport SEXP _CellBarcode_parse_10x_scSeq(SEXP in_file_pathSEXP, SEXP regex_strSEXP, SEXP cell_barcode_tagSEXP, SEXP umi_tagSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type in_file_path(in_file_pathSEXP);
+    Rcpp::traits::input_parameter< std::string >::type regex_str(regex_strSEXP);
+    Rcpp::traits::input_parameter< std::string >::type cell_barcode_tag(cell_barcode_tagSEXP);
+    Rcpp::traits::input_parameter< std::string >::type umi_tag(umi_tagSEXP);
+    rcpp_result_gen = Rcpp::wrap(parse_10x_scSeq(in_file_path, regex_str, cell_barcode_tag, umi_tag));
+    return rcpp_result_gen;
+END_RCPP
+}
 // seq_correct
-List seq_correct(std::vector<std::string> seq, IntegerVector count, int count_threshold, int dist_threshold, int dist_method, int insert_cost, int delete_cost, int replace_cost);
-RcppExport SEXP _CellBarcode_seq_correct(SEXP seqSEXP, SEXP countSEXP, SEXP count_thresholdSEXP, SEXP dist_thresholdSEXP, SEXP dist_methodSEXP, SEXP insert_costSEXP, SEXP delete_costSEXP, SEXP replace_costSEXP) {
+List seq_correct(std::vector<std::string> seq, IntegerVector count, int count_threshold, int dist_threshold, double depth_fold_threshold, int dist_method, int insert_cost, int delete_cost, int replace_cost);
+RcppExport SEXP _CellBarcode_seq_correct(SEXP seqSEXP, SEXP countSEXP, SEXP count_thresholdSEXP, SEXP dist_thresholdSEXP, SEXP depth_fold_thresholdSEXP, SEXP dist_methodSEXP, SEXP insert_costSEXP, SEXP delete_costSEXP, SEXP replace_costSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -20,17 +34,43 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< IntegerVector >::type count(countSEXP);
     Rcpp::traits::input_parameter< int >::type count_threshold(count_thresholdSEXP);
     Rcpp::traits::input_parameter< int >::type dist_threshold(dist_thresholdSEXP);
+    Rcpp::traits::input_parameter< double >::type depth_fold_threshold(depth_fold_thresholdSEXP);
     Rcpp::traits::input_parameter< int >::type dist_method(dist_methodSEXP);
     Rcpp::traits::input_parameter< int >::type insert_cost(insert_costSEXP);
     Rcpp::traits::input_parameter< int >::type delete_cost(delete_costSEXP);
     Rcpp::traits::input_parameter< int >::type replace_cost(replace_costSEXP);
-    rcpp_result_gen = Rcpp::wrap(seq_correct(seq, count, count_threshold, dist_threshold, dist_method, insert_cost, delete_cost, replace_cost));
+    rcpp_result_gen = Rcpp::wrap(seq_correct(seq, count, count_threshold, dist_threshold, depth_fold_threshold, dist_method, insert_cost, delete_cost, replace_cost));
+    return rcpp_result_gen;
+END_RCPP
+}
+// read_fastq_gz
+DataFrame read_fastq_gz(std::string in_file_path);
+RcppExport SEXP _CellBarcode_read_fastq_gz(SEXP in_file_pathSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type in_file_path(in_file_pathSEXP);
+    rcpp_result_gen = Rcpp::wrap(read_fastq_gz(in_file_path));
+    return rcpp_result_gen;
+END_RCPP
+}
+// read_fastq
+DataFrame read_fastq(std::string in_file_path);
+RcppExport SEXP _CellBarcode_read_fastq(SEXP in_file_pathSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type in_file_path(in_file_pathSEXP);
+    rcpp_result_gen = Rcpp::wrap(read_fastq(in_file_path));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_CellBarcode_seq_correct", (DL_FUNC) &_CellBarcode_seq_correct, 8},
+    {"_CellBarcode_parse_10x_scSeq", (DL_FUNC) &_CellBarcode_parse_10x_scSeq, 4},
+    {"_CellBarcode_seq_correct", (DL_FUNC) &_CellBarcode_seq_correct, 9},
+    {"_CellBarcode_read_fastq_gz", (DL_FUNC) &_CellBarcode_read_fastq_gz, 1},
+    {"_CellBarcode_read_fastq", (DL_FUNC) &_CellBarcode_read_fastq, 1},
     {NULL, NULL, 0}
 };
 
