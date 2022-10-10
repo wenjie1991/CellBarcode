@@ -18,8 +18,8 @@ contains the data from all the samples with a column named \code{sample_name}
 to keep the sample information.}
 }
 \value{
-If a \code{list} is requested, each \code{list} element a code{data.frame}
-for each sample. In a code{data.frame}, there are 2 columns 1.
+If a \code{list} is requested, each \code{list} element is a \code{data.frame}
+for each sample. In a \code{data.frame}, there are 2 columns 1.
 \code{barcode_seq}: barcode sequence 2. \code{counts}: reads count, or UMI
 count if the \code{cleanBc} was created by \code{bc_cure_umi}.
 
@@ -35,7 +35,7 @@ the `cleanBc` slot in the \code{BarcodeObj}.
 }
 \examples{
 
- data(bc_obj)
+data(bc_obj)
 # get the data in cleanBc slot
 # default the return value is a list
 bc_cleanBc(bc_obj)

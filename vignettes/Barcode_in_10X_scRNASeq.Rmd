@@ -71,7 +71,7 @@ The parameters:
 ```{r}
 sam_file <- system.file("extdata", "scRNASeq_10X.sam", package = "CellBarcode")
 
-d = bc_extract_10X_scSeq(
+d = bc_extract_10XscSeq(
    sam = sam_file,
    pattern = "AGATCAG(.*)TGTGGTA",
    cell_barcode_tag = "CR",
@@ -116,3 +116,9 @@ For example, the pattern `ATCG(.{21})TCGG` tells the barcode is surrounded by co
 A flexible length barcode between constant regions of "ATCG" and "TCGA".
 
 **Need more helps**: About more complex barcode pattern, please ask the package author, then the exmaple will be apear here.
+
+# Session Info
+
+```{r}
+sessionInfo()
+```

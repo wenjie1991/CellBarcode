@@ -30,11 +30,11 @@ The one dimension kmeans clustering is applied for identify the
 2. Transform the count by log2(x+1).
 3. Apply the 1 dimension clustering to the logarized count, with
 the cluster number of 2 and weights of the logarized count.
-4. Choose the minimum count value in the cluster with higher count as
+4. Choose the minimum count value in the cluster with more count as
 cutoff point.
 
 For more info about 1 dimension kmeans used here please refer to
-\code{\link[Ckmeans.1d.dp]{Ckmeans.1d.dp}}, which has been used here.
+\code{\link[Ckmeans.1d.dp]{Ckmeans.1d.dp}}.
 }
 \examples{
 

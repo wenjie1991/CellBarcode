@@ -13,7 +13,7 @@ Description:
   within a single sequencing read and has a pattern which can be matched by a
   regular expression. This package can handle barcode with flexible length, with
   or without UMI (unique molecular identifier). This tool also can be used for
-  pre-processing of some amplicon data such as CRISPR gRNA screening, immune
+  pre-processing of some amplicon sequencing such as CRISPR gRNA screening, immune
   repertoire sequencing and meta genome data.
 License: MIT + file LICENSE
 Encoding: UTF-8

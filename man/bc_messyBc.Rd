@@ -19,8 +19,8 @@ to keep the sample information.}
 }
 \value{
 If a \code{list} is requested, in the \code{list} each element is a
-\code{data.frame} corresponding to the successive samples. Each
-\code{data.frame} has at most 3 columns: 1. \code{umi_seq} (optional): UMI
+ \code{data.frame} corresponding to the successive samples. Each
+ \code{data.frame} has at most 3 columns: 1. \code{umi_seq} (optional): UMI
 sequence. 2. \code{barcode_seq}: barcode sequence. 3. \code{count}: how many
 reads a full sequence has. 
 

@@ -34,7 +34,7 @@ the modified elements (additions/deletions) in between those constant parts.
 }
 \examples{
 ## prepare input sequence
-seq_v = c(
+seq_v <- c(
     "TCCAGTAGCTACTATCGTTACGAGTAGCTACTACCG",
     "TCCAGTAGCTACTATCGTTACGACGTAGCTACTACCG",
     "TCCATACTATCGTTACGACGTAGCTACTACG",

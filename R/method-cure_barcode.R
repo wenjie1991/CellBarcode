@@ -100,7 +100,7 @@ setMethod("bc_cure_depth", c("BarcodeObj"), function(
 #' @exportMethod bc_cure_cluster
 setMethod("bc_cure_cluster", c("BarcodeObj"), function(
     barcodeObj
-    , dist_thresh = 1
+    , dist_threshold = 1
     , depth_fold_threshold = 1
     , dist_method = "hamm"
     , cluster_method = "greedy"
@@ -111,7 +111,7 @@ setMethod("bc_cure_cluster", c("BarcodeObj"), function(
 
     parameter_df <- data.frame(
         sample_names = rownames(barcodeObj@metadata)
-        , distance =dist_thresh 
+        , distance =dist_threshold
         , depth_fold_threshold = depth_fold_threshold
         , count_threshold =count_threshold 
     )
@@ -204,7 +204,7 @@ setMethod("bc_cure_cluster", c("BarcodeObj"), function(
 #' @exportMethod bc_cure_umi
 setMethod("bc_cure_umi", c("BarcodeObj"), function(
     barcodeObj
-    , depth = 2
+    , depth = 1
     , doFish = FALSE
     , isUniqueUMI = FALSE
     ) {

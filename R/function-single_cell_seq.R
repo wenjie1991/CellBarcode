@@ -1,14 +1,14 @@
-#' Parse 10X Genomic scRNASeq sam file
+#' Parse 10X Genomic scRNASeq sam file (Experimental)
 #'
-#' \code{bc_extract_10XscSeq} can extract cell barcode, UMI and lineage barcode
-#' sequences from 10X Genomics scRNASeq bam file. This funciont can not process
+#' \code{bc_extract_10XscSeq} can extract cellular barcode, UMI and lineage barcode
+#' sequences from 10X Genomics scRNASeq bam file. This function can not process
 #' bam file directly, user needs to uncompress the bam file to get sam file in
-#' order to run this function.
+#' order to run this function See example.
 #'
 #' @param sam A string, define the un-mapped sequences 
 #' @param pattern A string, define the regular expression to match the barcode
 #' sequence. The barcode sequence should be in the first catch. Please see the
-#' \code{\link[CellBarcode]{bc_extract}} for detail.
+#' documents of \code{\link[CellBarcode]{bc_extract}} and example for more information.
 #' @param cell_barcode_tag A string, define the tag of 10X cell barcode field in sam
 #' file. The default is "CR".
 #' @param umi_tag A string, define the tag of UMI field in the sam file.
@@ -39,7 +39,7 @@
 #'
 #' sam_file <- system.file("extdata", "scRNASeq_10X.sam", package = "CellBarcode")
 #'
-#' bc_extract_10X_scSeq(
+#' bc_extract_10XscSeq(
 #'   sam = sam_file,
 #'   pattern = "AGATCAG(.*)TGTGGTA",
 #'   cell_barcode_tag = "CR",
@@ -48,7 +48,7 @@
 #'
 #' @rdname bc_extract_10X_scSeq
 #' @export
-bc_extract_10X_scSeq <- function(
+bc_extract_10XscSeq <- function(
     sam, 
     pattern, 
     cell_barcode_tag = "CR", 
@@ -57,9 +57,9 @@ bc_extract_10X_scSeq <- function(
     if(!file.exists(sam)) {
         stop("The input bam file is not exist.")
     }
-    d = parse_10x_scSeq(sam, pattern)
-    setDT(d)
-    d = d[, .(count = sum(count)), by = .(cell_barcode, umi, barcode_seq)]
+    d <- parse_10x_scSeq(sam, pattern)
+    data.table::setDT(d)
+    d <- d[, .(count = sum(count)), by = .(cell_barcode, umi, barcode_seq)]
 
     as.data.frame(d)
 }

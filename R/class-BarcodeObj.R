@@ -35,17 +35,15 @@ check_sample_name <- function(object) {
 #' function. The \code{bc_extract} function can use various data types as input,
 #' such as data.frame, fastq files or ShortReadQ.
 #'
-#' Slot \code{messyBc} is a list holds the raw barcodes sequence before filtering,
+#' Slot \code{messyBc} is a list holds the raw barcodes sequence without filtering,
 #' where each element is a \code{data.table} corresponding to the successive samples.
-#' Each table has 5 columns: 1. \code{reads_seq}: full read sequence before
-#' parsing. 2. \code{match_seq}: the sequence matched by pattern given to
-#' \code{bc_extract}. 3. \code{umi_seq} (optional): UMI sequence. 4.
-#' \code{barcode_seq}: barcode sequence. 5. \code{count}: how many reads a full sequence
+#' Each table has 3 columns: 1. \code{umi_seq} (optional): UMI sequence. 2.
+#' \code{barcode_seq}: barcode sequence. 3. \code{count}: how many reads a full sequence
 #' has. In this table, \code{barcode_seq} value can be duplicated, as two different
-#' full read sequences can contain the same barcode sequence, due to the
+#' full read sequences can have the same barcode sequence, due to the
 #' diversity of the UMI or mutations in the constant region.
 #'
-#' Slot \code{cleanBc} is a \code{list} holds the barcodes sequence after applying filtering,
+#' Slot \code{cleanBc} is a \code{list} holds the barcodes sequence after filtering,
 #' where each element is a \code{data.table} corresponding to the successive samples.
 #' The "cleanBc" slot contains 2 columns 1. \code{barcode_seq}: barcode sequence
 #' 2. \code{counts}: reads count, or UMI count if the \code{cleanBc} was created by
