@@ -18,7 +18,7 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  macos:
     runs-on: macos-latest
     strategy:
       matrix:
@@ -37,6 +37,52 @@ jobs:
         shell: Rscript {0}
       - name: Install pandoc
         run: brew install pandoc
+      - name: Check
+        run: rcmdcheck::rcmdcheck(args = "--no-manual", error_on = "error")
+        shell: Rscript {0}
+
+  linux:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        r-version: ['4.2.1']
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up R ${{ matrix.r-version }}
+        uses: r-lib/actions/setup-r@f57f1301a053485946083d7a45022b278929a78a
+        with:
+          r-version: ${{ matrix.r-version }}
+      - name: Install dependencies
+        run: |
+          install.packages(c("remotes", "rcmdcheck"))
+          remotes::install_deps(dependencies = TRUE)
+        shell: Rscript {0}
+      - name: Install pandoc
+        run: sudo apt-get install pandoc
+      - name: Check
+        run: rcmdcheck::rcmdcheck(args = "--no-manual", error_on = "error")
+        shell: Rscript {0}
+
+  windows:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        r-version: ['4.2.1']
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up R ${{ matrix.r-version }}
+        uses: r-lib/actions/setup-r@f57f1301a053485946083d7a45022b278929a78a
+        with:
+          r-version: ${{ matrix.r-version }}
+      - name: Install dependencies
+        run: |
+          install.packages(c("remotes", "rcmdcheck"))
+          remotes::install_deps(dependencies = TRUE)
+        shell: Rscript {0}
+      - name: Install pandoc
+        run: choco install pandoc
       - name: Check
         run: rcmdcheck::rcmdcheck(args = "--no-manual", error_on = "error")
         shell: Rscript {0}
