@@ -2,6 +2,9 @@
 #include <string>
 #include <unordered_map>
 #include <iostream>
+
+// [[Rcpp::depends(BH)]]
+
 #include <boost/algorithm/string.hpp>
 #include <boost/regex.hpp>
 #include <Rcpp.h>
