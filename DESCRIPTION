@@ -34,7 +34,7 @@ Imports:
   utils, 
   S4Vectors,
   seqinr
-LinkingTo: Rcpp
+LinkingTo: Rcpp, BH
 RoxygenNote: 7.2.1
 Suggests: BiocStyle, testthat (>= 3.0.0), knitr, rmarkdown
 biocViews: Preprocessing, QualityControl, Sequencing, CRISPR
