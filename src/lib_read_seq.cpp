@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <unordered_map>
 #include <string>
-#include <zlib.h>
+#include "zlib.h"
 using namespace Rcpp;
 
 // Read the Fastq file and output frequency table

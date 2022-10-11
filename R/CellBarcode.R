@@ -59,6 +59,7 @@ ifnullelse <- function(cand1, other) {
 #' @import methods
 #' @import Rcpp
 #' @import ggplot2
+#' @import zlibbioc
 #' @useDynLib CellBarcode
 NULL
 
