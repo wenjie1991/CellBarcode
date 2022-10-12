@@ -1,5 +1,7 @@
 # CellBarcode
 
+![check](https://github.com/wenjie1991/CellBarcode/actions/workflows/r.yml/badge.svg)
+
 **CellBarcode** is an R package for dealing with **Cellular DNA barcoding** sequencing data.
 
 The R package were created by Wenjie SUN, Anne-Marie Lyne, and Leïla Perié at Institut Curie.
