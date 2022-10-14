@@ -84,18 +84,23 @@ DataFrame read_fastq(std::string in_file_path) {
         //     break;
         // }
 
-        fgets(line_title, 1000, infile);
-        fgets(line_seq, 1000, infile);
-        fgets(line_sep, 1000, infile);
-        fgets(line_quality, 1000, infile);
-        line_seq[strcspn(line_seq, "\n")] = 0;
+        if ( 
+            fgets(line_title, 1000, infile) != NULL && 
+            fgets(line_seq, 1000, infile) != NULL && 
+            fgets(line_sep, 1000, infile) != NULL &&
+            fgets(line_quality, 1000, infile) != NULL
+        ) {
+            line_seq[strcspn(line_seq, "\n")] = 0;
 
-        if (seq_map.find(line_seq) == seq_map.cend()) {
-            seq_map.insert(std::pair<std::string, long long>(line_seq, 1));
+            if (seq_map.find(line_seq) == seq_map.cend()) {
+                seq_map.insert(std::pair<std::string, long long>(line_seq, 1));
+            } else {
+                seq_map[line_seq]++;
+            }
         } else {
-            seq_map[line_seq]++;
+            break;
         }
-    }
+    } 
 
     fclose(infile);
 
