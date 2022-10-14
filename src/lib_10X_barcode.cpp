@@ -45,7 +45,7 @@ DataFrame parse_10x_scSeq(
 
     // INPUT
     boost::regex str_expr (regex_str);
-    
+
     FILE * infile = fopen(in_file_path.c_str(), "r");
 
     char line[0x10000];
@@ -59,53 +59,54 @@ DataFrame parse_10x_scSeq(
 
     std::unordered_map<std::string, Barcode> seq_map;
 
-    int i = 0;
+    // int i = 0;
     std::string key;
 
     while (!feof(infile)) {
-        fgets(line, 1000, infile);
-        line[strcspn(line, "\n")] = 0;
-        i++;
-        // if (i == 1000000) {
+        if (fgets(line, 1000, infile) != NULL) {
+            line[strcspn(line, "\n")] = 0;
+            // i++;
+            // if (i == 1000000) {
             // break;
-        // }
-        std::vector<std::string> parts;
-        split(parts, line, boost::is_any_of("\t"));
-        // seq = parts[9];
-        strcpy(seq, parts[9].c_str());
-        for (int j=11; j<parts.size(); j++) {
-            if (parts[j].substr(0, 2) == cell_barcode_tag) {
-                cell_barcode = parts[j].substr(5);
-            } else if (parts[j].substr(0, 2) == umi_tag) {
-                umi_seq = parts[j].substr(5);
+            // }
+            std::vector<std::string> parts;
+            split(parts, line, boost::is_any_of("\t"));
+            // seq = parts[9];
+            strcpy(seq, parts[9].c_str());
+            for (int j=11; j<parts.size(); j++) {
+                if (parts[j].substr(0, 2) == cell_barcode_tag) {
+                    cell_barcode = parts[j].substr(5);
+                } else if (parts[j].substr(0, 2) == umi_tag) {
+                    umi_seq = parts[j].substr(5);
+                }
             }
-        }
 
-        if (boost::regex_search(seq, sm, str_expr)) {
+            if (boost::regex_search(seq, sm, str_expr)) {
 
-            // std::cout 
-            //     << "seq:" << seq << std::endl
-            //     << "cell_barcode:" << cell_barcode << std::endl
-            //     << "umi:" << umi_seq << std::endl
-            //     << "match:" << sm[1] << std::endl
-            //     << std::endl;
+                // std::cout 
+                //     << "seq:" << seq << std::endl
+                //     << "cell_barcode:" << cell_barcode << std::endl
+                //     << "umi:" << umi_seq << std::endl
+                //     << "match:" << sm[1] << std::endl
+                //     << std::endl;
 
-            barcode = sm[1];
+                barcode = sm[1];
 
-            key = cell_barcode + umi_seq + barcode;
+                key = cell_barcode + umi_seq + barcode;
 
-            auto iter = seq_map.find(key);
+                auto iter = seq_map.find(key);
 
-            if (iter != seq_map.end()) {
-                iter->second.count++;
-            } else {
-                Barcode barcode_st;
-                barcode_st.cell_barcode = cell_barcode;
-                barcode_st.UMI = umi_seq;
-                barcode_st.barcode = barcode;
-                barcode_st.count = 1;
+                if (iter != seq_map.end()) {
+                    iter->second.count++;
+                } else {
+                    Barcode barcode_st;
+                    barcode_st.cell_barcode = cell_barcode;
+                    barcode_st.UMI = umi_seq;
+                    barcode_st.barcode = barcode;
+                    barcode_st.count = 1;
 
-                seq_map.insert(std::make_pair(key, barcode_st));
+                    seq_map.insert(std::make_pair(key, barcode_st));
+                }
             }
         }
         // std::cout<<line;
@@ -127,11 +128,11 @@ DataFrame parse_10x_scSeq(
 
         j++;
     }
-    
+
     return DataFrame::create(
-            _["cell_barcode"] = cell_barcode_v,
-            _["umi"] = umi_v,
-            _["barcode_seq"] = barcode_v,
-            _["count"] = count_v
-        );
+        _["cell_barcode"] = cell_barcode_v,
+        _["umi"] = umi_v,
+        _["barcode_seq"] = barcode_v,
+        _["count"] = count_v
+    );
 }
