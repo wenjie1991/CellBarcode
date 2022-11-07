@@ -1,0 +1,8 @@
+pandoc: 2.17.1.1
+pkgdown: 2.0.6
+pkgdown_sha: ~
+articles:
+  Barcode_in_10X_scRNASeq: Barcode_in_10X_scRNASeq.html
+  UMI_VDJ_Barcode: UMI_VDJ_Barcode.html
+last_built: 2022-11-07T15:22Z
+
