@@ -1,6 +1,7 @@
 # CellBarcode
 
-![check](https://github.com/wenjie1991/CellBarcode/actions/workflows/r.yml/badge.svg)
+[![check](https://github.com/wenjie1991/CellBarcode/actions/workflows/r.yml/badge.svg)](https://github.com/wenjie1991/CellBarcode/actions)
+[![BioC status](http://www.bioconductor.org/shields/build/release/bioc/CellBarcode.svg)](https://bioconductor.org/checkResults/release/bioc-LATEST/CellBarcode)
 
 **CellBarcode** is an R package for dealing with **Cellular DNA barcoding** sequencing data.
 
