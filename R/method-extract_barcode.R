@@ -106,7 +106,7 @@ setMethod("bc_extract", "data.frame", function(
     # captured UMI
     if ("UMI" %in% names(pattern_type)) {
         # TODO: save space option
-        if (F) {
+        if (FALSE) {
             d <- data.table(
                 reads_seq = reads_seq, 
                 match_seq = seq_v, 
@@ -123,7 +123,7 @@ setMethod("bc_extract", "data.frame", function(
         }
     } else {
         # TODO: save space option
-        if (F) {
+        if (FALSE) {
             d <- data.table(
                 reads_seq = reads_seq, 
                 match_seq = seq_v, 

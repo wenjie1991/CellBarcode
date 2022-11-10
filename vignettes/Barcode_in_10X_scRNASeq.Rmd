@@ -77,7 +77,8 @@ d = bc_extract_10XscSeq(
    cell_barcode_tag = "CR",
    umi_tag = "UR"
 )
-head(d)
+
+d
 ```
 
 The output is a `data.frame`. It contains 3 columns:

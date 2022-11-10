@@ -57,9 +57,41 @@ bc_extract_10XscSeq <- function(
     if(!file.exists(sam)) {
         stop("The input bam file is not exist.")
     }
-    d <- parse_10x_scSeq(sam, pattern)
+    l <- parse_10x_scSeq(sam, pattern)
+    d <- l$barcode_df
     data.table::setDT(d)
-    d <- d[, .(count = sum(count)), by = .(cell_barcode, umi, barcode_seq)]
 
-    as.data.frame(d)
+    raw_count_dt <- l$raw_reads_df
+    data.table::setDT(raw_count_dt)
+    setkey(raw_count_dt, "cell_barcode")
+
+    d <- d[, .(count = sum(count)), by = .(cell_barcode, umi, barcode_seq)][
+        , .(cell_barcode, umi_seq = umi, barcode_seq, count)
+        ][order(count, decreasing = TRUE)]
+
+    # as.data.frame(d)
+    messyBc <- plyr::dlply(d, .(cell_barcode), 
+        function(x) {
+            # attr(x, "raw_read_count") <- raw_count_dt[x$cell_barcode[1], count]
+            # attr(x, "barcode_read_count") <- sum(x$count)
+            x$cell_barcode <- NULL
+            data.table(x)
+        }
+    )
+
+    attr(messyBc, "split_type") <- NULL
+    attr(messyBc, "split_labels") <- NULL
+
+    barcode_read_count_dt <- d[, .(count = sum(count)), by = cell_barcode]
+    setkey(barcode_read_count_dt, "cell_barcode")
+
+    metadata <- data.frame(
+        raw_read_count = raw_count_dt[names(messyBc), count],
+        barcode_read_count = barcode_read_count_dt[names(messyBc), count]
+    )
+    rownames(metadata) <- names(messyBc)
+
+    output <- BarcodeObj(metadata = metadata, messyBc = messyBc)
+
+    output
 }

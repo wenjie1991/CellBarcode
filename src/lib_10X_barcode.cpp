@@ -1,4 +1,5 @@
 #include <cstring>
+#include <set>
 #include <string>
 #include <unordered_map>
 #include <iostream>
@@ -36,7 +37,7 @@ struct Barcode {
 //'   \item \code{count}: reads count.
 //' }
 // [[Rcpp::export]]
-DataFrame parse_10x_scSeq(
+List parse_10x_scSeq(
     std::string in_file_path, 
     std::string regex_str, 
     std::string cell_barcode_tag = "CR",
@@ -58,6 +59,7 @@ DataFrame parse_10x_scSeq(
     boost::cmatch sm;
 
     std::unordered_map<std::string, Barcode> seq_map;
+    std::unordered_map<std::string, int> raw_count;
 
     // int i = 0;
     std::string key;
@@ -81,6 +83,15 @@ DataFrame parse_10x_scSeq(
                 }
             }
 
+            // count raw reads
+            auto iter = raw_count.find(cell_barcode);
+            if (iter != raw_count.end()) {
+                iter->second++;
+            } else {
+                raw_count.insert(std::make_pair(cell_barcode, 1));
+            }
+
+            // match barcode
             if (boost::regex_search(seq, sm, str_expr)) {
 
                 // std::cout 
@@ -116,6 +127,7 @@ DataFrame parse_10x_scSeq(
 
     CharacterVector barcode_v (seq_map.size());
     CharacterVector cell_barcode_v (seq_map.size());
+    std::set<std::string> cell_barcode_unique_set;
     CharacterVector umi_v (seq_map.size());
     IntegerVector count_v (seq_map.size());
 
@@ -123,16 +135,39 @@ DataFrame parse_10x_scSeq(
     for (auto iter = seq_map.begin(); iter != seq_map.end(); iter++) {
         barcode_v[j] = iter->second.barcode;
         cell_barcode_v[j] = iter->second.cell_barcode;
+        cell_barcode_unique_set.insert(iter->second.cell_barcode);
         umi_v[j] = iter->second.UMI;
         count_v[j] = iter->second.count;
 
         j++;
     }
 
-    return DataFrame::create(
+    DataFrame barcode_df = DataFrame::create(
         _["cell_barcode"] = cell_barcode_v,
         _["umi"] = umi_v,
         _["barcode_seq"] = barcode_v,
         _["count"] = count_v
+    );
+
+
+    IntegerVector raw_reads_v (cell_barcode_unique_set.size());
+    CharacterVector cell_barcode_unique_v (cell_barcode_unique_set.size());
+
+    j = 0;
+    for (auto iter = cell_barcode_unique_set.begin(); iter != cell_barcode_unique_set.end(); iter++) {
+        raw_reads_v[j] = raw_count[*iter];
+        cell_barcode_unique_v[j] = *iter;
+
+        j++;
+    }
+
+    DataFrame raw_reads_df = DataFrame::create(
+        _["cell_barcode"] = cell_barcode_unique_v,
+        _["count"] = raw_reads_v
+    );
+
+    return List::create(
+        _["barcode_df"] = barcode_df,
+        _["raw_reads_df"] = raw_reads_df
     );
 }

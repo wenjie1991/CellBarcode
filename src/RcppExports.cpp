@@ -11,7 +11,7 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // parse_10x_scSeq
-DataFrame parse_10x_scSeq(std::string in_file_path, std::string regex_str, std::string cell_barcode_tag, std::string umi_tag);
+List parse_10x_scSeq(std::string in_file_path, std::string regex_str, std::string cell_barcode_tag, std::string umi_tag);
 RcppExport SEXP _CellBarcode_parse_10x_scSeq(SEXP in_file_pathSEXP, SEXP regex_strSEXP, SEXP cell_barcode_tagSEXP, SEXP umi_tagSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
