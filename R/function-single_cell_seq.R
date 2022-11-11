@@ -57,13 +57,14 @@ bc_extract_10XscSeq <- function(
     if(!file.exists(sam)) {
         stop("The input bam file is not exist.")
     }
+    sam <- path.expand(sam)
     l <- parse_10x_scSeq(sam, pattern)
     d <- l$barcode_df
     data.table::setDT(d)
 
     raw_count_dt <- l$raw_reads_df
     data.table::setDT(raw_count_dt)
-    setkey(raw_count_dt, "cell_barcode")
+    data.table::setkey(raw_count_dt, "cell_barcode")
 
     d <- d[, .(count = sum(count)), by = .(cell_barcode, umi, barcode_seq)][
         , .(cell_barcode, umi_seq = umi, barcode_seq, count)
@@ -83,7 +84,7 @@ bc_extract_10XscSeq <- function(
     attr(messyBc, "split_labels") <- NULL
 
     barcode_read_count_dt <- d[, .(count = sum(count)), by = cell_barcode]
-    setkey(barcode_read_count_dt, "cell_barcode")
+    data.table::setkey(barcode_read_count_dt, "cell_barcode")
 
     metadata <- data.frame(
         raw_read_count = raw_count_dt[names(messyBc), count],

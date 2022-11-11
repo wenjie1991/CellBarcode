@@ -65,11 +65,11 @@ List parse_10x_scSeq(
     std::string key;
 
     while (!feof(infile)) {
-        if (fgets(line, 1000, infile) != NULL) {
+        if (fgets(line, 10000, infile) != NULL) {
             line[strcspn(line, "\n")] = 0;
             // i++;
-            // if (i == 1000000) {
-            // break;
+            // if (i == 10) {
+            //    break;
             // }
             std::vector<std::string> parts;
             split(parts, line, boost::is_any_of("\t"));
@@ -131,6 +131,7 @@ List parse_10x_scSeq(
     CharacterVector umi_v (seq_map.size());
     IntegerVector count_v (seq_map.size());
 
+
     int j = 0;
     for (auto iter = seq_map.begin(); iter != seq_map.end(); iter++) {
         barcode_v[j] = iter->second.barcode;
@@ -160,6 +161,7 @@ List parse_10x_scSeq(
 
         j++;
     }
+
 
     DataFrame raw_reads_df = DataFrame::create(
         _["cell_barcode"] = cell_barcode_unique_v,

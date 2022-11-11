@@ -47,50 +47,55 @@ setMethod("bc_cure_depth", c("BarcodeObj"), function(
     , isUpdate = TRUE
     ){
 
-    if (depth[1] < 0)
-        depth <- NULL
-
-    if (isUpdate) {
-        message("------------\nbc_cure_depth: isUpdate is TRUE, update the cleanBc.\n------------")
+    if (depth == 0) {
+        barcodeObj@cleanBc <- barcodeObj@messyBc
     } else {
-        message("------------\nbc_cure_depth: isUpdate is FALSE, use messyBc as input.\n------------")
-    }
-    
-    if (is.null(barcodeObj@cleanBc) | !isUpdate) {
-        cleanBc <- barcodeObj@messyBc
-    } else {
-        cleanBc <- barcodeObj@cleanBc
-    }
 
-    if (is.null(depth)) {
-        message("------------\nbc_cure_depth: Null depth or negative provided, apply auto depth threshold.\n------------")
-        depth <- vapply(cleanBc, function(x_i) {
-                bc_find_depth_cutoff_point(x_i$count)
-        }, c(1.0))
-    }
+        if (depth[1] < 0)
+            depth <- NULL
 
-    bc_meta(barcodeObj, "depth_cutoff") <- depth
-
-    parameter_df <- data.frame(
-        sample_names = rownames(barcodeObj@metadata)
-        , depth = depth
-    )
-
-    
-    ## count the reads directly
-    cleanBc <- lapply(seq_along(cleanBc),
-        function(i) {
-            d <- data.table(cleanBc[[i]])
-            ## TODO: If the output is empty (with 0 row) ...
-            d[, 
-                .(count = sum(count)), 
-                by = barcode_seq][count >= parameter_df[i, "depth"]]
+        if (isUpdate) {
+            message("------------\nbc_cure_depth: isUpdate is TRUE, update the cleanBc.\n------------")
+        } else {
+            message("------------\nbc_cure_depth: isUpdate is FALSE, use messyBc as input.\n------------")
         }
-    )
+        
+        if (is.null(barcodeObj@cleanBc) | !isUpdate) {
+            cleanBc <- barcodeObj@messyBc
+        } else {
+            cleanBc <- barcodeObj@cleanBc
+        }
+
+        if (is.null(depth)) {
+            message("------------\nbc_cure_depth: Null depth or negative provided, apply auto depth threshold.\n------------")
+            depth <- vapply(cleanBc, function(x_i) {
+                    bc_find_depth_cutoff_point(x_i$count)
+            }, c(1.0))
+        }
+
+        bc_meta(barcodeObj, "depth_cutoff") <- depth
+
+        parameter_df <- data.frame(
+            sample_names = rownames(barcodeObj@metadata)
+            , depth = depth
+        )
+
+        
+        ## count the reads directly
+        cleanBc <- lapply(seq_along(cleanBc),
+            function(i) {
+                d <- data.table(cleanBc[[i]])
+                ## TODO: If the output is empty (with 0 row) ...
+                d[, 
+                    .(count = sum(count)), 
+                    by = barcode_seq][count >= parameter_df[i, "depth"]]
+            }
+        )
+        names(cleanBc) <- rownames(barcodeObj@metadata)
+        barcodeObj@cleanBc <- cleanBc
+    }
 
     ## save the result
-    names(cleanBc) <- rownames(barcodeObj@metadata)
-    barcodeObj@cleanBc <- cleanBc
     #   barcodeObj@cleanProc = cleanProc
     barcodeObj
 })
