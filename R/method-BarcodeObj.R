@@ -443,7 +443,7 @@ It contains:
                     # sample number
                     n <- summary_res$cleanBc_barcode_n[i]
                     stringr::str_glue("    In sample ${sample_name} there are: {n} barcodes")
-                }) %>% unlist %>% paste(collapse = "\n") %>% paste(tail_info)
+                }) %>% unlist %>% paste(collapse = "\n") %>% paste0(tail_info)
         res_cleanBc <- stringr::str_glue(
 "----------
 @cleanBc: {cleanBc_n} samples for cleaned barcodes
