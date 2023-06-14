@@ -30,13 +30,7 @@ setMethod("bc_subset", c("BarcodeObj"), function(
 
     metadata <- barcodeObj@metadata
 
-    # preprocess sample selecting expression
-    if (is_sample_quoted_exp) {
-        sample_call <- sample
-    } else {
-        sample_call <- substitute(sample)
-    }
-
+    
     # TODO: The function only can apply the operation to the `messyBc` `cleanBc`
     # and `metadata`. We need to make it capable to apply the selection to all
     # information in the object.
@@ -77,10 +71,16 @@ setMethod("bc_subset", c("BarcodeObj"), function(
     }
 
     # select samples
-    if (!is.null(sample_call)) {
-        
+    # preprocess sample selecting expression
+    if (is_sample_quoted_exp) {
+        sample_i <- sample
+    } else {
+        sample_call <- substitute(sample)
         # evaluate the sample argument
         sample_i <- eval(sample_call, metadata, parent.frame())
+    }
+
+    if (!is.null(sample_i)) {
 
         # subset metadata
         barcodeObj@metadata <- metadata[sample_i, , drop = FALSE]

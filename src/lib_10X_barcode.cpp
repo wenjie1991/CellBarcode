@@ -3,6 +3,7 @@
 #include <string>
 #include <unordered_map>
 #include <iostream>
+#include "zlib.h"
 
 // [[Rcpp::depends(BH)]]
 
@@ -37,7 +38,7 @@ struct Barcode {
 //'   \item \code{count}: reads count.
 //' }
 // [[Rcpp::export]]
-List parse_10x_scSeq(
+List parse_10x_sam(
     std::string in_file_path, 
     std::string regex_str, 
     std::string cell_barcode_tag = "CR",
@@ -173,3 +174,5 @@ List parse_10x_scSeq(
         _["raw_reads_df"] = raw_reads_df
     );
 }
+
+

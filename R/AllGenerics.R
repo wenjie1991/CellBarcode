@@ -872,6 +872,7 @@ setGeneric("bc_plot_pair", function(
         ) { standardGeneric("bc_plot_pair") })
 
 
+
 #' Evaluates sequences quality
 #'
 #' \code{bc_seq_qc} evaluates sequences quality. See the return value for detail.
