@@ -1,3 +1,18 @@
+## Changes in Version 1.7.0
+
+### New features
+
+- `bc_extract_sc_sam`: function to extract single-cell barcodes from SAM file
+- `bc_extract_sc_fastq`: function to extract single-cell barcodes from fastq
+  file
+- `bc_plot_count`: function to plot the count feature of the barcodes such as
+  barcode reads versus total reads, reads per UMI distribution.
+
+### Incompatible changes
+
+`bc_extract` now only accepts a vector or list, and returns `BarcodeObj`,
+instead of returning `data.frame` when the input is a single sample.
+
 ## Changes in Version 1.4.0
 
 Version bumping

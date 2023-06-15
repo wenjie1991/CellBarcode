@@ -1,4 +1,4 @@
-rocess_sc_list <- function(l) {
+process_sc_list <- function(l) {
     d <- l$barcode_df
     data.table::setDT(d)
 
@@ -149,7 +149,6 @@ bc_extract_sc_sam <- function(
 #' A BarcodeObj object with each cell as a sample.
 #' @seealso \code{\link[CellBarcode]{bc_extract}}, \code{\link[CellBarcode]{bc_extract_sc_sam}},
 #'
-#' @examples
 #' @rdname bc_extract_sc_fastq
 #' @export
 bc_extract_sc_fastq <- function(
