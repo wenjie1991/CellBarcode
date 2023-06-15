@@ -106,7 +106,7 @@ setMethod("bc_extract", "data.frame", function(
     # captured UMI
     if ("UMI" %in% names(pattern_type)) {
         # TODO: save space option
-        if (F) {
+        if (FALSE) {
             d <- data.table(
                 reads_seq = reads_seq, 
                 match_seq = seq_v, 
@@ -123,7 +123,7 @@ setMethod("bc_extract", "data.frame", function(
         }
     } else {
         # TODO: save space option
-        if (F) {
+        if (FALSE) {
             d <- data.table(
                 reads_seq = reads_seq, 
                 match_seq = seq_v, 
@@ -184,7 +184,6 @@ setMethod("bc_extract", "ShortReadQ", function(
 
 
 #' @rdname bc_extract
-#' @exportMethod bc_extract
 setMethod("bc_extract", "DNAStringSet", function(
     x, 
     pattern = "", 
@@ -215,7 +214,6 @@ setMethod("bc_extract", "DNAStringSet", function(
 })
 
 #' @rdname bc_extract
-#' @exportMethod bc_extract
 setMethod("bc_extract", "integer", function(
     x,
     pattern = "",
@@ -241,7 +239,6 @@ setMethod("bc_extract", "integer", function(
 
 
 #' @rdname bc_extract
-#' @exportMethod bc_extract
 setMethod("bc_extract", "character", function(
     x, 
     pattern = "", 
@@ -268,7 +265,7 @@ setMethod("bc_extract", "character", function(
 
 
     # if more than one fastq file as input
-    if (length(x) > 1) {
+    # if (length(x) > 1) {
 
         input_names <- basename(x)
         sample_name <- bc_process_sample_name(sample_name, metadata, input_names)
@@ -302,24 +299,24 @@ setMethod("bc_extract", "character", function(
         # class(output) <- "BarcodeObj"
         output <- BarcodeObj(metadata=metadata, messyBc=messyBc)
         return(output)
-    } else {
-        # if one fastq file as input
-        if (grepl(".fq$", x) | grepl(".fastq$", x)) {
-            barcode_df = read_fastq(x)
-        } else if (grepl(".fq.gz$", x) | grepl(".fastq.gz", x)) {
-            barcode_df = read_fastq_gz(x)
-        } else {
-            stop("The input is not Fastq file. Please check the input.")
-        }
-        bc_extract(
-            barcode_df,
-            sample_name = sample_name[i], 
-            pattern = pattern,
-            maxLDist = maxLDist,
-            pattern_type = pattern_type,
-            costs = costs,
-            ordered = ordered)
-    }
+    # } else {
+    #     # if one fastq file as input
+    #     if (grepl(".fq$", x) | grepl(".fastq$", x)) {
+    #         barcode_df = read_fastq(x)
+    #     } else if (grepl(".fq.gz$", x) | grepl(".fastq.gz", x)) {
+    #         barcode_df = read_fastq_gz(x)
+    #     } else {
+    #         stop("The input is not Fastq file. Please check the input.")
+    #     }
+    #     bc_extract(
+    #         barcode_df,
+    #         sample_name = sample_name[i], 
+    #         pattern = pattern,
+    #         maxLDist = maxLDist,
+    #         pattern_type = pattern_type,
+    #         costs = costs,
+    #         ordered = ordered)
+    # }
 })
 
 

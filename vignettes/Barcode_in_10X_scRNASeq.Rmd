@@ -71,13 +71,14 @@ The parameters:
 ```{r}
 sam_file <- system.file("extdata", "scRNASeq_10X.sam", package = "CellBarcode")
 
-d = bc_extract_10XscSeq(
+d = bc_extract_sc_sam(
    sam = sam_file,
    pattern = "AGATCAG(.*)TGTGGTA",
    cell_barcode_tag = "CR",
    umi_tag = "UR"
 )
-head(d)
+
+d
 ```
 
 The output is a `data.frame`. It contains 3 columns:

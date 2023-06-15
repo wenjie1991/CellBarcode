@@ -1,4 +1,4 @@
-## internal functions
+## Internal functions
 ###########################
 bc_plot_draw_pair <- function(d, log_coord, highlight, count_marks, alpha) {
 
@@ -202,4 +202,125 @@ setMethod("bc_plot_pair", c("BarcodeObj"), function(
 })
 
 
+#' Plot for counts distribution
+#' 
+#' This function is used to summarize the counts of each barcode.
+#'
+#' @param barcodeObj A BarcodeObj object
+#' @param bins The number of bins for the histogram
+#' @param useCleaned Whether to use the cleaned barcode data
+#' @details
+#' When useCleaned is TRUE, the cleaned barcode data will be used.
+#' Otherwise, the messy barcode data will be used.
+#' The output will be different when useCleaned is TRUE or FALSE.
+#' It also depends on whether the UMI is available.
+#' The counts including:
+#'  \enumerate{
+#'   \item reads count (with barcode) versus the total reads
+#'  \item reads count per UMI
+#'  \item UMI count per barcode
+#'  \item barcode count per sample
+#'  \item reads or UMI count (dominant barcode) versus total count per sample
+#'  \item reads or UMI count (dominant barcode) distribution
+#' }
+#'
+#' @return A egg::ggarrange object
+#'
+#' @examples
+#' data(bc_obj)
+#' bc_plot_count(barcodeObj=bc_obj)
+#'
+#' @export
+bc_plot_count = function(barcodeObj, bins = 20, useCleaned = T) {
+    ## TODO: if there is no UMI
+    ## TODO: apply to cleanBc
+
+    if (useCleaned) {
+        if (is.null(barcodeObj@cleanBc)) {
+            stop("The cleaned barcode data is not available, please run bc_cure_* firstly.")
+        }
+        d0 = barcodeObj@cleanBc
+    } else {
+        d0 = barcodeObj@messyBc
+    }
+
+    ## exist UMI
+    is_umi = any(grepl("umi", names(d0[[1]])))
+
+    plot_list = list()
+
+    # barcode reads% 
+    if (!useCleaned) {
+        d <- data.table(bc_meta(barcodeObj))
+        g <- ggplot(d) +
+            aes(x = barcode_read_count / raw_read_count) +
+            geom_histogram(bins = 20) +
+            labs(x = "Barcode reads ratio")
+        plot_list = c(plot_list, list(g))
+    }
+
+    if (is_umi) {
+        ## Reads per UMI
+        d = d0
+        d <- rbindlist(d, idcol = "cell_barcode")
+        g <- ggplot(d) +
+            aes(x = count) +
+            geom_histogram(bins = 20) +
+            labs(x = "Reads per UMI") +
+            scale_x_log10() + scale_y_log10() 
+        plot_list = c(plot_list, list(g))
+
+        ## UMI per barcode
+        d = d0
+        d <- rbindlist(d, idcol = "cell_barcode")
+        d <- d[, length(unique(umi_seq)), .(barcode_seq, cell_barcode)]
+        g <- ggplot(d) +
+            aes(x = V1) +
+            geom_histogram(bins = 20) +
+            labs(x = "UMI per barcode") +
+            scale_x_log10()
+        plot_list = c(plot_list, list(g))
+    }
+
+    ## barcode per sample
+    d <- d0
+    d <- data.table(x = unlist(lapply(d, function(x) {
+        length(unique(x$barcode_seq))
+    })))
+    g <- ggplot(d) +
+        aes(x = x) +
+        geom_histogram(bins = 20) +
+        labs(x = "Barcode n") +
+        scale_x_log10()
+    plot_list = c(plot_list, list(g))
+
+
+    if (useCleaned) {
+        ## Dominant barcode ratio
+        d <- d0
+        d <- data.table(x = unlist(lapply(d, function(x) {
+            max(x$count) / sum(x$count)
+        })))
+        g <- ggplot(d) +
+            aes(x = x) +
+            geom_histogram(bins = 20) +
+            labs(x = "Dominant barcode%") +
+            scale_x_log10()
+        plot_list = c(plot_list, list(g))
+
+        ## dominant barcode tag count
+        d <- d0
+        d <- data.table(x = unlist(lapply(d, function(x) {
+            max(x$count)
+        })))
+        g <- ggplot(d) +
+            aes(x = x) +
+            geom_histogram(bins = 20) +
+            labs(x = "Dominant barcode tag") +
+            scale_x_log10()
+        plot_list = c(plot_list, list(g))
+    }
+
+    egg::ggarrange(plots = plot_list)
+}
 

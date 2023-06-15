@@ -30,13 +30,7 @@ setMethod("bc_subset", c("BarcodeObj"), function(
 
     metadata <- barcodeObj@metadata
 
-    # preprocess sample selecting expression
-    if (is_sample_quoted_exp) {
-        sample_call <- sample
-    } else {
-        sample_call <- substitute(sample)
-    }
-
+    
     # TODO: The function only can apply the operation to the `messyBc` `cleanBc`
     # and `metadata`. We need to make it capable to apply the selection to all
     # information in the object.
@@ -77,10 +71,16 @@ setMethod("bc_subset", c("BarcodeObj"), function(
     }
 
     # select samples
-    if (!is.null(sample_call)) {
-        
+    # preprocess sample selecting expression
+    if (is_sample_quoted_exp) {
+        sample_i <- sample
+    } else {
+        sample_call <- substitute(sample)
         # evaluate the sample argument
         sample_i <- eval(sample_call, metadata, parent.frame())
+    }
+
+    if (!is.null(sample_i)) {
 
         # subset metadata
         barcodeObj@metadata <- metadata[sample_i, , drop = FALSE]
@@ -375,20 +375,31 @@ setMethod("bc_2matrix", c("BarcodeObj"), function(barcodeObj) {
 setMethod("format", c("BarcodeObj"), function(x) {
     summary_res <- count_BarcodeObj(x)
 
+    max_print_sample_num <- 70
     # elements list in BarcodeObj
     # subjects <- paste(slotNames(barcodeObj), collapse = "  ")
 
     # number of samples
     messyBc_n <- length(summary_res$messyBc_barcode_n)
 
+    if (messyBc_n >= max_print_sample_num) {
+        i_display_sample_selected <- seq_len(max_print_sample_num)
+        tail_info <- 
+            paste0("\n    Too many samples ... ", messyBc_n - max_print_sample_num, " samples do not display.\n")
+    } else {
+        i_display_sample_selected <- seq_len(messyBc_n)
+        tail_info <- ""
+    }
+
     messyBc_info <-
-        lapply(seq_along(summary_res$messyBc_barcode_n), function(i) {
+        lapply(i_display_sample_selected, function(i) {
             # sample name
             sample_name <- names(summary_res$messyBc_barcode_n)[i]
             # barcode number
             n <- summary_res$messyBc_barcode_n[i]
             stringr::str_glue("    In sample ${sample_name} there are: {n} Tags")
-            }) %>% unlist %>% paste(collapse = "\n")
+        }) %>% unlist %>% paste(collapse = "\n") %>% paste0(tail_info)
+
 
     # elements in metadata
     metadata_info <- paste(names(x@metadata), collapse = "  ")
@@ -412,8 +423,19 @@ It contains:
     if (!is.null(summary_res$cleanBc_barcode_n)) {
         # sample number
         cleanBc_n <- length(summary_res$cleanBc_barcode_n)
+
+        if (cleanBc_n >= max_print_sample_num) {
+            i_display_sample_selected <- seq_len(max_print_sample_num)
+            tail_info <- 
+                paste0("\n    Too many samples ... ", cleanBc_n - max_print_sample_num, " samples do not display.\n")
+        } else {
+            i_display_sample_selected <- seq_len(cleanBc_n)
+            tail_info <- ""
+        }
+
+
         cleanBc_info <-
-            lapply(seq_along(summary_res$cleanBc_barcode_n),
+            lapply(i_display_sample_selected, 
                 function(i) {
                     # sample name
                     sample_name <-
@@ -421,7 +443,7 @@ It contains:
                     # sample number
                     n <- summary_res$cleanBc_barcode_n[i]
                     stringr::str_glue("    In sample ${sample_name} there are: {n} barcodes")
-                }) %>% unlist %>% paste(collapse = "\n")
+                }) %>% unlist %>% paste(collapse = "\n") %>% paste0(tail_info)
         res_cleanBc <- stringr::str_glue(
 "----------
 @cleanBc: {cleanBc_n} samples for cleaned barcodes

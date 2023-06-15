@@ -16,8 +16,8 @@
 #'   \item \code{barcode_seq}: lineage barcode.
 #'   \item \code{count}: reads count.
 #' }
-parse_10x_scSeq <- function(in_file_path, regex_str, cell_barcode_tag = "CR", umi_tag = "UR") {
-    .Call('_CellBarcode_parse_10x_scSeq', PACKAGE = 'CellBarcode', in_file_path, regex_str, cell_barcode_tag, umi_tag)
+parse_10x_sam <- function(in_file_path, regex_str, cell_barcode_tag = "CR", umi_tag = "UR") {
+    .Call('_CellBarcode_parse_10x_sam', PACKAGE = 'CellBarcode', in_file_path, regex_str, cell_barcode_tag, umi_tag)
 }
 
 #' Sequence clustering
@@ -59,5 +59,9 @@ read_fastq_gz <- function(in_file_path) {
 
 read_fastq <- function(in_file_path) {
     .Call('_CellBarcode_read_fastq', PACKAGE = 'CellBarcode', in_file_path)
+}
+
+read_fastq_gz2 <- function(in_fq1, in_fq2) {
+    .Call('_CellBarcode_read_fastq_gz2', PACKAGE = 'CellBarcode', in_fq1, in_fq2)
 }
 

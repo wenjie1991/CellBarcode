@@ -10,9 +10,9 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// parse_10x_scSeq
-DataFrame parse_10x_scSeq(std::string in_file_path, std::string regex_str, std::string cell_barcode_tag, std::string umi_tag);
-RcppExport SEXP _CellBarcode_parse_10x_scSeq(SEXP in_file_pathSEXP, SEXP regex_strSEXP, SEXP cell_barcode_tagSEXP, SEXP umi_tagSEXP) {
+// parse_10x_sam
+List parse_10x_sam(std::string in_file_path, std::string regex_str, std::string cell_barcode_tag, std::string umi_tag);
+RcppExport SEXP _CellBarcode_parse_10x_sam(SEXP in_file_pathSEXP, SEXP regex_strSEXP, SEXP cell_barcode_tagSEXP, SEXP umi_tagSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -20,7 +20,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< std::string >::type regex_str(regex_strSEXP);
     Rcpp::traits::input_parameter< std::string >::type cell_barcode_tag(cell_barcode_tagSEXP);
     Rcpp::traits::input_parameter< std::string >::type umi_tag(umi_tagSEXP);
-    rcpp_result_gen = Rcpp::wrap(parse_10x_scSeq(in_file_path, regex_str, cell_barcode_tag, umi_tag));
+    rcpp_result_gen = Rcpp::wrap(parse_10x_sam(in_file_path, regex_str, cell_barcode_tag, umi_tag));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -65,12 +65,25 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// read_fastq_gz2
+List read_fastq_gz2(std::string in_fq1, std::string in_fq2);
+RcppExport SEXP _CellBarcode_read_fastq_gz2(SEXP in_fq1SEXP, SEXP in_fq2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type in_fq1(in_fq1SEXP);
+    Rcpp::traits::input_parameter< std::string >::type in_fq2(in_fq2SEXP);
+    rcpp_result_gen = Rcpp::wrap(read_fastq_gz2(in_fq1, in_fq2));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_CellBarcode_parse_10x_scSeq", (DL_FUNC) &_CellBarcode_parse_10x_scSeq, 4},
+    {"_CellBarcode_parse_10x_sam", (DL_FUNC) &_CellBarcode_parse_10x_sam, 4},
     {"_CellBarcode_seq_correct", (DL_FUNC) &_CellBarcode_seq_correct, 9},
     {"_CellBarcode_read_fastq_gz", (DL_FUNC) &_CellBarcode_read_fastq_gz, 1},
     {"_CellBarcode_read_fastq", (DL_FUNC) &_CellBarcode_read_fastq, 1},
+    {"_CellBarcode_read_fastq_gz2", (DL_FUNC) &_CellBarcode_read_fastq_gz2, 2},
     {NULL, NULL, 0}
 };
 
