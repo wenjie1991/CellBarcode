@@ -42,7 +42,7 @@ jobs:
         shell: Rscript {0}
 
   linux:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     strategy:
       matrix:
         r-version: ['4.1.0']
