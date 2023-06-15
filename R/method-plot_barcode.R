@@ -231,7 +231,7 @@ setMethod("bc_plot_pair", c("BarcodeObj"), function(
 #' bc_plot_count(barcodeObj=bc_obj)
 #'
 #' @export
-bc_plot_count = function(barcodeObj, bins = 20, useCleaned = T) {
+bc_plot_count = function(barcodeObj, bins = 20, useCleaned = TRUE) {
     ## TODO: if there is no UMI
     ## TODO: apply to cleanBc
 

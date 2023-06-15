@@ -144,7 +144,7 @@ setMethod("bc_seq_qc", c("data.frame"), function(x, reads_sample_size = 1e5) {
     reads_sample_size <- min(sum(freq), reads_sample_size)
 
     x <- Biostrings::DNAStringSet(
-        sample(sequences, reads_sample_size, replace = T, prob = freq / sum(freq))
+        sample(sequences, reads_sample_size, replace = TRUE, prob = freq / sum(freq))
     )
 
     bc_seqqc(x)
@@ -158,7 +158,7 @@ setMethod("bc_seq_qc", c("integer"), function(x, reads_sample_size = 1e5) {
     reads_sample_size <- min(sum(x), reads_sample_size)
 
     x <- Biostrings::DNAStringSet(
-        sample(names(x), reads_sample_size, replace = T, prob =  x / sum(x))
+        sample(names(x), reads_sample_size, replace = TRUE, prob =  x / sum(x))
     )
 
     bc_seqqc(x)
