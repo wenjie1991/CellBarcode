@@ -1,4 +1,4 @@
-process_sc_list <- function(l) {
+rocess_sc_list <- function(l) {
     d <- l$barcode_df
     data.table::setDT(d)
 
@@ -36,18 +36,19 @@ process_sc_list <- function(l) {
     output
 }
 
-#' Parse 10X Genomic scRNASeq sam file (Experimental)
+#' Extract barcode from single cell sequencing sam file
 #'
-#' \code{bc_extract_10X_sam} can extract cellular barcode, UMI and lineage barcode
-#' sequences from 10X Genomics scRNASeq sam file. This function can not process
-#' bam file directly, user needs to uncompress the bam file to get sam file in
-#' order to run this function See example.
+#' \code{bc_extract_sc_sam} can extract cellular barcode, UMI and lineage
+#' barcode sequences from 10X Genomics scRNASeq sam file (or bam file have
+#' similar data structure). This function can not process bam file directly,
+#' users need to uncompress the bam file to get sam file in order to run this
+#' function See example.
 #'
 #' @param sam A string, define the un-mapped sequences 
 #' @param pattern A string, define the regular expression to match the barcode
 #' sequence. The barcode sequence should be in the first catch. Please see the
 #' documents of \code{\link[CellBarcode]{bc_extract}} and example for more information.
-#' @param cell_barcode_tag A string, define the tag of 10X cell barcode field in sam
+#' @param cell_barcode_tag A string, define the tag of cellular barcode field in sam
 #' file. The default is "CR".
 #' @param umi_tag A string, define the tag of UMI field in the sam file.
 #' @details 
@@ -59,17 +60,14 @@ process_sc_list <- function(l) {
 #' }
 #' 
 #' @return 
-#' A data.frame with 4 columns:
-#' \enumerate{
-#'   \item \code{cell_barcode}: 10X cellular barcode.
-#'   \item \code{umi}: UMI sequence.
-#'   \item \code{barcode_seq}: lineage barcode.
-#'   \item \code{count}: reads count.
-#'   }
+#' A BarcodeObj object with each cell as a sample.
+#' @seealso \code{\link[CellBarcode]{bc_extract}},
+#' \code{\link[CellBarcode]{bc_extract_sc_fastq}}
+#'
 #' @examples
 #' ## NOT run
 #' # In the case that when the barcode sequence is not mapped to 
-#' # reference genome, it will be much more efficiency to get 
+#' # reference genome, it will be much more efficient to get 
 #' # the un-mapped sequences as the input.
 #'
 #' ## Get un-mapped reads
@@ -77,16 +75,16 @@ process_sc_list <- function(l) {
 #'
 #' sam_file <- system.file("extdata", "scRNASeq_10X.sam", package = "CellBarcode")
 #'
-#' bc_extract_10X_sam(
+#' bc_extract_sc_sam(
 #'   sam = sam_file,
 #'   pattern = "AGATCAG(.*)TGTGGTA",
 #'   cell_barcode_tag = "CR",
 #'   umi_tag = "UR"
 #' )
 #'
-#' @rdname bc_extract_10X_sam
+#' @rdname bc_extract_sc_sam
 #' @export
-bc_extract_10X_sam <- function(
+bc_extract_sc_sam <- function(
     sam, 
     pattern, 
     cell_barcode_tag = "CR", 
@@ -101,14 +99,65 @@ bc_extract_10X_sam <- function(
     process_sc_list(l)
 }
 
+#' Extract barcode from single cell sequencing fastq file
+#'
+#' \code{bc_extract_10X_fastq} can extract cellular barcode, UMI and lineage barcode
+#' sequences from 10X Genomics scRNASeq fastq file. This function can process
+#' the barcodes in the scRNASeq fastq file or target amplified fastq files directly.
+#'
+#' @param fq1 A string, the fastq file contains the cellular barcode and lineage
+#' barcode
+#' @param fq2 A string, it is optional, it provides the second fastq file
+#' contains the cellular barcode and lineage barcode. Two fastq files will be
+#' concatenated for the barcode extraction
+#' @param patternCellBarcode A string, defines the regular expression to match
+#' the single cell cellular barcode sequence. The expected sequence should be in
+#' the first catch. Please see the documents of
+#' \code{\link[CellBarcode]{bc_extract}} and example for more information.
+#' @param patternUMI A string, defines the regular expression to match the UMI
+#' sequence. The expected sequence should be in the first catch. Please see the
+#' documents of \code{\link[CellBarcode]{bc_extract}} and example for more
+#' information.
+#' @param patternBarcode the regular expression to match the lineage barcode. The
+#' expected sequence should be in the first catch. Please see the documents of
+#' \code{\link[CellBarcode]{bc_extract}} and example for more information.
+#' @details 
+#' 
+#' It should take some effort to define the regular expression to match the
+#' barcode sequence. Here I also provide the example to extract the barcode from
+#' 10X Genomics scRNASeq results. It also can be used to extract the barcode from
+#' other system.
+#'
+#' The function can process the barcodes in the scRNASeq fastq file or target 
+#' amplified fastq files. For the 10X scRNASeq fastq file, the cellular barcode is 
+#' in the first 16bp of the read1, the UMI is in the next 12bp, and the lineage
+#' barcode is in the read2.
+#' 
+#' The usage of the function will be like this:
+#' 
+#' \preformatted{
+#' bc_extract_sc_fastq(
+#'    fq1 = "read1.fastq.gz",
+#'    fq2 = "read2.fastq.gz",
+#'    patternCellBarcode = "(.{16})",
+#'    patternUMI = ".{16}(.{12})",
+#'    patternBarcode = "CGAAGTATCAAG(.+)CCGTAGCAAG"
+#' )
+#' }
+#' 
+#' @return 
+#' A BarcodeObj object with each cell as a sample.
+#' @seealso \code{\link[CellBarcode]{bc_extract}}, \code{\link[CellBarcode]{bc_extract_sc_sam}},
+#'
+#' @examples
+#' @rdname bc_extract_sc_fastq
 #' @export
-bc_extract_10X_fastq <- function(
+bc_extract_sc_fastq <- function(
     fq1,
     fq2 = NULL,
     patternCellBarcode = NULL,
     patternUMI = NULL,
-    patternBarcode = NULL,
-    isOverlap = F
+    patternBarcode = NULL
     ) {
 
     if (!file.exists(fq1)) {
