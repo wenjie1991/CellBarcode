@@ -1038,9 +1038,7 @@ setGeneric("bc_seq_filter", function(
 #'
 #' @export
 setGeneric("bc_plot_count", function(
-    barcodeObj,
-    bins = 20,
-    useCleaned = TRUE) {
-    standardGeneric("bc_plot_count")
-})
+        barcodeObj,
+        bins = 20,
+        useCleaned = TRUE) { standardGeneric("bc_plot_count") })
 

@@ -5,13 +5,13 @@
 
 **CellBarcode** is an R package for dealing with **Cellular DNA barcoding** sequencing data.
 
-The R package were created by Wenjie SUN, Anne-Marie Lyne, and Leïla Perié at Institut Curie.
+The R package is created by Wenjie SUN, Anne-Marie Lyne, and Leïla Perié at Institut Curie.
 
 ## Kinds of barcodes
 
 **CellBarcode** can handle all kinds of DNA barcodes, as long as:
 
-- The barcodes have a pattern which can be matched by a regular expression.
+- The barcodes have a pattern that can be matched by a regular expression.
 - Each barcode is within a single sequencing read.
 
 ## What you can do with **CellBarcode**
@@ -29,7 +29,7 @@ The R package were created by Wenjie SUN, Anne-Marie Lyne, and Leïla Perié at 
 
 ### Install devel version from GitHub
 
-```
+```r
 if(!requireNamespace("remotes", quietly = TRUE))
     install.packages("remotes")
 remotes::install_github("wenjie1991/CellBarcode@dev")
@@ -83,7 +83,6 @@ head(bc_2df(bc_sub))
 # export the barcode counts to matrix
 head(bc_2matrix(bc_sub))
 ```
-
 
 ## License
 

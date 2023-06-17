@@ -2,7 +2,7 @@
 % Please edit documentation in R/function-single_cell_seq.R
 \name{bc_extract_sc_fastq}
 \alias{bc_extract_sc_fastq}
-\title{Extract barcode from single cell sequencing fastq file}
+\title{Extract barcode from single-cell sequencing fastq file}
 \usage{
 bc_extract_sc_fastq(
   fq1,
@@ -38,7 +38,7 @@ expected sequence should be in the first catch. Please see the documents of
 A BarcodeObj object with each cell as a sample.
 }
 \description{
-\code{bc_extract_10X_fastq} can extract cellular barcode, UMI and lineage barcode
+\code{bc_extract_10X_fastq} can extract cellular barcode, UMI, and lineage barcode
 sequences from 10X Genomics scRNASeq fastq file. This function can process
 the barcodes in the scRNASeq fastq file or target amplified fastq files directly.
 }

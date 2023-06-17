@@ -201,25 +201,13 @@ setMethod("bc_plot_pair", c("BarcodeObj"), function(
     egg::ggarrange(plots=g_list)
 })
 
-#' @rdname bc_plot_pair
-#' @exportMethod bc_plot_pair
-setMethod("bc_plot_pair", c("BarcodeObj"), function(
-    barcodeObj,
-    sample_x,
-    sample_y,
-    count_marks_x=NULL,
-    count_marks_y=count_marks_x,
-    highlight=NULL,
-    log_coord=TRUE,
-    alpha=0.7
-    ) {
-
-#' @rdname bc_plot_pair
+#' @rdname bc_plot_count
 #' @exportMethod bc_plot_count
 setMethod("bc_plot_count", c("BarcodeObj"), function(
     barcodeObj, 
     bins = 20, 
-    useCleaned = TRUE) {
+    useCleaned = TRUE
+    ) {
     ## TODO: if there is no UMI
     ## TODO: apply to cleanBc
 
@@ -310,5 +298,5 @@ setMethod("bc_plot_count", c("BarcodeObj"), function(
     }
 
     egg::ggarrange(plots = plot_list)
-}
+})
 
