@@ -36,12 +36,12 @@ process_sc_list <- function(l) {
     output
 }
 
-#' Extract barcode from single cell sequencing sam file
+#' Extract barcode from single-cell sequencing sam file
 #'
-#' \code{bc_extract_sc_sam} can extract cellular barcode, UMI and lineage
+#' \code{bc_extract_sc_sam} can extract cellular barcode, UMI, and lineage
 #' barcode sequences from 10X Genomics scRNASeq sam file (or bam file have
 #' similar data structure). This function can not process bam file directly,
-#' users need to uncompress the bam file to get sam file in order to run this
+#' users need to uncompress the bam file to get a sam file to run this
 #' function See example.
 #'
 #' @param sam A string, define the un-mapped sequences 
@@ -50,10 +50,10 @@ process_sc_list <- function(l) {
 #' documents of \code{\link[CellBarcode]{bc_extract}} and example for more information.
 #' @param cell_barcode_tag A string, define the tag of cellular barcode field in sam
 #' file. The default is "CR".
-#' @param umi_tag A string, define the tag of UMI field in the sam file.
+#' @param umi_tag A string, define the tag of a UMI field in the sam file.
 #' @details 
 #' If the barcode sequence does not map to the reference genome. The user should
-#' use samtools to get the un-mapped reads and save it as sam format for using
+#' use the samtools to get the un-mapped reads and save it as sam format for using
 #' as the input. It can save a lot of time. The way to get the un-mapped reads:
 #' \preformatted{
 #' samtools view -f 4 input.bam > output.sam 
@@ -99,9 +99,9 @@ bc_extract_sc_sam <- function(
     process_sc_list(l)
 }
 
-#' Extract barcode from single cell sequencing fastq file
+#' Extract barcode from single-cell sequencing fastq file
 #'
-#' \code{bc_extract_10X_fastq} can extract cellular barcode, UMI and lineage barcode
+#' \code{bc_extract_10X_fastq} can extract cellular barcode, UMI, and lineage barcode
 #' sequences from 10X Genomics scRNASeq fastq file. This function can process
 #' the barcodes in the scRNASeq fastq file or target amplified fastq files directly.
 #'

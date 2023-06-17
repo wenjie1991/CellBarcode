@@ -1,31 +1,20 @@
 # TODO:
-# One function do all the job
+
+## The filterFq() should be an independent package
 # filterFq() -> output the filtering detail
-# make function to cross talk with genBaRcode and other packages
-# create function to identify the cutoff point
-# [ ] evaluate the sequencing depth (saturation of the sequene)
-# [y] sequence qc output: data.frame with 1. total reads, 2. mean length
-# [y] bc_extract add raw_read_count, barcode_read_count to metadata
-# [y] bc_cure_depth auto_identify the depth cutoff point
-# [y] Add cutoff point in metadata
+
+# [ ] evaluating the sequencing depth (saturation of the sequencing)
 # [ ] bc_plot_pairwise with interactive available (plotly)
 # [ ] bc_plot_pairwise with interactive available (d3)
-# [y] bc_plot_pairwise ggplot2
 # [ ] bc_plot_single with interactive (plotly)
 # [ ] bc_plot_single with interactive (d3)
-# [y] bc_plot_single with ggplot2
-
-# [y] Draw reads per barcode between samples pairwisely between technical replicates
-#       or different samples, draw reads per barcodes between more than two samples.
-# [ ] Explore the barcodes within a single sample or between two sample or more
+# [ ] bc_plot_pairwise with interactive (d3)
+# [ ] Explore the barcodes within a single sample or between two samples or more
 #       interactively (explore the cutoff point interactively).
-# [y] Merge technical repeats by merge sample function (subsetting barcodeObj ->
-#       change samle names -> combine two or more barcodeObj).
 # [ ] If no barcodes in the object, give errors when processing it with
 # BarcodeObj methods.
 
-# global help function
-
+# Global help function
 ifnullelse <- function(cand1, other) {
     if (is.null(cand1)) {
         return(other)
@@ -36,13 +25,7 @@ ifnullelse <- function(cand1, other) {
 
 #' DNA Barcode Analysis toolkit
 #'
-#' This package performs DNA Barcode (genetic lineage tracing) analysis. The
-#' package can handle all kinds of DNA barcodes, as long as the barcode within a
-#' single sequencing read and has a pattern which can be matched by a regular
-#' expression. \code{CellBarcode} can handle barcode with flexible length, with or
-#' without UMI (unique molecular identifier). This tool also can be used for
-#' pre-processing of some amplicon data such as CRISPR gRNA screening, immune
-#' repertoire sequencing and meta genome data.
+#' The package CellBarcode performs Cellular DNA Barcode analysis. It can handle all kinds of DNA barcodes, as long as the barcode is within a single sequencing read and has a pattern that can be matched by a regular expression. \code{CellBarcode} can handle barcodes with flexible lengths, with or without UMI (unique molecular identifier). This tool also can be used for pre-processing some amplicon data such as CRISPR gRNA screening, immune repertoire sequencing, and metagenome data.
 #'
 #' @name CellBarcode
 #' @docType package
@@ -120,7 +103,7 @@ NULL
 #'
 #' bc_obj = bc_cure_depth(bc_obj, depth=5)
 #'
-#' # save the dummy data
+#' # Save the dummy data
 #' # save(bc_obj, file = "./data/bc_obj.RData")
 #' ###
 #' }

@@ -18,7 +18,7 @@ distribution graphs.}
 \item{log_x}{A logical value, if TRUE, the \code{x} axis is logarized.}
 }
 \value{
-A data.frame with following columns:
+A data.frame with the following columns:
 \itemize{
   \item \code{total_reads}: total read number.
   \item \code{uniq_barcode}: how many barcodes in the dataset.
@@ -55,7 +55,7 @@ Shannon entropy \eqn{H}, with a units of bit,
 \examples{
 data(bc_obj)
 
-# filter barcode by depth
+# filter barcode by the depth
 bc_obj <- bc_cure_depth(bc_obj)
 
 # Output the summary of the barcodes

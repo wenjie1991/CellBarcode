@@ -84,38 +84,38 @@ bc_extract(
 )
 }
 \arguments{
-\item{x}{A single or a list of fastq file, ShortReadQ, DNAStringSet,
+\item{x}{A single or a list of fastq files, ShortReadQ, DNAStringSet,
 data.frame, or named integer.}
 
 \item{pattern}{A string or a string vector with the same number of files,
-specifying the regular expression with capture. It matchs the barcode (and
+specifying the regular expression with capture. It matches the barcode (and
 UMI) with capture pattern.}
 
 \item{sample_name}{A string vector, applicable when \code{x} is a list or
 fastq file vector. This argument specifies the sample names. If not provided,
-the function will look for sample name in the rownames of metadata,
+the function will look for sample names in the rownames of metadata,
 the fastqfile name or the \code{list} names.}
 
 \item{metadata}{A \code{data.frame} with sample names as the row names, with 
 each metadata record by column, specifying the sample characteristics.}
 
-\item{maxLDist}{An integer. The minimun mismatch threshold for barcode
+\item{maxLDist}{An integer. The minimum mismatch threshold for barcode
 matching, when maxLDist is 0, the \code{\link[stringr]{str_match}}  is
 invoked for barcode matching which is faster, otherwise
 \code{\link[utils]{aregexec}} is invoked and the \code{costs} parameters can
-be used to specifying the weight of the distance calculation.}
+be used to specify the weight of the distance calculation.}
 
 \item{pattern_type}{A vector. It defines the barcode (and UMI) capture
 group. See Details.}
 
 \item{costs}{A named list, applicable when maxLDist > 0, specifying the
-weight of each mismatch events while extracting the barcodes.  The list
+weight of each mismatch event while extracting the barcodes.  The list
 element name have to be \code{sub} (substitution), \code{ins} (insertion) and
 \code{del} (deletion). The default value is \code{list(sub = 1, ins = 99, del
-= 99)}.  See \code{\link[utils]{aregexec}} for more detail information.}
+= 99)}.  See \code{\link[utils]{aregexec}} for more detailed information.}
 
 \item{ordered}{A logical value. If the value is true, the return barcodes
-(UMI-barcode tags) are sorted by the reads counts.}
+(UMI-barcode tags) are sorted by the read counts.}
 }
 \value{
 This function returns a BarcodeObj object if the input is a \code{list} or a
@@ -132,7 +132,7 @@ the \code{data.frame} has columns:
 \description{
 \code{bc_extract} identifies the barcodes (and UMI) from the sequences using
 regular expressions.  \code{pattern} and \code{pattern_type} arguments are
-necessary, which provide the barcode (and UMI) pattern and their location
+necessary, which provides the barcode (and UMI) pattern and their location
 within the sequences.
 }
 \details{

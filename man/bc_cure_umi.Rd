@@ -13,7 +13,7 @@ bc_cure_umi(barcodeObj, depth = 2, doFish = FALSE, isUniqueUMI = FALSE)
 \item{barcodeObj}{A BarcodeObj object.}
 
 \item{depth}{A numeric or a vector of numeric, specifying the UMI-barcode
-tag count threshold. Only the barcodes with UMI-barcode tag count equal or larger than
+tag count threshold. Only the barcodes with UMI-barcode tag count equal to or larger than
 the threshold are kept.}
 
 \item{doFish}{A logical value, if true, for barcodes with UMI read depth
@@ -23,8 +23,8 @@ of identified barcodes, but the UMI counts will increase due to including the
 low depth UMI barcodes.}
 
 \item{isUniqueUMI}{A logical value. In the case that a UMI
-relates to several barcodes, if you believe that the UMI is absolute unique,
-then only the UMI-barcodes tags with highest count are kept for each UMI.}
+relates to several barcodes, if you believe that the UMI is absolutely unique,
+then only the UMI-barcodes tags with the highest count are kept for each UMI.}
 }
 \value{
 A \code{BarcodeObj} object with \code{cleanBc} slot updated (or
@@ -35,10 +35,10 @@ When the UMI is applied, \code{bc_cure_umi} can filter the UMI-barcode tags
 by counts.
 }
 \details{
-When invoke this function, it processes the data with following
+When invoking this function, it processes the data with following
 steps:
 \enumerate{
-  \item (if isUniqueUMI is TRUE) Find dominant UMI-barcode tag with highest
+  \item (if isUniqueUMI is TRUE) Find the dominant UMI-barcode tag with the highest
   reads count in each UMI.
   \item UMI-barcode depth filtering.
   \item (if doFish is TRUE) Fishing the UMI-barcode tags with low reads

@@ -14,7 +14,7 @@ bc_barcodes(barcodeObj, unlist = TRUE)
 
 \item{unlist}{A logical value. If TRUE, the function returns a vector of
 unique barcode list from all samples; otherwise a list will be returned. In
-the later case, each element of the list contains the barcodes of a sample.}
+the latter case, each element of the list contains the barcodes of a sample.}
 }
 \value{
 A character vector or a list.
@@ -28,10 +28,10 @@ functions, such as \code{bc_cure_depth}, \code{bc_cure_umi}.
 \examples{
 data(bc_obj)
 
-# get unique barcode vector of all samples
+# Get unique barcodes vector of all samples
 bc_barcodes(bc_obj)
 
-# get a list with each element containing barcodes from one sample
+# Get a list with each element containing barcodes from one sample
 bc_barcodes(bc_obj, unlist = FALSE)
 
 ###

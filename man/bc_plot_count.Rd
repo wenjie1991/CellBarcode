@@ -4,7 +4,7 @@
 \alias{bc_plot_count}
 \title{Plot for counts distribution}
 \usage{
-bc_plot_count(barcodeObj, bins = 20, useCleaned = T)
+bc_plot_count(barcodeObj, bins = 20, useCleaned = TRUE)
 }
 \arguments{
 \item{barcodeObj}{A BarcodeObj object}

@@ -41,7 +41,7 @@ the `messyBc` slot in the \code{BarcodeObj}.
 # default the return value is a list
 bc_messyBc(bc_obj)
 
-# the return value can be a data.frame
+# The return value can be a data.frame
 bc_messyBc(bc_obj, isList=FALSE)
 ###
 }

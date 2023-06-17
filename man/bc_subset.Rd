@@ -42,7 +42,7 @@ bc_merge(barcodeObj_x, barcodeObj_y)
 \item{sample}{A character vector or integer vector or an expression
 (expressio not applicable for \code{[]} operator), specifying the samples in
 the subsets. When the value is an expression, the columns in the metadata can
-be used as variable.}
+be used as a variable.}
 
 \item{barcode}{A vector of integer or string, indicating the selected
 barcode.}
@@ -63,7 +63,7 @@ barcodes.}
 A BarcodeObj object.
 }
 \description{
-A set of functions and operators for subset or join of
+A set of functions and operators for subsetting or joining of
 BarcodeObj object(s). 
 The \code{bc_subset}, \code{*} and \code{-} are used to select barcodes or
 samples in a \code{BarcodeObj} object.
@@ -78,7 +78,7 @@ Two BarcodeObj objects can be joined by \code{+}.
 \code{messyBc} slot in the BarcodeObj objects will be joined. 
 For the \code{metadata} slot, the \code{sample_name} column, and the
 \emph{Full outer join} (the record in either BarcodeObj object) will be
-performed with rownames as the key.
+performed with row names as the key.
 The \code{messyBc} and \code{cleanBc} from two objects are combined by rows
 for the same sample from two \code{BarcodeObj} objects.
 
@@ -95,7 +95,7 @@ bc_obj
 bc_subset(bc_obj, barcode = c("AACCTT", "AACCTT"))
 bc_obj[c("AGAG", "AAAG"), ]
 
-# Select samples by meta data
+# Select samples by metadata
 bc_meta(bc_obj)$phenotype <- c("l", "b")
 bc_meta(bc_obj)
 bc_subset(bc_obj, phenotype == "l")
@@ -105,7 +105,7 @@ bc_obj[, "test1"]
 bc_obj[, c("test1", "test2")]
 bc_subset(bc_obj, sample = "test1", barcode = c("AACCTT", "AACCTT"))
 
-# Apply barcodes black list
+# Apply barcode blacklist
 bc_subset(
 bc_obj,
     sample = c("test1", "test2"),
@@ -117,14 +117,14 @@ bc_obj["AGAG", "test1"] + bc_obj["AAAG", "test2"]
 # Join two samples with overlap barcodes
 bc_obj_join <- bc_obj["AGAG", "test1"] + bc_obj["AGAG", "test2"]
 bc_obj_join
-# The same barcode will removed after applying bc_cure_depth()
+# The same barcode will be removed after applying bc_cure_depth()
 bc_cure_depth(bc_obj_join)
 
 # Remove barcodes
 bc_obj
 bc_obj - "AAAG"
 
-# Select barcodes in white list
+# Select barcodes in a whitelist
 bc_obj
 bc_obj * "AAAG"
 ###

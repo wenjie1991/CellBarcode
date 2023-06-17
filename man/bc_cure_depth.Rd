@@ -13,9 +13,9 @@ bc_cure_depth(barcodeObj, depth = 0, isUpdate = TRUE)
 \item{barcodeObj}{A BarcodeObj object.}
 
 \item{depth}{A numeric or a vector of numeric, specifying the threshold of
-minimum count for a barcode to kept. If the input is a vector, if the vector
-length is not the same to the sample number the element will be repeatedly
-used. And when the depth argument is a number with negative value, automatic
+minimum count for a barcode to keep. If the input is a vector and the vector
+length is not the same as the sample number, the element will be repeatedly
+used. And when the depth argument is a number with a negative value, automatic
 cutoff point will be chosen by \code{bc_auto_cutoff} function for each
 samples. See \code{\link[CellBarcode]{bc_auto_cutoff}} for details.}
 

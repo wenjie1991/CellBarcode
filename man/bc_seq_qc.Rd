@@ -40,14 +40,14 @@ bc_plot_seqQc(x)
 \S4method{bc_plot_seqQc}{BarcodeQcSet}(x)
 }
 \arguments{
-\item{x}{A single or list of Fastq file, ShortReadQ object, DNAStringSet
+\item{x}{A single or list of Fastq files, ShortReadQ object, DNAStringSet
 object, data.frame or named integer vector.}
 
 \item{sample_name}{A character vector with the length of sample number, used
 to set the sample name.}
 
-\item{reads_sample_size}{A integer value define the sample size of the
-sequences for quality control analysis. If the there are less sequences comparing
+\item{reads_sample_size}{A integer value defines the sample size of the
+sequences for quality control analysis. If there are fewer sequences comparing
 to this value, all the sequences will be used. The default is 1e5.}
 }
 \value{
