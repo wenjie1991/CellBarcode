@@ -84,14 +84,14 @@ jobs:
           key: ${{ runner.os }}-r-${{ matrix.r-version }}-1-${{ hashFiles('r-dependencies.rds') }}
           restore-keys: ${{ runner.os }}-r-${{ matrix.r-version }}-1-
 
+      - name: Install pandoc
+        run: sudo apt-get install pandoc libcurl4-openssl-dev
+
       - name: Install dependencies
         run: |
           install.packages(c("remotes", "rcmdcheck"))
           remotes::install_deps(dependencies = TRUE)
         shell: Rscript {0}
-
-      - name: Install pandoc
-        run: sudo apt-get install pandoc libcurl4-openssl-dev
 
       - name: Check
         run: rcmdcheck::rcmdcheck(args = "--no-manual", error_on = "error")
