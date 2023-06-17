@@ -201,37 +201,25 @@ setMethod("bc_plot_pair", c("BarcodeObj"), function(
     egg::ggarrange(plots=g_list)
 })
 
+#' @rdname bc_plot_pair
+#' @exportMethod bc_plot_pair
+setMethod("bc_plot_pair", c("BarcodeObj"), function(
+    barcodeObj,
+    sample_x,
+    sample_y,
+    count_marks_x=NULL,
+    count_marks_y=count_marks_x,
+    highlight=NULL,
+    log_coord=TRUE,
+    alpha=0.7
+    ) {
 
-#' Plot for counts distribution
-#' 
-#' This function is used to summarize the counts of each barcode.
-#'
-#' @param barcodeObj A BarcodeObj object
-#' @param bins The number of bins for the histogram
-#' @param useCleaned Whether to use the cleaned barcode data
-#' @details
-#' When useCleaned is TRUE, the cleaned barcode data will be used.
-#' Otherwise, the messy barcode data will be used.
-#' The output will be different when useCleaned is TRUE or FALSE.
-#' It also depends on whether the UMI is available.
-#' The counts including:
-#'  \enumerate{
-#'   \item reads count (with barcode) versus the total reads
-#'  \item reads count per UMI
-#'  \item UMI count per barcode
-#'  \item barcode count per sample
-#'  \item reads or UMI count (dominant barcode) versus total count per sample
-#'  \item reads or UMI count (dominant barcode) distribution
-#' }
-#'
-#' @return A egg::ggarrange object
-#'
-#' @examples
-#' data(bc_obj)
-#' bc_plot_count(barcodeObj=bc_obj)
-#'
-#' @export
-bc_plot_count = function(barcodeObj, bins = 20, useCleaned = TRUE) {
+#' @rdname bc_plot_pair
+#' @exportMethod bc_plot_count
+setMethod("bc_plot_count", c("BarcodeObj"), function(
+    barcodeObj, 
+    bins = 20, 
+    useCleaned = TRUE) {
     ## TODO: if there is no UMI
     ## TODO: apply to cleanBc
 
