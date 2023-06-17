@@ -36,11 +36,11 @@ the `cleanBc` slot in the \code{BarcodeObj}.
 \examples{
 
 data(bc_obj)
-# get the data in cleanBc slot
+# Get the data in cleanBc slot
 # default the return value is a list
 bc_cleanBc(bc_obj)
 
-# the return value can be a data.frame
+# The return value can be a data.frame
 bc_cleanBc(bc_obj, isList=FALSE)
 ###
 }

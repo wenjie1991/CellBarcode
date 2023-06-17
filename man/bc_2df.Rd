@@ -7,7 +7,7 @@
 \alias{bc_2df,BarcodeObj-method}
 \alias{bc_2dt,BarcodeObj-method}
 \alias{bc_2matrix,BarcodeObj-method}
-\title{Transforms BarcodeObj object into other data type}
+\title{Transforms BarcodeObj object into another data type}
 \usage{
 bc_2df(barcodeObj)
 

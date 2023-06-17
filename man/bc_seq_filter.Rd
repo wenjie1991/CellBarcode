@@ -8,7 +8,7 @@
 \alias{bc_seq_filter,character-method}
 \alias{bc_seq_filter,integer-method}
 \alias{bc_seq_filter,list-method}
-\title{Remove low quality sequence}
+\title{Remove low-quality sequence}
 \usage{
 bc_seq_filter(
   x,
@@ -67,7 +67,7 @@ A ShortReadQ or DNAStringSet object with sequences passed the
 filters.
 }
 \description{
-Remove low quality sequences by base-pair quality, sequence length or unknown
+Remove low-quality sequences by base-pair quality, sequence length or unknown
 base "N".
 }
 \examples{
@@ -75,17 +75,17 @@ library(ShortRead)
 
 fq_file <- system.file("extdata", "simple.fq", package="CellBarcode")
 
-# apply filter to fastq files
+# apply a filter to fastq files
 bc_seq_filter(fq_file)
 
-# read in fastq files to get ShortReadQ object
+# Read in fastq files to get ShortReadQ object
 sr <- readFastq(fq_file[1])
 # apply sequencing quality filter to ShortReadQ
 bc_seq_filter(sr)
 
 # get DNAStringSet object
 ds <- sread(sr)
-# apply sequencing quality filter to DNAStringSet
+# Apply sequencing quality filter to DNAStringSet
 bc_seq_filter(ds)
 
 ###

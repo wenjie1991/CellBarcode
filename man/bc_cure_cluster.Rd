@@ -32,18 +32,18 @@ bc_cure_cluster(
 sample number, specifying the editing distance threshold for defining two
 similar barcode sequences. If the input is a vector, each value in the vector
 relates to one sample according to its order in \code{BarcodeObj} object.
-The sequences with editing distance equal or less than the threshold will be
+The sequences with editing distance equal to or less than the threshold will be
 considered similar barcodes.}
 
 \item{depth_fold_threshold}{A single numeric or vector of numeric with the
 length of sample number, specifying the depth fold change threshold of
-removing the similar minority barcode. The majority barcode should have at
+removing the similar minority barcode. The majority of barcodes should have at
 least \code{depth_fold_threshold} times of reads of the similar minotiry
-one, in order to remove the minority similar barcode. (TODO: more preciouse
+one, to remove the minority similar barcode. (TODO: more precise
 description)}
 
 \item{dist_method}{A  character string, specifying the editing distance 
-used for evaluating barcodes similarity. It can be "hamm" for Hamming
+used for evaluating barcode similarity. It can be "hamm" for Hamming
 distance or "leven" for Levenshtein distance.}
 
 \item{cluster_method}{A character string specifying the algorithm used to
@@ -52,14 +52,14 @@ available, in this case, The most and the least abundant barcode will
 be used for comparing, the least abundant barcode is preferentially removed.}
 
 \item{count_threshold}{An integer, read depth threshold to consider a barcode
-as a true barcode. If a barcode with count higher than this threshold
-it will not be removeg, even the barcode is similar to more abundant one.
+as a true barcode. If a barcode with a count higher than this threshold
+it will not be removed, even if the barcode is similar to a more abundant one.
 Default is 1e9.}
 
 \item{dist_costs}{A list, the cost of the events of distance algorithm, 
 applicable when Levenshtein distance is applied. The
 names of vector have to be \code{insert}, \code{delete} and \code{replace},
-specifying the weight of insertion, deletion, replacement events
+specifying the weight of insertion, deletion, and replacement events
 respectively. The default cost for each event is 1.}
 }
 \value{
@@ -67,9 +67,9 @@ A BarcodeObj object with cleanBc slot updated.
 }
 \description{
 \code{bc_cure_cluster} performs clustering of barcodes by editing distance,
-and remove the minority barcodes with similar sequence. This function is only
+and remove the minority barcodes with a similar sequence. This function is only
 applicable for the BarcodeObj object with a \code{cleanBc} slot. The barcodes
-with smaller reads count will be removed.
+with a smaller reads count will be removed.
 }
 \examples{
 data(bc_obj)
@@ -100,7 +100,7 @@ bc_obj <- bc_extract(list(test = d1), pattern, sample_name=c("test"),
 # Remove barcodes with depth < 5
 (bc_cured <- bc_cure_depth(bc_obj, depth=5))
 
-# Do the clustering, remove the less abundent barcodes
+# Do the clustering, remove the less abundant barcodes
 # one by hamming distance <= 1 
 bc_cure_cluster(bc_cured, dist_threshold = 1)
 

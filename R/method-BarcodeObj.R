@@ -1,13 +1,13 @@
-## internal functions
+## Internal functions
 ###########################
 count_BarcodeObj <- function(barcodeObj) {
     summary_res <- list()
 
-    # number of barcodes for each samples in messyBc
+    # number of barcodes for each sample in messyBc
     summary_res$messyBc_barcode_n <- lapply(barcodeObj@messyBc, nrow)
     names(summary_res$messyBc_barcode_n) <- rownames(barcodeObj@metadata)
 
-    # number of barcodes for each samples in cleanBc
+    # number of barcodes for each sample in cleanBc
     if (!is.null(barcodeObj@cleanBc)) {
         summary_res$cleanBc_barcode_n <- lapply(barcodeObj@cleanBc, nrow)
         names(summary_res$cleanBc_barcode_n) <- rownames(barcodeObj@metadata)
@@ -35,7 +35,7 @@ setMethod("bc_subset", c("BarcodeObj"), function(
     # and `metadata`. We need to make it capable to apply the selection to all
     # information in the object.
 
-    ## TODO: How do handle messyBc
+    ## TODO: How to handle messyBc
 
     # select barcodes
     if (!is.null(barcode)) {
@@ -106,9 +106,9 @@ setMethod("bc_subset", c("BarcodeObj"), function(
 
 #' @export
 "[.BarcodeObj" <- function(barcodeObj, barcode = NULL, sample = NULL, ...) {
-    # do not evaluate the expression
+    # Do not evaluate the expression
     y_call <- sample
-    # invoke bc_subset to done the job
+    # invoke bc_subset to do the job
     return(
         bc_subset(
             barcodeObj,
@@ -130,7 +130,7 @@ setMethod("bc_merge", c("BarcodeObj", "BarcodeObj"), function(barcodeObj_x, barc
 "+.BarcodeObj" <- function(barcodeObj_x, barcodeObj_y) {
     # TODO: Apply the merge to all parts of the data
     #       How to deal when two BarcodeObj have the same samples, the same
-    #       samples will merged
+    #       samples will merge
 
     # merge metadata
     suffixes <- paste0(".", 
@@ -146,7 +146,7 @@ setMethod("bc_merge", c("BarcodeObj", "BarcodeObj"), function(barcodeObj_x, barc
     metadata_xy$Row.names <- NULL
 
     # merge messyBc
-    # if the messyBc do not have the same header, do not merge them
+    # If the messyBc does not have the same header, do not merge them
     flag_remove_umi <- FALSE
     if (("umi_seq" %in% (names(barcodeObj_x@messyBc)) != ("umi_seq" %in% names(barcodeObj_y@messyBc)))) {
         message("------------\n+.BarcodeObj: You are merge data with UMI to data without UMI. The UMI info are discarded.\n------------")
@@ -234,7 +234,7 @@ setMethod("bc_names", c("BarcodeObj"), function(x){
 #' @rdname bc_names
 #' @exportMethod bc_names<-
 setMethod("bc_names<-", c("BarcodeObj", "character"), function(x, value) {
-    # if the sample names are not consistent stop
+    # If the sample names are not consistent stop
     # check_sample_name(barcodeObj)
 
     # check if the new names fit the sample number
@@ -249,7 +249,7 @@ setMethod("bc_names<-", c("BarcodeObj", "character"), function(x, value) {
     if (!is.null(x@cleanBc)) 
         names(x@cleanBc) <- value
 
-    # renew sample name in metadata
+    # renew sample name in the metadata
     rownames(x@metadata) <- value
     # barcodeObj@metadata <- value
     # check_sample_name(barcodeObj)
@@ -291,18 +291,18 @@ setMethod("bc_meta<-", c("BarcodeObj", "ANY", "ANY"), function(barcodeObj, key =
     # check sample names consistency
     check_sample_name(barcodeObj)
 
-    # if no key is given, update the metadata
+    # If no key is given, update the metadata
     if (is.null(key)) {
         if (!is(value, "data.frame"))
             stop("The input data is not data.frame")
 
-        # if new value matches the sample number
+        # If a new value matches the sample number
         if (length(value) != 1 & nrow(value) != nrow(barcodeObj@metadata))
             stop("The given meta data does not have correct length.")
 
         barcodeObj@metadata <- value
     } else {
-        # if new value matches the sample number
+        # If a new value matches the sample number
         if (length(value) != 1 & length(value) != nrow(barcodeObj@metadata))
             stop("The given meta data does not have correct length.")
 

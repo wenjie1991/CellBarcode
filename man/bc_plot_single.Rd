@@ -27,16 +27,16 @@ bc_plot_single(
 \item{barcodeObj}{A \code{BarcodeObj} object has a cleanBc slot}
 
 \item{sample_names}{A character vector or integer vector, specifying the
-samples used for plot.}
+samples used for the plot.}
 
 \item{count_marks}{A numeric or numeric vector, specifying the read count
 cutoff in the scatter plot for each sample.}
 
-\item{highlight}{A character vector, specifying the barcodes need to be
+\item{highlight}{A character vector, specifying the barcodes that need to be
 highlighted.}
 
 \item{log_coord}{A logical value, if TRUE (default), the \code{x} and
-\code{y} coordinates of the scatter plot will be logarized by log10.}
+\code{y} coordinates of the scatter plot are transformed by log10.}
 
 \item{alpha}{A numeric between 0 and 1, specifies the transparency of the
 dots in the scatter plot.}

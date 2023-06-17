@@ -40,7 +40,7 @@ dots in the scatter plot.}
 A scatter plot matrix.
 }
 \description{
-Draw barcode count scatter plot for all pairwise combination of samples
+Draw barcode count scatter plot for all pairwise combinations of samples
 within a \code{BarcodeObj} object. It uses \code{cleanBc} slot in the
 \code{BarcodeObj} object is used to draw the figure. If the \code{BarcodeObj}
 object does not have a cleanBc slot, you have to run the \code{bc_cure*}

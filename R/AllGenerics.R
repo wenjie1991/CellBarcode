@@ -1,6 +1,6 @@
 #' Manages barcodes and samples in a BarcodeObj object
 #'
-#' A set of functions and operators for subset or join of
+#' A set of functions and operators for subsetting or joining of
 #' BarcodeObj object(s). 
 #' The \code{bc_subset}, \code{*} and \code{-} are used to select barcodes or
 #' samples in a \code{BarcodeObj} object.
@@ -12,7 +12,7 @@
 #' @param sample A character vector or integer vector or an expression
 #' (expressio not applicable for \code{[]} operator), specifying the samples in
 #' the subsets. When the value is an expression, the columns in the metadata can
-#' be used as variable.
+#' be used as a variable.
 #' @param black_list A character vector, specifying the black list with excluded
 #' barcodes.
 #' @param white_list A character vector, giving the barcode white list. 
@@ -31,7 +31,7 @@
 #' \code{messyBc} slot in the BarcodeObj objects will be joined. 
 #' For the \code{metadata} slot, the \code{sample_name} column, and the
 #' \emph{Full outer join} (the record in either BarcodeObj object) will be
-#' performed with rownames as the key.
+#' performed with row names as the key.
 #' The \code{messyBc} and \code{cleanBc} from two objects are combined by rows
 #' for the same sample from two \code{BarcodeObj} objects.
 #' 
@@ -48,7 +48,7 @@
 #' bc_subset(bc_obj, barcode = c("AACCTT", "AACCTT"))
 #' bc_obj[c("AGAG", "AAAG"), ]
 #'
-#' # Select samples by meta data
+#' # Select samples by metadata
 #' bc_meta(bc_obj)$phenotype <- c("l", "b")
 #' bc_meta(bc_obj)
 #' bc_subset(bc_obj, phenotype == "l")
@@ -58,7 +58,7 @@
 #' bc_obj[, c("test1", "test2")]
 #' bc_subset(bc_obj, sample = "test1", barcode = c("AACCTT", "AACCTT"))
 #'
-#' # Apply barcodes black list
+#' # Apply barcode blacklist
 #' bc_subset(
 #' bc_obj,
 #'     sample = c("test1", "test2"),
@@ -70,14 +70,14 @@
 #' # Join two samples with overlap barcodes
 #' bc_obj_join <- bc_obj["AGAG", "test1"] + bc_obj["AGAG", "test2"]
 #' bc_obj_join
-#' # The same barcode will removed after applying bc_cure_depth()
+#' # The same barcode will be removed after applying bc_cure_depth()
 #' bc_cure_depth(bc_obj_join)
 #'
 #' # Remove barcodes
 #' bc_obj
 #' bc_obj - "AAAG"
 #'
-#' # Select barcodes in white list
+#' # Select barcodes in a whitelist
 #' bc_obj
 #' bc_obj * "AAAG"
 #' ###
@@ -116,15 +116,15 @@ setGeneric("bc_merge", function(barcodeObj_x, barcodeObj_y) {
 #' @param barcodeObj A \code{BarcodeObj} object.
 #' @param unlist A logical value. If TRUE, the function returns a vector of
 #' unique barcode list from all samples; otherwise a list will be returned. In
-#' the later case, each element of the list contains the barcodes of a sample.
+#' the latter case, each element of the list contains the barcodes of a sample.
 #' @return A character vector or a list.
 #' @examples
 #' data(bc_obj)
 #'
-#' # get unique barcode vector of all samples
+#' # Get unique barcodes vector of all samples
 #' bc_barcodes(bc_obj)
 #'
-#' # get a list with each element containing barcodes from one sample
+#' # Get a list with each element containing barcodes from one sample
 #' bc_barcodes(bc_obj, unlist = FALSE)
 #'
 #' ###
@@ -185,7 +185,7 @@ setGeneric("bc_names<-", function(x, value) { standardGeneric("bc_names<-") })
 #' # default the return value is a list
 #' bc_messyBc(bc_obj)
 #'
-#' # the return value can be a data.frame
+#' # The return value can be a data.frame
 #' bc_messyBc(bc_obj, isList=FALSE)
 #' ###
 setGeneric("bc_messyBc", function(barcodeObj, isList=TRUE){ standardGeneric("bc_messyBc") })
@@ -215,11 +215,11 @@ setGeneric("bc_messyBc", function(barcodeObj, isList=TRUE){ standardGeneric("bc_
 #' @examples
 #'
 #' data(bc_obj)
-#' # get the data in cleanBc slot
+#' # Get the data in cleanBc slot
 #' # default the return value is a list
 #' bc_cleanBc(bc_obj)
 #'
-#' # the return value can be a data.frame
+#' # The return value can be a data.frame
 #' bc_cleanBc(bc_obj, isList=FALSE)
 #' ###
 setGeneric("bc_cleanBc", function(barcodeObj, isList=TRUE){ standardGeneric("bc_cleanBc") })
@@ -244,16 +244,16 @@ setGeneric("bc_cleanBc", function(barcodeObj, isList=TRUE){ standardGeneric("bc_
 #' # get the metadata data.frame
 #' bc_meta(bc_obj)
 #'
-#' # assign value to a metadata by $ operation
+#' # assign value to metadata by $ operation
 #' bc_meta(bc_obj)$phenotype <- c("l", "b")
 #'
-#' # assign value to a metasta by "key" argument
+#' # assign value to metadata by "key" argument
 #' bc_meta(bc_obj, key = "sample_type") <- c("l", "b")
 #'
 #' # show the updated metadata
 #' bc_meta(bc_obj)
 #'
-#' # assign a new data.frame to metadata
+#' # assign new data.frame to metadata
 #' metadata <- data.frame(
 #'     sample_name <- c("test1", "test2"),
 #'     phenotype <- c("l", "b")
@@ -270,7 +270,7 @@ setGeneric("bc_meta", function(barcodeObj) { standardGeneric("bc_meta") })
 setGeneric("bc_meta<-", function(barcodeObj, key=NULL, value) {
     standardGeneric("bc_meta<-") })
 
-#' Transforms BarcodeObj object into other data type
+#' Transforms BarcodeObj object into another data type
 #'
 #' Transforms BarcodeObj object into \code{data.frame}, \code{data.table} or
 #' \code{matrix}.
@@ -315,34 +315,34 @@ setGeneric("bc_2matrix", function(barcodeObj) { standardGeneric("bc_2matrix") })
 #' 
 #' \code{bc_extract} identifies the barcodes (and UMI) from the sequences using
 #' regular expressions.  \code{pattern} and \code{pattern_type} arguments are
-#' necessary, which provide the barcode (and UMI) pattern and their location
+#' necessary, which provides the barcode (and UMI) pattern and their location
 #' within the sequences.
 #'
-#' @param x A single or a list of fastq file, ShortReadQ, DNAStringSet,
+#' @param x A single or a list of fastq files, ShortReadQ, DNAStringSet,
 #' data.frame, or named integer.
 #' @param pattern A string or a string vector with the same number of files,
-#' specifying the regular expression with capture. It matchs the barcode (and
+#' specifying the regular expression with capture. It matches the barcode (and
 #' UMI) with capture pattern.
 #' @param sample_name A string vector, applicable when \code{x} is a list or
 #' fastq file vector. This argument specifies the sample names. If not provided,
-#' the function will look for sample name in the rownames of metadata,
+#' the function will look for sample names in the rownames of metadata,
 #' the fastqfile name or the \code{list} names.
 #' @param metadata A \code{data.frame} with sample names as the row names, with 
 #' each metadata record by column, specifying the sample characteristics. 
-#' @param maxLDist An integer. The minimun mismatch threshold for barcode
+#' @param maxLDist An integer. The minimum mismatch threshold for barcode
 #' matching, when maxLDist is 0, the \code{\link[stringr]{str_match}}  is
 #' invoked for barcode matching which is faster, otherwise
 #' \code{\link[utils]{aregexec}} is invoked and the \code{costs} parameters can
-#' be used to specifying the weight of the distance calculation.
+#' be used to specify the weight of the distance calculation.
 #' @param pattern_type A vector. It defines the barcode (and UMI) capture
 #' group. See Details.
 #' @param costs A named list, applicable when maxLDist > 0, specifying the
-#' weight of each mismatch events while extracting the barcodes.  The list
+#' weight of each mismatch event while extracting the barcodes.  The list
 #' element name have to be \code{sub} (substitution), \code{ins} (insertion) and
 #' \code{del} (deletion). The default value is \code{list(sub = 1, ins = 99, del
-#' = 99)}.  See \code{\link[utils]{aregexec}} for more detail information.
+#' = 99)}.  See \code{\link[utils]{aregexec}} for more detailed information.
 #' @param ordered A logical value. If the value is true, the return barcodes
-#' (UMI-barcode tags) are sorted by the reads counts.
+#' (UMI-barcode tags) are sorted by the read counts.
 #' @details
 #' The \code{pattern} argument is a regular expression, the capture operation
 #' \code{()} identifying the barcode or UMI. \code{pattern_type} argument
@@ -456,13 +456,13 @@ setGeneric("bc_extract",
 #' slot will be used.
 #' @return a numeric \code{vector} of the cutoff point.
 #'
-#' @details The one dimension kmeans clustering is applied for identify the 
-#' "true barcode" based on read count. The the algorithm detail is:
-#' 1. Remove the barcodes with count below the median of counts.
+#' @details The one dimension kmeans clustering is applied to identify the 
+#' "true barcode" based on the read count. The algorithm detail is:
+#' 1. Remove the barcodes with counts below the median of counts.
 #' 2. Transform the count by log2(x+1).
-#' 3. Apply the 1 dimension clustering to the logarized count, with
-#' the cluster number of 2 and weights of the logarized count.
-#' 4. Choose the minimum count value in the cluster with more count as
+#' 3. Apply the 1-dimension clustering to the log count, with
+#' the cluster number of 2 and weights of the log count.
+#' 4. Choose the minimum count value in the cluster with more counts as
 #' cutoff point.
 #'
 #' For more info about 1 dimension kmeans used here please refer to
@@ -484,9 +484,9 @@ setGeneric("bc_auto_cutoff",
 #'
 #' @param barcodeObj A BarcodeObj object.
 #' @param depth A numeric or a vector of numeric, specifying the threshold of
-#' minimum count for a barcode to kept. If the input is a vector, if the vector
-#' length is not the same to the sample number the element will be repeatedly
-#' used. And when the depth argument is a number with negative value, automatic
+#' minimum count for a barcode to keep. If the input is a vector and the vector
+#' length is not the same as the sample number, the element will be repeatedly
+#' used. And when the depth argument is a number with a negative value, automatic
 #' cutoff point will be chosen by \code{bc_auto_cutoff} function for each
 #' samples. See \code{\link[CellBarcode]{bc_auto_cutoff}} for details.
 #' @param isUpdate A logical value. If TRUE, the \code{cleanBc} slot in
@@ -542,38 +542,38 @@ setGeneric("bc_cure_depth",
 #' Clean barcodes by editing distance
 #'
 #' \code{bc_cure_cluster} performs clustering of barcodes by editing distance,
-#' and remove the minority barcodes with similar sequence. This function is only
+#' and remove the minority barcodes with a similar sequence. This function is only
 #' applicable for the BarcodeObj object with a \code{cleanBc} slot. The barcodes
-#' with smaller reads count will be removed.
+#' with a smaller reads count will be removed.
 #'
 #' @param barcodeObj A BarcodeObj object.
 #' @param dist_threshold A single integer, or vector of integers with the length of
 #' sample number, specifying the editing distance threshold for defining two
 #' similar barcode sequences. If the input is a vector, each value in the vector
 #' relates to one sample according to its order in \code{BarcodeObj} object.
-#' The sequences with editing distance equal or less than the threshold will be
+#' The sequences with editing distance equal to or less than the threshold will be
 #' considered similar barcodes.
 #' @param depth_fold_threshold A single numeric or vector of numeric with the
 #' length of sample number, specifying the depth fold change threshold of
-#' removing the similar minority barcode. The majority barcode should have at
+#' removing the similar minority barcode. The majority of barcodes should have at
 #' least \code{depth_fold_threshold} times of reads of the similar minotiry
-#' one, in order to remove the minority similar barcode. (TODO: more preciouse
+#' one, to remove the minority similar barcode. (TODO: more precise
 #' description)
 #' @param dist_method A  character string, specifying the editing distance 
-#' used for evaluating barcodes similarity. It can be "hamm" for Hamming
+#' used for evaluating barcode similarity. It can be "hamm" for Hamming
 #' distance or "leven" for Levenshtein distance.
 #' @param cluster_method A character string specifying the algorithm used to
 #' perform the clustering of barcodes. Currently only "greedy" is
 #' available, in this case, The most and the least abundant barcode will
 #' be used for comparing, the least abundant barcode is preferentially removed. 
 #' @param count_threshold An integer, read depth threshold to consider a barcode
-#' as a true barcode. If a barcode with count higher than this threshold
-#' it will not be removeg, even the barcode is similar to more abundant one.
+#' as a true barcode. If a barcode with a count higher than this threshold
+#' it will not be removed, even if the barcode is similar to a more abundant one.
 #' Default is 1e9.
 #' @param dist_costs A list, the cost of the events of distance algorithm, 
 #' applicable when Levenshtein distance is applied. The
 #' names of vector have to be \code{insert}, \code{delete} and \code{replace},
-#' specifying the weight of insertion, deletion, replacement events
+#' specifying the weight of insertion, deletion, and replacement events
 #' respectively. The default cost for each event is 1.
 #' @return A BarcodeObj object with cleanBc slot updated.
 #' @examples
@@ -605,7 +605,7 @@ setGeneric("bc_cure_depth",
 #' # Remove barcodes with depth < 5
 #' (bc_cured <- bc_cure_depth(bc_obj, depth=5))
 #' 
-#' # Do the clustering, remove the less abundent barcodes
+#' # Do the clustering, remove the less abundant barcodes
 #' # one by hamming distance <= 1 
 #' bc_cure_cluster(bc_cured, dist_threshold = 1)
 #' 
@@ -634,7 +634,7 @@ setGeneric("bc_cure_cluster",
 #'
 #' @param barcodeObj A BarcodeObj object.
 #' @param depth A numeric or a vector of numeric, specifying the UMI-barcode
-#' tag count threshold. Only the barcodes with UMI-barcode tag count equal or larger than
+#' tag count threshold. Only the barcodes with UMI-barcode tag count equal to or larger than
 #' the threshold are kept. 
 #' @param doFish A logical value, if true, for barcodes with UMI read depth
 #' above the threshold, “fish” for identical barcodes with UMI read depth below
@@ -642,14 +642,14 @@ setGeneric("bc_cure_cluster",
 #' of identified barcodes, but the UMI counts will increase due to including the
 #' low depth UMI barcodes. 
 #' @param isUniqueUMI A logical value. In the case that a UMI
-#' relates to several barcodes, if you believe that the UMI is absolute unique,
-#' then only the UMI-barcodes tags with highest count are kept for each UMI.
+#' relates to several barcodes, if you believe that the UMI is absolutely unique,
+#' then only the UMI-barcodes tags with the highest count are kept for each UMI.
 #' @return A \code{BarcodeObj} object with \code{cleanBc} slot updated (or
 #' created).
-#' @details When invoke this function, it processes the data with following
+#' @details When invoking this function, it processes the data with following
 #' steps:
 #' \enumerate{
-#'   \item (if isUniqueUMI is TRUE) Find dominant UMI-barcode tag with highest
+#'   \item (if isUniqueUMI is TRUE) Find the dominant UMI-barcode tag with the highest
 #'   reads count in each UMI.
 #'   \item UMI-barcode depth filtering.
 #'   \item (if doFish is TRUE) Fishing the UMI-barcode tags with low reads
@@ -705,7 +705,7 @@ setGeneric("bc_cure_umi", function(
 #' @param plot A logical value, if TRUE, draw the Lorenz curve and barcode
 #' distribution graphs. 
 #' @param log_x A logical value, if TRUE, the \code{x} axis is logarized.
-#' @return A data.frame with following columns:
+#' @return A data.frame with the following columns:
 #' \itemize{
 #'   \item \code{total_reads}: total read number.
 #'   \item \code{uniq_barcode}: how many barcodes in the dataset.
@@ -737,7 +737,7 @@ setGeneric("bc_cure_umi", function(
 #' @examples
 #' data(bc_obj)
 #' 
-#' # filter barcode by depth
+#' # filter barcode by the depth
 #' bc_obj <- bc_cure_depth(bc_obj)
 #'
 #' # Output the summary of the barcodes
@@ -752,7 +752,7 @@ setGeneric("bc_summary_barcode", function(
 
 #' Barcode read count 2D scatter plot of sample combination
 #'
-#' Draw barcode count scatter plot for all pairwise combination of samples
+#' Draw barcode count scatter plot for all pairwise combinations of samples
 #' within a \code{BarcodeObj} object. It uses \code{cleanBc} slot in the
 #' \code{BarcodeObj} object is used to draw the figure. If the \code{BarcodeObj}
 #' object does not have a cleanBc slot, you have to run the \code{bc_cure*}
@@ -794,13 +794,13 @@ setGeneric("bc_plot_mutual", function(
 #'
 #' @param barcodeObj A \code{BarcodeObj} object has a cleanBc slot
 #' @param sample_names A character vector or integer vector, specifying the
-#' samples used for plot.
+#' samples used for the plot.
 #' @param count_marks A numeric or numeric vector, specifying the read count
 #' cutoff in the scatter plot for each sample.
-#' @param highlight A character vector, specifying the barcodes need to be
+#' @param highlight A character vector, specifying the barcodes that need to be
 #' highlighted.
 #' @param log_coord A logical value, if TRUE (default), the \code{x} and
-#' \code{y} coordinates of the scatter plot will be logarized by log10.
+#' \code{y} coordinates of the scatter plot are transformed by log10.
 #' @param alpha A numeric between 0 and 1, specifies the transparency of the
 #' dots in the scatter plot.
 #' @return 1D distribution graph matrix.
@@ -825,7 +825,7 @@ setGeneric("bc_plot_single", function(
 #' Barcode read count 2D scatter plot for given pairs
 #'
 #' Draws scatter plot for barcode read count between given pairs of samples with
-#' a \code{BarcodeObj} object. This function will return scatter plot matrix
+#' a \code{BarcodeObj} object. This function will return a scatter plot matrix
 #' contains the scatter plots for all given sample pairs.
 #'
 #' @param barcodeObj A \code{BarcodeObj} object.
@@ -840,12 +840,12 @@ setGeneric("bc_plot_single", function(
 #' point for samples in x
 #' axis
 #' @param count_marks_y A number vector used to mark the cutoff point for
-#' samples in y axis.
-#' @param highlight A character vector, specifying the barcodes need to be
+#' samples in the y-axis.
+#' @param highlight A character vector, specifying the barcodes that need to be
 #' highlighted.
 #' @param log_coord A logical value, if TRUE (default), the \code{x} and
 #' \code{y} coordinates
-#' of the scatter will be logarized by log10.
+#' of the scatter will be transformed by log10.
 #' @param alpha A numeric between 0 and 1, specifies the transparency of the
 #' dots in the scatter plot.
 #' @return Scatter plot matrix.
@@ -877,12 +877,12 @@ setGeneric("bc_plot_pair", function(
 #'
 #' \code{bc_seq_qc} evaluates sequences quality. See the return value for detail.
 #' 
-#' @param x A single or list of Fastq file, ShortReadQ object, DNAStringSet
+#' @param x A single or list of Fastq files, ShortReadQ object, DNAStringSet
 #' object, data.frame or named integer vector.
 #' @param sample_name A character vector with the length of sample number, used
 #' to set the sample name.
-#' @param reads_sample_size A integer value define the sample size of the
-#' sequences for quality control analysis. If the there are less sequences comparing
+#' @param reads_sample_size A integer value defines the sample size of the
+#' sequences for quality control analysis. If there are fewer sequences comparing
 #' to this value, all the sequences will be used. The default is 1e5.
 #' @return A barcodeQc or a barcodeQcSet class. 
 #' The barcodeQc is a list with four slots, 
@@ -961,9 +961,9 @@ setGeneric("bc_plot_seqQc", function(x) { standardGeneric("bc_plot_seqQc") })
 setGeneric("bc_summary_seqQc", function(x) { standardGeneric("bc_summary_seqQc") })
 
 
-#' Remove low quality sequence
+#' Remove low-quality sequence
 #' 
-#' Remove low quality sequences by base-pair quality, sequence length or unknown
+#' Remove low-quality sequences by base-pair quality, sequence length or unknown
 #' base "N".
 #'
 #' @param x A single or a list of Fastq file, \code{ShortReadQ},
@@ -982,17 +982,17 @@ setGeneric("bc_summary_seqQc", function(x) { standardGeneric("bc_summary_seqQc")
 #' 
 #' fq_file <- system.file("extdata", "simple.fq", package="CellBarcode")
 #'
-#' # apply filter to fastq files
+#' # apply a filter to fastq files
 #' bc_seq_filter(fq_file)
 #'
-#' # read in fastq files to get ShortReadQ object
+#' # Read in fastq files to get ShortReadQ object
 #' sr <- readFastq(fq_file[1])
 #' # apply sequencing quality filter to ShortReadQ
 #' bc_seq_filter(sr)
 #'
 #' # get DNAStringSet object
 #' ds <- sread(sr)
-#' # apply sequencing quality filter to DNAStringSet
+#' # Apply sequencing quality filter to DNAStringSet
 #' bc_seq_filter(ds)
 #'
 #' ###
@@ -1008,4 +1008,37 @@ setGeneric("bc_seq_filter", function(
 
 
 
+#' Plot for counts distribution
+#' 
+#' This function is used to summarize the counts of each barcode.
+#'
+#' @param barcodeObj A BarcodeObj object
+#' @param bins The number of bins for the histogram
+#' @param useCleaned Whether to use the cleaned barcode data
+#' @details
+#' When useCleaned is TRUE, the cleaned barcode data will be used.
+#' Otherwise, the messy barcode data will be used.
+#' The output will be different when useCleaned is TRUE or FALSE.
+#' It also depends on whether the UMI is available.
+#' The counts include:
+#'  \enumerate{
+#'   \item reads count (with barcode) versus the total reads
+#'  \item reads count per UMI
+#'  \item UMI count per barcode
+#'  \item barcode count per sample
+#'  \item reads or UMI count (dominant barcode) versus total count per sample
+#'  \item reads or UMI count (dominant barcode) distribution
+#' }
+#'
+#' @return A egg::ggarrange object
+#'
+#' @examples
+#' data(bc_obj)
+#' bc_plot_count(barcodeObj=bc_obj)
+#'
+#' @export
+setGeneric("bc_plot_count", function(
+        barcodeObj,
+        bins = 20,
+        useCleaned = TRUE) { standardGeneric("bc_plot_count") })
 

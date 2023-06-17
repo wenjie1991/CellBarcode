@@ -5,11 +5,5 @@
 \alias{CellBarcode}
 \title{DNA Barcode Analysis toolkit}
 \description{
-This package performs DNA Barcode (genetic lineage tracing) analysis. The
-package can handle all kinds of DNA barcodes, as long as the barcode within a
-single sequencing read and has a pattern which can be matched by a regular
-expression. \code{CellBarcode} can handle barcode with flexible length, with or
-without UMI (unique molecular identifier). This tool also can be used for
-pre-processing of some amplicon data such as CRISPR gRNA screening, immune
-repertoire sequencing and meta genome data.
+The package CellBarcode performs Cellular DNA Barcode analysis. It can handle all kinds of DNA barcodes, as long as the barcode is within a single sequencing read and has a pattern that can be matched by a regular expression. \code{CellBarcode} can handle barcodes with flexible lengths, with or without UMI (unique molecular identifier). This tool also can be used for pre-processing some amplicon data such as CRISPR gRNA screening, immune repertoire sequencing, and metagenome data.
 }

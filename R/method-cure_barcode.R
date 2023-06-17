@@ -1,6 +1,6 @@
 
 
-## private functions
+## Private functions
 ###########################
 bc_find_depth_cutoff_point <- function(count, count_lower_bound = median(count[count > 0])) {
 

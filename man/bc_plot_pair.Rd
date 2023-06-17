@@ -44,14 +44,14 @@ point for samples in x
 axis}
 
 \item{count_marks_y}{A number vector used to mark the cutoff point for
-samples in y axis.}
+samples in the y-axis.}
 
-\item{highlight}{A character vector, specifying the barcodes need to be
+\item{highlight}{A character vector, specifying the barcodes that need to be
 highlighted.}
 
 \item{log_coord}{A logical value, if TRUE (default), the \code{x} and
 \code{y} coordinates
-of the scatter will be logarized by log10.}
+of the scatter will be transformed by log10.}
 
 \item{alpha}{A numeric between 0 and 1, specifies the transparency of the
 dots in the scatter plot.}
@@ -61,7 +61,7 @@ Scatter plot matrix.
 }
 \description{
 Draws scatter plot for barcode read count between given pairs of samples with
-a \code{BarcodeObj} object. This function will return scatter plot matrix
+a \code{BarcodeObj} object. This function will return a scatter plot matrix
 contains the scatter plots for all given sample pairs.
 }
 \examples{

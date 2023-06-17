@@ -446,8 +446,7 @@ setMethod("show", c("BarcodeQcSet"), function(object) {
         "\n", sep="")
 })
 
-#' Subset the BarcodeQcSet
-#'
+
 #' Subset the BarcodeQcSet
 #'
 #' @param x A BarcodeQcSet object

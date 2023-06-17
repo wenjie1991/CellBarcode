@@ -55,7 +55,7 @@ bc_obj = bc_extract(
 
 bc_obj = bc_cure_depth(bc_obj, depth=5)
 
-# save the dummy data
+# Save the dummy data
 # save(bc_obj, file = "./data/bc_obj.RData")
 ###
 }

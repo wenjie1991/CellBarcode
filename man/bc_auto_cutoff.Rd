@@ -24,13 +24,13 @@ Finds the cutoff point for the barcode count filtering based on the barcode
 count distribution.
 }
 \details{
-The one dimension kmeans clustering is applied for identify the 
-"true barcode" based on read count. The the algorithm detail is:
-1. Remove the barcodes with count below the median of counts.
+The one dimension kmeans clustering is applied to identify the 
+"true barcode" based on the read count. The algorithm detail is:
+1. Remove the barcodes with counts below the median of counts.
 2. Transform the count by log2(x+1).
-3. Apply the 1 dimension clustering to the logarized count, with
-the cluster number of 2 and weights of the logarized count.
-4. Choose the minimum count value in the cluster with more count as
+3. Apply the 1-dimension clustering to the log count, with
+the cluster number of 2 and weights of the log count.
+4. Choose the minimum count value in the cluster with more counts as
 cutoff point.
 
 For more info about 1 dimension kmeans used here please refer to
