@@ -1,3 +1,11 @@
+## Changes in Version 
+
+## Changes in Version 1.7.2
+
+### New features
+
+- `bc_extract_sc_bam`: function to extract single-cell barcodes from BAM file.
+
 ## Changes in Version 1.7.0
 
 ### New features
