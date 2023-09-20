@@ -23,8 +23,9 @@ struct Barcode {
 };
 
 //' Parse 10X bam file
-//' @param sam A string, define the un-mapped sequences 
-//' @param pattern A string, define the regular expression to match the barcode
+//'
+//' @param in_file_path A string, define the un-mapped sequences 
+//' @param regex_str A string, define the regular expression to match the barcode
 //' sequence. The barcode sequence should be in the first catch. Please see the
 //' \code{\link[CellBarcode]{bc_extract}} for detail.
 //' @param cell_barcode_tag A string, define the tag of 10X cell barcode field in sam
