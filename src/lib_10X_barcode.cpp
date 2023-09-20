@@ -22,6 +22,7 @@ struct Barcode {
     long count;
 };
 
+//' Parse 10X bam file
 //' @param sam A string, define the un-mapped sequences 
 //' @param pattern A string, define the regular expression to match the barcode
 //' sequence. The barcode sequence should be in the first catch. Please see the

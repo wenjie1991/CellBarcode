@@ -63,6 +63,15 @@ bc_extract_sc_sam(
   umi_tag = "UR"
 )
 
+## Read bam file directly
+bam_file <- system.file("extdata", "scRNASeq_10X.bam", package = "CellBarcode")
+bc_extract_sc_bam(
+   bam = bam_file,
+   pattern = "AGATCAG(.*)TGTGGTA",
+   cell_barcode_tag = "CR",
+   umi_tag = "UR"
+)
+
 }
 \seealso{
 \code{\link[CellBarcode]{bc_extract}},
