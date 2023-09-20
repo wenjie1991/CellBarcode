@@ -2,9 +2,12 @@
 % Please edit documentation in R/function-single_cell_seq.R
 \name{bc_extract_sc_sam}
 \alias{bc_extract_sc_sam}
+\alias{bc_extract_sc_bam}
 \title{Extract barcode from single-cell sequencing sam file}
 \usage{
 bc_extract_sc_sam(sam, pattern, cell_barcode_tag = "CR", umi_tag = "UR")
+
+bc_extract_sc_bam(bam, pattern, cell_barcode_tag = "CR", umi_tag = "UR")
 }
 \arguments{
 \item{sam}{A string, define the un-mapped sequences}
@@ -17,6 +20,8 @@ documents of \code{\link[CellBarcode]{bc_extract}} and example for more informat
 file. The default is "CR".}
 
 \item{umi_tag}{A string, define the tag of a UMI field in the sam file.}
+
+\item{bam}{A string, define the bam file, it will be converted to sam file}
 }
 \value{
 A BarcodeObj object with each cell as a sample.
@@ -29,7 +34,11 @@ users need to uncompress the bam file to get a sam file to run this
 function See example.
 }
 \details{
-If the barcode sequence does not map to the reference genome. The user should
+Although the function `bc_extract_sc_bam` can process bam file directly,
+some optimization is still working on, it will be much more efficient to use
+`samtools` to get the sam file.
+
+What's more, if the barcode sequence does not map to the reference genome. The user should
 use the samtools to get the un-mapped reads and save it as sam format for using
 as the input. It can save a lot of time. The way to get the un-mapped reads:
 \preformatted{

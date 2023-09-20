@@ -34,7 +34,8 @@ Imports:
   utils, 
   S4Vectors,
   seqinr,
-  zlibbioc
+  zlibbioc,
+  Rsamtools
 LinkingTo: Rcpp, BH
 RoxygenNote: 7.2.3
 Suggests: BiocStyle, testthat (>= 3.0.0), knitr, rmarkdown
