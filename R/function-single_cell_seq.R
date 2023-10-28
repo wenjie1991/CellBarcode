@@ -45,6 +45,7 @@ process_sc_list <- function(l) {
 #' function See example.
 #'
 #' @param sam A string, define the un-mapped sequences 
+#' @param bam A string, define the bam file, it will be converted to sam file 
 #' @param pattern A string, define the regular expression to match the barcode
 #' sequence. The barcode sequence should be in the first catch. Please see the
 #' documents of \code{\link[CellBarcode]{bc_extract}} and example for more information.
@@ -52,7 +53,12 @@ process_sc_list <- function(l) {
 #' file. The default is "CR".
 #' @param umi_tag A string, define the tag of a UMI field in the sam file.
 #' @details 
-#' If the barcode sequence does not map to the reference genome. The user should
+#'
+#' Although the function `bc_extract_sc_bam` can process bam file directly,
+#' some optimization is still working on, it will be much more efficient to use
+#' `samtools` to get the sam file.
+#'
+#' What's more, if the barcode sequence does not map to the reference genome. The user should
 #' use the samtools to get the un-mapped reads and save it as sam format for using
 #' as the input. It can save a lot of time. The way to get the un-mapped reads:
 #' \preformatted{
@@ -81,6 +87,15 @@ process_sc_list <- function(l) {
 #'   cell_barcode_tag = "CR",
 #'   umi_tag = "UR"
 #' )
+#' 
+#' ## Read bam file directly
+#' bam_file <- system.file("extdata", "scRNASeq_10X.bam", package = "CellBarcode")
+#' bc_extract_sc_bam(
+#'    bam = bam_file,
+#'    pattern = "AGATCAG(.*)TGTGGTA",
+#'    cell_barcode_tag = "CR",
+#'    umi_tag = "UR"
+#' )
 #'
 #' @rdname bc_extract_sc_sam
 #' @export
@@ -91,12 +106,45 @@ bc_extract_sc_sam <- function(
     umi_tag = "UR"
     ) {
     if(!file.exists(sam)) {
-        stop("The input bam file does not exist.")
+        stop("The input sam file does not exist.")
     }
     sam <- path.expand(sam)
     l <- parse_10x_sam(sam, pattern)
 
     process_sc_list(l)
+}
+
+#' @rdname bc_extract_sc_sam 
+#' @export
+bc_extract_sc_bam <- function(
+    bam,
+    pattern,
+    cell_barcode_tag = "CR",
+    umi_tag = "UR"
+    ) {
+    ## check if the bam file exists
+    if(!file.exists(bam)) {
+        stop("The input bam file does not exist.")
+    }
+
+    # Define a temporary directory
+    tmp_dir <- tempdir()
+
+    # Define the path for the SAM file
+    sam_file_path <- file.path(tmp_dir, "output.sam")
+
+    # Create a BamFile object 
+    # bam_file <- Rsamtools::BamFile(bam)
+
+    # Read the BAM file and write it to a SAM file
+    cat("Start to convert bam file to sam file.\n")
+    cat("sam file path: ", sam_file_path, "\n")
+    Rsamtools::asSam(bam, sub("\\.sam$", "", sam_file_path), overwrite = TRUE)
+
+    out = bc_extract_sc_sam(sam_file_path, pattern, cell_barcode_tag, umi_tag)
+    file.remove(sam_file_path)
+
+    out
 }
 
 #' Extract barcode from single-cell sequencing fastq file
