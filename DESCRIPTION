@@ -1,7 +1,11 @@
 Package: CellBarcode
 Type: Package
 Title: Cellular DNA Barcode Analysis toolkit
+<<<<<<< HEAD
 Version: 1.7.2
+=======
+Version: 1.9.0
+>>>>>>> 5b505989186f975b902359f4ea395174c810c122
 Authors@R: c(
   person("Wenjie", "Sun", email = "sunwjie@gmail.com", role = "cre", comment=c(ORCID="0000-0002-3100-2346")),
   person("Anne-Marie", "Lyne", email = "Anne-Marie.Lyne@curie.fr", role = "aut"),
