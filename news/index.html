@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">CellBarcode</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.9.0</span>
       </span>
     </div>
 
@@ -61,21 +61,57 @@
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="1.2.2" id="changes-in-version-122">Changes in version 1.2.2<a class="anchor" aria-label="anchor" href="#changes-in-version-122"></a></h2>
+<h2 class="page-header" data-toc-text="1.7.2" id="changes-in-version-172">Changes in Version 1.7.2<a class="anchor" aria-label="anchor" href="#changes-in-version-172"></a></h2>
 <div class="section level3">
-<h3 id="enhancements-1-2-2">Enhancements<a class="anchor" aria-label="anchor" href="#enhancements-1-2-2"></a></h3>
+<h3 id="new-features-1-7-2">New features<a class="anchor" aria-label="anchor" href="#new-features-1-7-2"></a></h3>
+<ul><li>
+<code>bc_extract_sc_bam</code>: function to extract single-cell barcodes from BAM file.</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="1.7.0" id="changes-in-version-170">Changes in Version 1.7.0<a class="anchor" aria-label="anchor" href="#changes-in-version-170"></a></h2>
+<div class="section level3">
+<h3 id="new-features-1-7-0">New features<a class="anchor" aria-label="anchor" href="#new-features-1-7-0"></a></h3>
+<ul><li>
+<code>bc_extract_sc_sam</code>: function to extract single-cell barcodes from SAM file</li>
+<li>
+<code>bc_extract_sc_fastq</code>: function to extract single-cell barcodes from fastq file</li>
+<li>
+<code>bc_plot_count</code>: function to plot the count feature of the barcodes such as barcode reads versus total reads, reads per UMI distribution.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="incompatible-changes-1-7-0">Incompatible changes<a class="anchor" aria-label="anchor" href="#incompatible-changes-1-7-0"></a></h3>
+<p><code>bc_extract</code> now only accepts a vector or list, and returns <code>BarcodeObj</code>, instead of returning <code>data.frame</code> when the input is a single sample.</p>
+</div>
+</div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="1.4.0" id="changes-in-version-140">Changes in Version 1.4.0<a class="anchor" aria-label="anchor" href="#changes-in-version-140"></a></h2>
+<p>Version bumping</p>
+</div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="1.3.2" id="changes-in-version-132">Changes in version 1.3.2<a class="anchor" aria-label="anchor" href="#changes-in-version-132"></a></h2>
+<div class="section level3">
+<h3 id="enhancements-1-3-2">Enhancements<a class="anchor" aria-label="anchor" href="#enhancements-1-3-2"></a></h3>
 <ul><li><p>Reduce memory usage by removing the original sequence in barcodeObj.</p></li>
 <li><p>Impromve fastq reading efficiency by using Rcpp.</p></li>
 </ul></div>
 <div class="section level3">
-<h3 id="new-features-1-2-2">New features<a class="anchor" aria-label="anchor" href="#new-features-1-2-2"></a></h3>
+<h3 id="new-features-1-3-2">New features<a class="anchor" aria-label="anchor" href="#new-features-1-3-2"></a></h3>
 <ul><li><p><code>bc_splitVDJ</code> split VDJ barcode (experimental).</p></li>
-<li><p><code>bc_extract_10X_scSeq</code> function used to extract transcripted barcode in 10X Genomics scRNASeq data.</p></li>
+<li><p><code>bc_extract_10XscSeq</code> function used to extract transcripted barcode in 10X Genomics scRNASeq data.</p></li>
 </ul></div>
 <div class="section level3">
-<h3 id="bug-fix-1-2-2">Bug fix<a class="anchor" aria-label="anchor" href="#bug-fix-1-2-2"></a></h3>
+<h3 id="bug-fix-1-3-2">Bug fix<a class="anchor" aria-label="anchor" href="#bug-fix-1-3-2"></a></h3>
 <ul><li>fix the error of <code>bc_cure_cluster</code>.</li>
 </ul></div>
+</div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="1.2.0" id="changes-in-120">Changes in 1.2.0<a class="anchor" aria-label="anchor" href="#changes-in-120"></a></h2>
+<p>Just version bumping</p>
+</div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="1.1.0" id="changes-in-110">Changes in 1.1.0<a class="anchor" aria-label="anchor" href="#changes-in-110"></a></h2>
+<p>Just version bumping</p>
 </div>
   </div>
 
@@ -91,7 +127,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

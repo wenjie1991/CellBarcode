@@ -58,7 +58,10 @@
     <loc>https://wenjie1991.github.io/CellBarcode/reference/bc_extract.html</loc>
   </url>
   <url>
-    <loc>https://wenjie1991.github.io/CellBarcode/reference/bc_extract_10X_scSeq.html</loc>
+    <loc>https://wenjie1991.github.io/CellBarcode/reference/bc_extract_sc_fastq.html</loc>
+  </url>
+  <url>
+    <loc>https://wenjie1991.github.io/CellBarcode/reference/bc_extract_sc_sam.html</loc>
   </url>
   <url>
     <loc>https://wenjie1991.github.io/CellBarcode/reference/bc_messyBc.html</loc>
@@ -71,6 +74,9 @@
   </url>
   <url>
     <loc>https://wenjie1991.github.io/CellBarcode/reference/bc_obj.html</loc>
+  </url>
+  <url>
+    <loc>https://wenjie1991.github.io/CellBarcode/reference/bc_plot_count.html</loc>
   </url>
   <url>
     <loc>https://wenjie1991.github.io/CellBarcode/reference/bc_plot_mutual.html</loc>
@@ -104,6 +110,9 @@
   </url>
   <url>
     <loc>https://wenjie1991.github.io/CellBarcode/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>https://wenjie1991.github.io/CellBarcode/reference/parse_10x_sam.html</loc>
   </url>
   <url>
     <loc>https://wenjie1991.github.io/CellBarcode/reference/seq_correct.html</loc>

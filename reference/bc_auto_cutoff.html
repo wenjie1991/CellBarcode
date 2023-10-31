@@ -24,7 +24,7 @@ count distribution."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/a
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">CellBarcode</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.9.0</span>
       </span>
     </div>
 
@@ -94,13 +94,13 @@ slot will be used.</p></dd>
     </div>
     <div id="details">
     <h2>Details</h2>
-    <p>The one dimension kmeans clustering is applied for identify the 
-"true barcode" based on read count. The the algorithm detail is:
-1. Remove the barcodes with count below the median of counts.
+    <p>The one dimension kmeans clustering is applied to identify the 
+"true barcode" based on the read count. The algorithm detail is:
+1. Remove the barcodes with counts below the median of counts.
 2. Transform the count by log2(x+1).
-3. Apply the 1 dimension clustering to the logarized count, with
-the cluster number of 2 and weights of the logarized count.
-4. Choose the minimum count value in the cluster with more count as
+3. Apply the 1-dimension clustering to the log count, with
+the cluster number of 2 and weights of the log count.
+4. Choose the minimum count value in the cluster with more counts as
 cutoff point.</p>
 <p>For more info about 1 dimension kmeans used here please refer to
 <code><a href="https://rdrr.io/pkg/Ckmeans.1d.dp/man/Ckmeans.1d.dp.html" class="external-link">Ckmeans.1d.dp</a></code>.</p>
@@ -132,7 +132,7 @@ cutoff point.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

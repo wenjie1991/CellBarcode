@@ -24,7 +24,7 @@ by counts."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">CellBarcode</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.9.0</span>
       </span>
     </div>
 
@@ -82,7 +82,7 @@ by counts.</p>
 
 <dt>depth</dt>
 <dd><p>A numeric or a vector of numeric, specifying the UMI-barcode
-tag count threshold. Only the barcodes with UMI-barcode tag count equal or larger than
+tag count threshold. Only the barcodes with UMI-barcode tag count equal to or larger than
 the threshold are kept.</p></dd>
 
 
@@ -96,8 +96,8 @@ low depth UMI barcodes.</p></dd>
 
 <dt>isUniqueUMI</dt>
 <dd><p>A logical value. In the case that a UMI
-relates to several barcodes, if you believe that the UMI is absolute unique,
-then only the UMI-barcodes tags with highest count are kept for each UMI.</p></dd>
+relates to several barcodes, if you believe that the UMI is absolutely unique,
+then only the UMI-barcodes tags with the highest count are kept for each UMI.</p></dd>
 
 </dl></div>
     <div id="value">
@@ -109,8 +109,8 @@ created).</p>
     </div>
     <div id="details">
     <h2>Details</h2>
-    <p>When invoke this function, it processes the data with following
-steps:</p><ol><li><p>(if isUniqueUMI is TRUE) Find dominant UMI-barcode tag with highest
+    <p>When invoking this function, it processes the data with following
+steps:</p><ol><li><p>(if isUniqueUMI is TRUE) Find the dominant UMI-barcode tag with the highest
   reads count in each UMI.</p></li>
 <li><p>UMI-barcode depth filtering.</p></li>
 <li><p>(if doFish is TRUE) Fishing the UMI-barcode tags with low reads
@@ -177,7 +177,7 @@ steps:</p><ol><li><p>(if isUniqueUMI is TRUE) Find dominant UMI-barcode tag with
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

@@ -25,7 +25,7 @@ also generates Lorenz curve and barcode frequency distribution graphs."><!-- mat
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">CellBarcode</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.9.0</span>
       </span>
     </div>
 
@@ -95,7 +95,7 @@ distribution graphs.</p></dd>
     <h2>Value</h2>
     
 
-<p>A data.frame with following columns:</p><ul><li><p><code>total_reads</code>: total read number.</p></li>
+<p>A data.frame with the following columns:</p><ul><li><p><code>total_reads</code>: total read number.</p></li>
 <li><p><code>uniq_barcode</code>: how many barcodes in the dataset.</p></li>
 <li><p><code>shannon_index</code>: Shannon's diversity index or Shannon–Wiener
     index.</p></li>
@@ -123,7 +123,7 @@ $$ H = - \sum_{i=1}^{R}p_ilog_2p_i $$</p>
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">bc_obj</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># filter barcode by depth</span></span></span>
+<span class="r-in"><span><span class="co"># filter barcode by the depth</span></span></span>
 <span class="r-in"><span><span class="va">bc_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="bc_cure_depth.html">bc_cure_depth</a></span><span class="op">(</span><span class="va">bc_obj</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ------------</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> bc_cure_depth: isUpdate is TRUE, update the cleanBc.</span>
@@ -152,7 +152,7 @@ $$ H = - \sum_{i=1}^{R}p_ilog_2p_i $$</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

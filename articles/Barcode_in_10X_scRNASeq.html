@@ -39,7 +39,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">CellBarcode</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.9.0</span>
       </span>
     </div>
 
@@ -140,20 +140,71 @@ what you are doing.</p></li>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sam_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"scRNASeq_10X.sam"</span>, package <span class="op">=</span> <span class="st">"CellBarcode"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">d</span> <span class="op">=</span> <span class="fu"><a href="../reference/bc_extract_10X_scSeq.html">bc_extract_10XscSeq</a></span><span class="op">(</span></span>
+<span><span class="va">d</span> <span class="op">=</span> <span class="fu"><a href="../reference/bc_extract_sc_sam.html">bc_extract_sc_sam</a></span><span class="op">(</span></span>
 <span>   sam <span class="op">=</span> <span class="va">sam_file</span>,</span>
 <span>   pattern <span class="op">=</span> <span class="st">"AGATCAG(.*)TGTGGTA"</span>,</span>
 <span>   cell_barcode_tag <span class="op">=</span> <span class="st">"CR"</span>,</span>
 <span>   umi_tag <span class="op">=</span> <span class="st">"UR"</span></span>
 <span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span></span>
-<span><span class="co">#&gt;       cell_barcode          umi           barcode_seq count</span></span>
-<span><span class="co">#&gt; 1 ACAACCATCACGGAGA GCTGGGATCCGG GGGAGTGGTGGAAGGTTAGGA     1</span></span>
-<span><span class="co">#&gt; 2 AATCGACTCATCGCTC CTTTTGTATGGA CCTCGGCAGAGTACTTTTTAA     1</span></span>
-<span><span class="co">#&gt; 3 AAGTTCGAGAGGTATT CCACGGGCACCG CGTTAATCGGTCTAGTGATTA     1</span></span>
-<span><span class="co">#&gt; 4 AAGTCGTAGCACGGAT AAAGCCTGCAAG CTATATATTCGTTGTATTATA     1</span></span>
-<span><span class="co">#&gt; 5 AAGACAAAGGCGCTTC CGTCTTGGTAGC TCATTTGATACTAAGAATGAA     2</span></span>
-<span><span class="co">#&gt; 6 AACTTCTGTGTTCCTC GACAACCTTGGT GGGTGGGATTCAGTGATCATA     1</span></span></code></pre></div>
+<span></span>
+<span><span class="va">d</span></span>
+<span><span class="co">#&gt; Bonjour le monde, This is a BarcodeObj.</span></span>
+<span><span class="co">#&gt; ----------</span></span>
+<span><span class="co">#&gt; It contains: </span></span>
+<span><span class="co">#&gt; ----------</span></span>
+<span><span class="co">#&gt; @metadata: 2 field(s) available:</span></span>
+<span><span class="co">#&gt; raw_read_count  barcode_read_count</span></span>
+<span><span class="co">#&gt; ----------</span></span>
+<span><span class="co">#&gt; @messyBc: 49 sample(s) for raw barcodes:</span></span>
+<span><span class="co">#&gt;     In sample $AAACGAAAGTTCATGC there are: 1 Tags</span></span>
+<span><span class="co">#&gt;     In sample $AAACGCTAGCTGACCC there are: 1 Tags</span></span>
+<span><span class="co">#&gt;     In sample $AAAGGATAGTGTGTTC there are: 1 Tags</span></span>
+<span><span class="co">#&gt;     In sample $AAAGGGCAGCCTGAGA there are: 1 Tags</span></span>
+<span><span class="co">#&gt;     In sample $AAAGGTAAGGCCCACT there are: 1 Tags</span></span>
+<span><span class="co">#&gt;     In sample $AAAGTCCCACTGCGAC there are: 1 Tags</span></span>
+<span><span class="co">#&gt;     In sample $AAAGTGATCTGACGCG there are: 1 Tags</span></span>
+<span><span class="co">#&gt;     In sample $AACACACCAATCCAGT there are: 1 Tags</span></span>
+<span><span class="co">#&gt;     In sample $AACACACTCACCGACG there are: 1 Tags</span></span>
+<span><span class="co">#&gt;     In sample $AACCCAAGGTAATTTA there are: 1 Tags</span></span>
+<span><span class="co">#&gt;     In sample $AACCTTTGTCATTCCC there are: 1 Tags</span></span>
+<span><span class="co">#&gt;     In sample $AACGAAATCTGGGTCG there are: 1 Tags</span></span>
+<span><span class="co">#&gt;     In sample $AACTTCTGTGTTCCTC there are: 1 Tags</span></span>
+<span><span class="co">#&gt;     In sample $AAGACAAAGCTAAATG there are: 1 Tags</span></span>
+<span><span class="co">#&gt;     In sample $AAGACAAAGGCGCTTC there are: 1 Tags</span></span>
+<span><span class="co">#&gt;     In sample $AAGCAGTGGTATCAAC there are: 8 Tags</span></span>
+<span><span class="co">#&gt;     In sample $AAGGAGCTGACAGGTG there are: 1 Tags</span></span>
+<span><span class="co">#&gt;     In sample $AAGTCGTAGCACGGAT there are: 1 Tags</span></span>
+<span><span class="co">#&gt;     In sample $AAGTGAAAGTCCCGGT there are: 1 Tags</span></span>
+<span><span class="co">#&gt;     In sample $AAGTTCGAGAGGTATT there are: 1 Tags</span></span>
+<span><span class="co">#&gt;     In sample $AATAGAGGTTCTAACG there are: 1 Tags</span></span>
+<span><span class="co">#&gt;     In sample $AATCGACTCATCGCTC there are: 1 Tags</span></span>
+<span><span class="co">#&gt;     In sample $ACAAAGAGTAGGTCAG there are: 1 Tags</span></span>
+<span><span class="co">#&gt;     In sample $ACAACCATCACGGAGA there are: 1 Tags</span></span>
+<span><span class="co">#&gt;     In sample $ACATGGGGTAAAAGGA there are: 1 Tags</span></span>
+<span><span class="co">#&gt;     In sample $AGCAGTGGTATCAACG there are: 1 Tags</span></span>
+<span><span class="co">#&gt;     In sample $AGGCATTAAAGCAGCG there are: 1 Tags</span></span>
+<span><span class="co">#&gt;     In sample $AGGCCTCACATTCTTC there are: 1 Tags</span></span>
+<span><span class="co">#&gt;     In sample $AGTCTTTCGTCAAACA there are: 1 Tags</span></span>
+<span><span class="co">#&gt;     In sample $CAAATTTTGTAATCCA there are: 1 Tags</span></span>
+<span><span class="co">#&gt;     In sample $CACAAATTTTGTAATC there are: 1 Tags</span></span>
+<span><span class="co">#&gt;     In sample $CACAACTCCTCATAAA there are: 1 Tags</span></span>
+<span><span class="co">#&gt;     In sample $CAGTGGTATCAACGCA there are: 1 Tags</span></span>
+<span><span class="co">#&gt;     In sample $CCTTGTGAGTGTTACC there are: 1 Tags</span></span>
+<span><span class="co">#&gt;     In sample $CTACGGGAAGCAATAG there are: 1 Tags</span></span>
+<span><span class="co">#&gt;     In sample $GATACAAAGGCATTAA there are: 1 Tags</span></span>
+<span><span class="co">#&gt;     In sample $GCAGTGGTATCAACGC there are: 2 Tags</span></span>
+<span><span class="co">#&gt;     In sample $GGAAGCAATAGCATGA there are: 1 Tags</span></span>
+<span><span class="co">#&gt;     In sample $GTGGTATCAACGCAGA there are: 2 Tags</span></span>
+<span><span class="co">#&gt;     In sample $GTTAAGAATACCAGTC there are: 1 Tags</span></span>
+<span><span class="co">#&gt;     In sample $TAAGCCAAAAGAACAA there are: 1 Tags</span></span>
+<span><span class="co">#&gt;     In sample $TAAGCCATAAACATAT there are: 1 Tags</span></span>
+<span><span class="co">#&gt;     In sample $TGAAAGTGACAACTGA there are: 1 Tags</span></span>
+<span><span class="co">#&gt;     In sample $TTCACCGATTTTGTAA there are: 2 Tags</span></span>
+<span><span class="co">#&gt;     In sample $TTCCAAATTTTGTAAT there are: 1 Tags</span></span>
+<span><span class="co">#&gt;     In sample $TTCCTCTCAGAATTGG there are: 1 Tags</span></span>
+<span><span class="co">#&gt;     In sample $TTCGCTGATTTTGTAA there are: 1 Tags</span></span>
+<span><span class="co">#&gt;     In sample $TTCTTCACAGAATTGG there are: 1 Tags</span></span>
+<span><span class="co">#&gt;     In sample $TTGGGCGTCTTTGGGC there are: 1 Tags</span></span></code></pre></div>
 <p>The output is a <code>data.frame</code>. It contains 3 columns:</p>
 <ul>
 <li><p>cell_barcode: It is unique identificaiton for each cell. One
@@ -195,70 +246,72 @@ please ask the package author, then the exmaple will be apear here.</p>
 </h2>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; R version 4.2.1 (2022-06-23)</span></span>
-<span><span class="co">#&gt; Platform: x86_64-apple-darwin17.0 (64-bit)</span></span>
-<span><span class="co">#&gt; Running under: macOS Big Sur ... 10.16</span></span>
+<span><span class="co">#&gt; R version 4.3.0 (2023-04-21)</span></span>
+<span><span class="co">#&gt; Platform: x86_64-apple-darwin20 (64-bit)</span></span>
+<span><span class="co">#&gt; Running under: macOS 14.1</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Matrix products: default</span></span>
-<span><span class="co">#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRblas.0.dylib</span></span>
-<span><span class="co">#&gt; LAPACK: /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRlapack.dylib</span></span>
+<span><span class="co">#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.3-x86_64/Resources/lib/libRblas.0.dylib </span></span>
+<span><span class="co">#&gt; LAPACK: /Library/Frameworks/R.framework/Versions/4.3-x86_64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; locale:</span></span>
 <span><span class="co">#&gt; [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; time zone: Europe/Paris</span></span>
+<span><span class="co">#&gt; tzcode source: internal</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; attached base packages:</span></span>
 <span><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
-<span><span class="co">#&gt; [1] CellBarcode_1.4.0 ggplot2_3.4.0     data.table_1.14.5 BiocStyle_2.26.0 </span></span>
+<span><span class="co">#&gt; [1] CellBarcode_1.7.0 ggplot2_3.4.2     data.table_1.14.8 BiocStyle_2.28.0 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
-<span><span class="co">#&gt;  [1] MatrixGenerics_1.10.0       Biobase_2.58.0             </span></span>
-<span><span class="co">#&gt;  [3] sass_0.4.2                  jsonlite_1.8.3             </span></span>
-<span><span class="co">#&gt;  [5] bslib_0.4.1                 Rdpack_2.4                 </span></span>
-<span><span class="co">#&gt;  [7] assertthat_0.2.1            BiocManager_1.30.19        </span></span>
-<span><span class="co">#&gt;  [9] stats4_4.2.1                latticeExtra_0.6-30        </span></span>
-<span><span class="co">#&gt; [11] GenomeInfoDbData_1.2.9      Rsamtools_2.14.0           </span></span>
-<span><span class="co">#&gt; [13] Ckmeans.1d.dp_4.3.4         yaml_2.3.6                 </span></span>
-<span><span class="co">#&gt; [15] pillar_1.8.1                lattice_0.20-45            </span></span>
-<span><span class="co">#&gt; [17] glue_1.6.2                  digest_0.6.30              </span></span>
-<span><span class="co">#&gt; [19] rbibutils_2.2.9             GenomicRanges_1.50.0       </span></span>
-<span><span class="co">#&gt; [21] RColorBrewer_1.1-3          XVector_0.38.0             </span></span>
-<span><span class="co">#&gt; [23] colorspace_2.0-3            plyr_1.8.7                 </span></span>
-<span><span class="co">#&gt; [25] htmltools_0.5.3             Matrix_1.5-1               </span></span>
-<span><span class="co">#&gt; [27] pkgconfig_2.0.3             ShortRead_1.56.0           </span></span>
-<span><span class="co">#&gt; [29] bookdown_0.29               zlibbioc_1.44.0            </span></span>
-<span><span class="co">#&gt; [31] purrr_0.3.5                 scales_1.2.1               </span></span>
-<span><span class="co">#&gt; [33] jpeg_0.1-9                  BiocParallel_1.32.0        </span></span>
-<span><span class="co">#&gt; [35] tibble_3.1.8                generics_0.1.3             </span></span>
-<span><span class="co">#&gt; [37] IRanges_2.32.0              cachem_1.0.6               </span></span>
-<span><span class="co">#&gt; [39] withr_2.5.0                 SummarizedExperiment_1.28.0</span></span>
-<span><span class="co">#&gt; [41] BiocGenerics_0.44.0         cli_3.4.1                  </span></span>
-<span><span class="co">#&gt; [43] deldir_1.0-6                magrittr_2.0.3             </span></span>
-<span><span class="co">#&gt; [45] crayon_1.5.2                memoise_2.0.1              </span></span>
-<span><span class="co">#&gt; [47] evaluate_0.17               fs_1.5.2                   </span></span>
-<span><span class="co">#&gt; [49] fansi_1.0.3                 hwriter_1.3.2.1            </span></span>
-<span><span class="co">#&gt; [51] textshaping_0.3.6           tools_4.2.1                </span></span>
-<span><span class="co">#&gt; [53] lifecycle_1.0.3             matrixStats_0.62.0         </span></span>
-<span><span class="co">#&gt; [55] stringr_1.4.1               interp_1.1-3               </span></span>
-<span><span class="co">#&gt; [57] S4Vectors_0.36.0            munsell_0.5.0              </span></span>
-<span><span class="co">#&gt; [59] DelayedArray_0.24.0         Biostrings_2.66.0          </span></span>
-<span><span class="co">#&gt; [61] compiler_4.2.1              pkgdown_2.0.6              </span></span>
-<span><span class="co">#&gt; [63] jquerylib_0.1.4             GenomeInfoDb_1.34.1        </span></span>
-<span><span class="co">#&gt; [65] systemfonts_1.0.4           rlang_1.0.6                </span></span>
-<span><span class="co">#&gt; [67] grid_4.2.1                  RCurl_1.98-1.9             </span></span>
-<span><span class="co">#&gt; [69] bitops_1.0-7                rmarkdown_2.17             </span></span>
-<span><span class="co">#&gt; [71] egg_0.4.5                   gtable_0.3.1               </span></span>
-<span><span class="co">#&gt; [73] codetools_0.2-18            DBI_1.1.3                  </span></span>
-<span><span class="co">#&gt; [75] R6_2.5.1                    gridExtra_2.3              </span></span>
-<span><span class="co">#&gt; [77] GenomicAlignments_1.34.0    knitr_1.40                 </span></span>
-<span><span class="co">#&gt; [79] dplyr_1.0.10                fastmap_1.1.0              </span></span>
-<span><span class="co">#&gt; [81] utf8_1.2.2                  rprojroot_2.0.3            </span></span>
-<span><span class="co">#&gt; [83] ragg_1.2.4                  desc_1.4.2                 </span></span>
-<span><span class="co">#&gt; [85] stringi_1.7.8               parallel_4.2.1             </span></span>
-<span><span class="co">#&gt; [87] Rcpp_1.0.9                  png_0.1-7                  </span></span>
-<span><span class="co">#&gt; [89] vctrs_0.5.0                 tidyselect_1.2.0           </span></span>
-<span><span class="co">#&gt; [91] xfun_0.34</span></span></code></pre></div>
+<span><span class="co">#&gt;  [1] tidyselect_1.2.0            dplyr_1.1.2                </span></span>
+<span><span class="co">#&gt;  [3] Biostrings_2.68.1           bitops_1.0-7               </span></span>
+<span><span class="co">#&gt;  [5] fastmap_1.1.1               RCurl_1.98-1.12            </span></span>
+<span><span class="co">#&gt;  [7] GenomicAlignments_1.36.0    egg_0.4.5                  </span></span>
+<span><span class="co">#&gt;  [9] digest_0.6.31               lifecycle_1.0.3            </span></span>
+<span><span class="co">#&gt; [11] magrittr_2.0.3              compiler_4.3.0             </span></span>
+<span><span class="co">#&gt; [13] rlang_1.1.1                 sass_0.4.6                 </span></span>
+<span><span class="co">#&gt; [15] tools_4.3.0                 utf8_1.2.3                 </span></span>
+<span><span class="co">#&gt; [17] yaml_2.3.7                  knitr_1.43                 </span></span>
+<span><span class="co">#&gt; [19] S4Arrays_1.0.4              interp_1.1-4               </span></span>
+<span><span class="co">#&gt; [21] DelayedArray_0.26.3         plyr_1.8.8                 </span></span>
+<span><span class="co">#&gt; [23] RColorBrewer_1.1-3          ShortRead_1.58.0           </span></span>
+<span><span class="co">#&gt; [25] BiocParallel_1.34.2         withr_2.5.0                </span></span>
+<span><span class="co">#&gt; [27] purrr_1.0.1                 hwriter_1.3.2.1            </span></span>
+<span><span class="co">#&gt; [29] BiocGenerics_0.46.0         desc_1.4.2                 </span></span>
+<span><span class="co">#&gt; [31] grid_4.3.0                  stats4_4.3.0               </span></span>
+<span><span class="co">#&gt; [33] fansi_1.0.4                 latticeExtra_0.6-30        </span></span>
+<span><span class="co">#&gt; [35] Ckmeans.1d.dp_4.3.4         colorspace_2.1-0           </span></span>
+<span><span class="co">#&gt; [37] scales_1.2.1                SummarizedExperiment_1.30.2</span></span>
+<span><span class="co">#&gt; [39] cli_3.6.1                   rmarkdown_2.22             </span></span>
+<span><span class="co">#&gt; [41] crayon_1.5.2                ragg_1.2.5                 </span></span>
+<span><span class="co">#&gt; [43] generics_0.1.3              cachem_1.0.8               </span></span>
+<span><span class="co">#&gt; [45] stringr_1.5.0               zlibbioc_1.46.0            </span></span>
+<span><span class="co">#&gt; [47] parallel_4.3.0              BiocManager_1.30.21        </span></span>
+<span><span class="co">#&gt; [49] XVector_0.40.0              matrixStats_1.0.0          </span></span>
+<span><span class="co">#&gt; [51] vctrs_0.6.3                 Matrix_1.6-0               </span></span>
+<span><span class="co">#&gt; [53] jsonlite_1.8.5              bookdown_0.34              </span></span>
+<span><span class="co">#&gt; [55] IRanges_2.34.0              S4Vectors_0.38.1           </span></span>
+<span><span class="co">#&gt; [57] systemfonts_1.0.4           jpeg_0.1-10                </span></span>
+<span><span class="co">#&gt; [59] jquerylib_0.1.4             glue_1.6.2                 </span></span>
+<span><span class="co">#&gt; [61] pkgdown_2.0.7               codetools_0.2-19           </span></span>
+<span><span class="co">#&gt; [63] stringi_1.7.12              gtable_0.3.3               </span></span>
+<span><span class="co">#&gt; [65] GenomeInfoDb_1.36.0         deldir_1.0-9               </span></span>
+<span><span class="co">#&gt; [67] GenomicRanges_1.52.0        munsell_0.5.0              </span></span>
+<span><span class="co">#&gt; [69] tibble_3.2.1                pillar_1.9.0               </span></span>
+<span><span class="co">#&gt; [71] htmltools_0.5.5             GenomeInfoDbData_1.2.10    </span></span>
+<span><span class="co">#&gt; [73] R6_2.5.1                    textshaping_0.3.6          </span></span>
+<span><span class="co">#&gt; [75] Rdpack_2.4                  rprojroot_2.0.3            </span></span>
+<span><span class="co">#&gt; [77] evaluate_0.21               Biobase_2.60.0             </span></span>
+<span><span class="co">#&gt; [79] lattice_0.21-8              rbibutils_2.2.13           </span></span>
+<span><span class="co">#&gt; [81] png_0.1-8                   Rsamtools_2.16.0           </span></span>
+<span><span class="co">#&gt; [83] memoise_2.0.1               bslib_0.5.0                </span></span>
+<span><span class="co">#&gt; [85] Rcpp_1.0.10                 gridExtra_2.3              </span></span>
+<span><span class="co">#&gt; [87] xfun_0.39                   fs_1.6.2                   </span></span>
+<span><span class="co">#&gt; [89] MatrixGenerics_1.12.2       pkgconfig_2.0.3</span></span></code></pre></div>
 </div>
   </div>
 
@@ -279,7 +332,7 @@ please ask the package author, then the exmaple will be apear here.</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

@@ -26,7 +26,7 @@ functions, such as bc_cure_depth, bc_cure_umi."><!-- mathjax --><script src="htt
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">CellBarcode</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.9.0</span>
       </span>
     </div>
 
@@ -87,7 +87,7 @@ functions, such as <code>bc_cure_depth</code>, <code>bc_cure_umi</code>.</p>
 <dt>unlist</dt>
 <dd><p>A logical value. If TRUE, the function returns a vector of
 unique barcode list from all samples; otherwise a list will be returned. In
-the later case, each element of the list contains the barcodes of a sample.</p></dd>
+the latter case, each element of the list contains the barcodes of a sample.</p></dd>
 
 </dl></div>
     <div id="value">
@@ -101,11 +101,11 @@ the later case, each element of the list contains the barcodes of a sample.</p><
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">bc_obj</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># get unique barcode vector of all samples</span></span></span>
+<span class="r-in"><span><span class="co"># Get unique barcodes vector of all samples</span></span></span>
 <span class="r-in"><span><span class="fu">bc_barcodes</span><span class="op">(</span><span class="va">bc_obj</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "AGAG"  "AAAG"  "AGAAG" "ACAAG" "AACG" </span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># get a list with each element containing barcodes from one sample</span></span></span>
+<span class="r-in"><span><span class="co"># Get a list with each element containing barcodes from one sample</span></span></span>
 <span class="r-in"><span><span class="fu">bc_barcodes</span><span class="op">(</span><span class="va">bc_obj</span>, unlist <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $test1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "AGAG"  "AAAG"  "AGAAG" "ACAAG"</span>
@@ -129,7 +129,7 @@ the later case, each element of the list contains the barcodes of a sample.</p><
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>
