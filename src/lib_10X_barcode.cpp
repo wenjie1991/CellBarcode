@@ -69,6 +69,9 @@ List parse_10x_sam(
 
     while (!feof(infile)) {
         if (fgets(line, 10000, infile) != NULL) {
+            if (line[0] == '@') {
+                continue;
+            }
             line[strcspn(line, "\n")] = 0;
             // i++;
             // if (i == 10) {
