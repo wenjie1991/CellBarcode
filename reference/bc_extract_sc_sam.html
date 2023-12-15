@@ -212,7 +212,65 @@ samtools view -f 4 input.bam &gt; output.sam
 <span class="r-in"><span>   cell_barcode_tag <span class="op">=</span> <span class="st">"CR"</span>,</span></span>
 <span class="r-in"><span>   umi_tag <span class="op">=</span> <span class="st">"UR"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in bc_extract_sc_bam(bam = bam_file, pattern = "AGATCAG(.*)TGTGGTA",     cell_barcode_tag = "CR", umi_tag = "UR"):</span> could not find function "bc_extract_sc_bam"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Start to convert bam file to sam file.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sam file path:  /var/folders/46/vh_b6qzs5kzgdhvx1kcn7hyh0000gn/T//Rtmp3vltG5/output.sam </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bonjour le monde, This is a BarcodeObj.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ----------</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> It contains: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ----------</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> @metadata: 2 field(s) available:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> raw_read_count  barcode_read_count</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ----------</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> @messyBc: 49 sample(s) for raw barcodes:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $AAACGAAAGTTCATGC there are: 1 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $AAACGCTAGCTGACCC there are: 1 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $AAAGGATAGTGTGTTC there are: 1 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $AAAGGGCAGCCTGAGA there are: 1 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $AAAGGTAAGGCCCACT there are: 1 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $AAAGTCCCACTGCGAC there are: 1 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $AAAGTGATCTGACGCG there are: 1 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $AACACACCAATCCAGT there are: 1 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $AACACACTCACCGACG there are: 1 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $AACCCAAGGTAATTTA there are: 1 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $AACCTTTGTCATTCCC there are: 1 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $AACGAAATCTGGGTCG there are: 1 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $AACTTCTGTGTTCCTC there are: 1 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $AAGACAAAGCTAAATG there are: 1 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $AAGACAAAGGCGCTTC there are: 1 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $AAGCAGTGGTATCAAC there are: 8 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $AAGGAGCTGACAGGTG there are: 1 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $AAGTCGTAGCACGGAT there are: 1 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $AAGTGAAAGTCCCGGT there are: 1 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $AAGTTCGAGAGGTATT there are: 1 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $AATAGAGGTTCTAACG there are: 1 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $AATCGACTCATCGCTC there are: 1 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $ACAAAGAGTAGGTCAG there are: 1 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $ACAACCATCACGGAGA there are: 1 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $ACATGGGGTAAAAGGA there are: 1 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $AGCAGTGGTATCAACG there are: 1 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $AGGCATTAAAGCAGCG there are: 1 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $AGGCCTCACATTCTTC there are: 1 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $AGTCTTTCGTCAAACA there are: 1 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $CAAATTTTGTAATCCA there are: 1 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $CACAAATTTTGTAATC there are: 1 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $CACAACTCCTCATAAA there are: 1 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $CAGTGGTATCAACGCA there are: 1 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $CCTTGTGAGTGTTACC there are: 1 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $CTACGGGAAGCAATAG there are: 1 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $GATACAAAGGCATTAA there are: 1 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $GCAGTGGTATCAACGC there are: 2 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $GGAAGCAATAGCATGA there are: 1 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $GTGGTATCAACGCAGA there are: 2 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $GTTAAGAATACCAGTC there are: 1 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $TAAGCCAAAAGAACAA there are: 1 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $TAAGCCATAAACATAT there are: 1 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $TGAAAGTGACAACTGA there are: 1 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $TTCACCGATTTTGTAA there are: 2 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $TTCCAAATTTTGTAAT there are: 1 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $TTCCTCTCAGAATTGG there are: 1 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $TTCGCTGATTTTGTAA there are: 1 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $TTCTTCACAGAATTGG there are: 1 Tags</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     In sample $TTGGGCGTCTTTGGGC there are: 1 Tags </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
