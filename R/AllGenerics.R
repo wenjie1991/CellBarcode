@@ -1042,3 +1042,31 @@ setGeneric("bc_plot_count", function(
         bins = 20,
         useCleaned = TRUE) { standardGeneric("bc_plot_count") })
 
+
+#' Create a BarcodeObj object from extracted barcodes data
+#' 
+#' @param x The barcodes data, it can be matrix, data.frame with each row as a
+#' barcode each column as a sample. The row names should be given as the barcode
+#' sequences, and the column names can be given as the sample names.
+#' @param sample_name A character vector, optional, specifying the sample name.
+#' @param metadata A data.frame, optional, specifying the metadata of each
+#' sample. The row names of the metadata should be the same as the sample
+#' names.
+#' @param ordered A logical value. If the value is true, the return barcodes
+#' (UMI-barcode tags) are sorted by the read counts.
+#'
+#' @return A BarcodeObj object.
+#'
+#' @examples
+#' data(bc_obj)
+#' m = bc_2matrix(bc_obj)
+#' bc_create_BarcodeObj(m)
+#'
+#' @export
+setGeneric("bc_create_BarcodeObj", function(
+        x,
+        sample_name=NULL,
+        metadata=NULL,
+        ordered=TRUE
+        ) { standardGeneric("bc_create_BarcodeObj") })
+

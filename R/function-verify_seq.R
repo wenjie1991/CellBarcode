@@ -26,7 +26,6 @@
 #load required packages
 # library(seqinr)
 # library(Biostrings)
-# TODO: Make C++ version
 
 #' Parse VDJ recombination (experimental)
 #'
