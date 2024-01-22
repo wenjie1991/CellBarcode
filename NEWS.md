@@ -1,4 +1,4 @@
-## Changes in Version 1.9.1
+## Changes in Version 1.9.1g
 
 ### New features
 
@@ -6,6 +6,7 @@
 
 a16a9e7 feat: Adding function bc_create_BarcodeObj enabling import process barcode data
 45d886a test: adding test for processed data import
+1d5f4de doc: add bc_create_BarcodeObj document
 
 ### Fix:
 
