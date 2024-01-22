@@ -32,7 +32,7 @@ The R package is created by Wenjie SUN, Anne-Marie Lyne, and Leïla Perié at In
 ```r
 if(!requireNamespace("remotes", quietly = TRUE))
     install.packages("remotes")
-remotes::install_github("wenjie1991/CellBarcode@dev")
+remotes::install_github("wenjie1991/CellBarcode")
 ```
 
 ## Get start
