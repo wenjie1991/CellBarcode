@@ -297,6 +297,11 @@ setMethod("bc_extract", "character", function(
         names(messyBc) <- sample_name
         # output <- list(messyBc = messyBc, metadata = metadata)
         # class(output) <- "BarcodeObj"
+
+        # check if no barcodes found
+        if (all(sapply(messyBc, nrow) == 0)) {
+            message("No barcode found. Please check the input file and pattern.")
+        }
         output <- BarcodeObj(metadata=metadata, messyBc=messyBc)
         return(output)
     # } else {
@@ -356,6 +361,11 @@ setMethod("bc_extract", "list", function(
 
     # output <- list(messyBc = messyBc, metadata = metadata)
     # class(output) <- "BarcodeObj"
+
+    # check if no barcodes found
+    if (all(sapply(messyBc, nrow) == 0)) {
+        message("No barcode found. Please check the input file and pattern.")
+    }
     output <- BarcodeObj(metadata=metadata, messyBc=messyBc)
     output
 })
