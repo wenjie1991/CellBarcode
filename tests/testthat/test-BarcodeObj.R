@@ -120,3 +120,27 @@ test_that("meta data", {
 
 })
 
+## import processed data as a BarcodeObj
+test_that("import", {
+    x = bc_2matrix(bc_obj)
+    expect_equal(
+        bc_2matrix(
+            bc_cure_depth(
+                bc_create_BarcodeObj(x)
+            )
+        ), 
+    x)
+
+    x = data.frame(x)
+    expect_equal(
+        data.frame(
+            bc_2matrix(
+                bc_cure_depth(
+                    bc_create_BarcodeObj(x)
+                )
+            )
+        ),
+    x)
+})
+
+
