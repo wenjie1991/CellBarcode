@@ -293,7 +293,7 @@ setMethod("bc_meta<-", c("BarcodeObj", "ANY", "ANY"), function(barcodeObj, key =
 
     # If no key is given, update the metadata
     if (is.null(key)) {
-        if (!is_pure_data_frame(value))
+        if (!is_pure_dataframe(value))
             stop("The input data is not a data.frame")
 
         # If a new value matches the sample number

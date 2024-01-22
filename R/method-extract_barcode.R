@@ -254,7 +254,7 @@ setMethod("bc_extract", "character", function(
     #   no sample_name
     #   no rowname
     
-    if (!is.null(metadata) & !is_pure_dataframe(metadata, "data.frame")) {
+    if (!is.null(metadata) & !is_pure_dataframe(metadata)) {
         stop("metadata should be a data.frame.")
     }
 
