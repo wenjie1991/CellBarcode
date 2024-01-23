@@ -39,7 +39,7 @@ remotes::install_github("wenjie1991/CellBarcode")
 
 Here is an example of a basic workflow:
 
-```{r}
+```r
 library(CellBarcode)
 library(magrittr)
 

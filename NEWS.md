@@ -1,4 +1,4 @@
-## Changes in Version 1.9.1g
+## Changes in Version 1.9.1
 
 ### New features
 
