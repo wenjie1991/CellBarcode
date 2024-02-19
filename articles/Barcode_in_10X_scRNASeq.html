@@ -39,7 +39,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">CellBarcode</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.9.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.9.2</span>
       </span>
     </div>
 
@@ -96,6 +96,20 @@
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">CellBarcode</span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
+<h2 id="process-single-cell-sequencing-data">Process single cell sequencing data<a class="anchor" aria-label="anchor" href="#process-single-cell-sequencing-data"></a>
+</h2>
+<p>The <strong>CellBarcode</strong> package is able to extract barcode
+sequence from single cell sequencing data.</p>
+<p>The <strong>Bam</strong>, <strong>Sam</strong> and
+<strong>Fastq</strong> format files are supported. The
+<strong>Bam</strong> and <strong>Sam</strong> files should be the output
+of the 10X Genomics CellRanger pipeline. The <strong>Fastq</strong>
+files are the raw sequencing data. The vignette will show how to extract
+barcode from the <strong>Bam/Sam</strong> files.</p>
+<p>For more examples, please check the <strong>Supplementary Vignette
+2</strong> in following link: <a href="https://static-content.springer.com/esm/art%3A10.1038%2Fs43588-024-00595-7/MediaObjects/43588_2024_595_MOESM1_ESM.pdf" class="external-link uri">https://static-content.springer.com/esm/art%3A10.1038%2Fs43588-024-00595-7/MediaObjects/43588_2024_595_MOESM1_ESM.pdf</a></p>
+</div>
+<div class="section level2">
 <h2 id="preprocess-of-cellranger-output-bam-file">Preprocess of CellRanger output bam file<a class="anchor" aria-label="anchor" href="#preprocess-of-cellranger-output-bam-file"></a>
 </h2>
 <p><strong>The the information in the bam file</strong>. There are RNA
@@ -108,7 +122,7 @@ in following location of the CellRanger output.</p>
 And in some cases we can do some filtering to make the input file
 smaller, for reducing the running time.</p>
 <p><strong>Example 1 get the sam file</strong></p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="ex">samtools</span> view possorted_genome_bam.bam <span class="op">&gt;</span> scRNASeq_10X.sam</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> view possorted_genome_bam.bam <span class="op">&gt;</span> scRNASeq_10X.sam</span></code></pre></div>
 <p><strong>Example 2 get the sam file only contain un mapped
 reads</strong></p>
 <p>In most of the time, the barcodes are designed not overlap with the
@@ -117,7 +131,7 @@ reference genome. Add a simple parameter, we can get the un-mapped reads
 to significantly reduce the running time of the barcode extraction
 procedure. In the following example, the <code>scRNASeq_10X.sam</code>
 file only contains the un-mapped reads.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="ex">samtools</span> view <span class="at">-f</span> 4 possorted_genome_bam.bam <span class="op">&gt;</span> scRNASeq_10X.sam</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> view <span class="at">-f</span> 4 possorted_genome_bam.bam <span class="op">&gt;</span> scRNASeq_10X.sam</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="extract-lineage-barcode">Extract lineage barcode<a class="anchor" aria-label="anchor" href="#extract-lineage-barcode"></a>
@@ -246,16 +260,16 @@ please ask the package author, then the exmaple will be apear here.</p>
 </h2>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; R version 4.3.1 (2023-06-16)</span></span>
+<span><span class="co">#&gt; R version 4.3.0 (2023-04-21)</span></span>
 <span><span class="co">#&gt; Platform: x86_64-apple-darwin20 (64-bit)</span></span>
-<span><span class="co">#&gt; Running under: macOS Monterey 12.7.2</span></span>
+<span><span class="co">#&gt; Running under: macOS 14.2.1</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Matrix products: default</span></span>
 <span><span class="co">#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.3-x86_64/Resources/lib/libRblas.0.dylib </span></span>
 <span><span class="co">#&gt; LAPACK: /Library/Frameworks/R.framework/Versions/4.3-x86_64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; locale:</span></span>
-<span><span class="co">#&gt; [1] en_US.UTF-8/UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8</span></span>
+<span><span class="co">#&gt; [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; time zone: Europe/Paris</span></span>
 <span><span class="co">#&gt; tzcode source: internal</span></span>
@@ -264,55 +278,54 @@ please ask the package author, then the exmaple will be apear here.</p>
 <span><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
-<span><span class="co">#&gt; [1] CellBarcode_1.7.1 ggplot2_3.4.4     data.table_1.14.8 BiocStyle_2.28.1 </span></span>
+<span><span class="co">#&gt; [1] CellBarcode_1.7.0 ggplot2_3.4.4     data.table_1.14.8 BiocStyle_2.28.0 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
-<span><span class="co">#&gt;  [1] tidyselect_1.2.0            dplyr_1.1.3                </span></span>
+<span><span class="co">#&gt;  [1] tidyselect_1.2.0            dplyr_1.1.2                </span></span>
 <span><span class="co">#&gt;  [3] Biostrings_2.68.1           bitops_1.0-7               </span></span>
 <span><span class="co">#&gt;  [5] fastmap_1.1.1               RCurl_1.98-1.12            </span></span>
 <span><span class="co">#&gt;  [7] GenomicAlignments_1.36.0    egg_0.4.5                  </span></span>
-<span><span class="co">#&gt;  [9] digest_0.6.33               lifecycle_1.0.3            </span></span>
-<span><span class="co">#&gt; [11] magrittr_2.0.3              compiler_4.3.1             </span></span>
-<span><span class="co">#&gt; [13] rlang_1.1.1                 sass_0.4.7                 </span></span>
-<span><span class="co">#&gt; [15] tools_4.3.1                 utf8_1.2.4                 </span></span>
-<span><span class="co">#&gt; [17] yaml_2.3.7                  knitr_1.45                 </span></span>
-<span><span class="co">#&gt; [19] S4Arrays_1.0.6              interp_1.1-4               </span></span>
-<span><span class="co">#&gt; [21] DelayedArray_0.26.7         plyr_1.8.9                 </span></span>
+<span><span class="co">#&gt;  [9] digest_0.6.31               lifecycle_1.0.3            </span></span>
+<span><span class="co">#&gt; [11] magrittr_2.0.3              compiler_4.3.0             </span></span>
+<span><span class="co">#&gt; [13] rlang_1.1.1                 sass_0.4.6                 </span></span>
+<span><span class="co">#&gt; [15] tools_4.3.0                 utf8_1.2.3                 </span></span>
+<span><span class="co">#&gt; [17] yaml_2.3.7                  knitr_1.43                 </span></span>
+<span><span class="co">#&gt; [19] S4Arrays_1.0.4              interp_1.1-4               </span></span>
+<span><span class="co">#&gt; [21] DelayedArray_0.26.3         plyr_1.8.8                 </span></span>
 <span><span class="co">#&gt; [23] RColorBrewer_1.1-3          ShortRead_1.58.0           </span></span>
-<span><span class="co">#&gt; [25] abind_1.4-5                 BiocParallel_1.34.2        </span></span>
-<span><span class="co">#&gt; [27] withr_2.5.2                 purrr_1.0.2                </span></span>
-<span><span class="co">#&gt; [29] hwriter_1.3.2.1             BiocGenerics_0.46.0        </span></span>
-<span><span class="co">#&gt; [31] desc_1.4.2                  grid_4.3.1                 </span></span>
-<span><span class="co">#&gt; [33] stats4_4.3.1                fansi_1.0.5                </span></span>
-<span><span class="co">#&gt; [35] latticeExtra_0.6-30         Ckmeans.1d.dp_4.3.5        </span></span>
-<span><span class="co">#&gt; [37] colorspace_2.1-0            scales_1.2.1               </span></span>
-<span><span class="co">#&gt; [39] SummarizedExperiment_1.30.2 cli_3.6.1                  </span></span>
-<span><span class="co">#&gt; [41] rmarkdown_2.25              crayon_1.5.2               </span></span>
-<span><span class="co">#&gt; [43] ragg_1.2.6                  generics_0.1.3             </span></span>
-<span><span class="co">#&gt; [45] cachem_1.0.8                stringr_1.5.0              </span></span>
-<span><span class="co">#&gt; [47] zlibbioc_1.46.0             parallel_4.3.1             </span></span>
-<span><span class="co">#&gt; [49] BiocManager_1.30.22         XVector_0.40.0             </span></span>
-<span><span class="co">#&gt; [51] matrixStats_1.0.0           vctrs_0.6.4                </span></span>
-<span><span class="co">#&gt; [53] Matrix_1.6-1.1              jsonlite_1.8.7             </span></span>
-<span><span class="co">#&gt; [55] bookdown_0.36               IRanges_2.34.1             </span></span>
-<span><span class="co">#&gt; [57] S4Vectors_0.38.2            systemfonts_1.0.5          </span></span>
-<span><span class="co">#&gt; [59] jpeg_0.1-10                 jquerylib_0.1.4            </span></span>
-<span><span class="co">#&gt; [61] glue_1.6.2                  pkgdown_2.0.7              </span></span>
-<span><span class="co">#&gt; [63] codetools_0.2-19            stringi_1.7.12             </span></span>
-<span><span class="co">#&gt; [65] gtable_0.3.4                GenomeInfoDb_1.36.4        </span></span>
-<span><span class="co">#&gt; [67] deldir_1.0-9                GenomicRanges_1.52.1       </span></span>
-<span><span class="co">#&gt; [69] munsell_0.5.0               tibble_3.2.1               </span></span>
-<span><span class="co">#&gt; [71] pillar_1.9.0                htmltools_0.5.6.1          </span></span>
-<span><span class="co">#&gt; [73] GenomeInfoDbData_1.2.10     R6_2.5.1                   </span></span>
-<span><span class="co">#&gt; [75] textshaping_0.3.7           Rdpack_2.5                 </span></span>
-<span><span class="co">#&gt; [77] rprojroot_2.0.3             evaluate_0.23              </span></span>
-<span><span class="co">#&gt; [79] Biobase_2.60.0              lattice_0.22-5             </span></span>
-<span><span class="co">#&gt; [81] rbibutils_2.2.16            png_0.1-8                  </span></span>
-<span><span class="co">#&gt; [83] Rsamtools_2.16.0            memoise_2.0.1              </span></span>
-<span><span class="co">#&gt; [85] bslib_0.5.1                 Rcpp_1.0.11                </span></span>
-<span><span class="co">#&gt; [87] gridExtra_2.3               xfun_0.41                  </span></span>
-<span><span class="co">#&gt; [89] fs_1.6.3                    MatrixGenerics_1.12.3      </span></span>
-<span><span class="co">#&gt; [91] pkgconfig_2.0.3</span></span></code></pre></div>
+<span><span class="co">#&gt; [25] BiocParallel_1.34.2         withr_2.5.0                </span></span>
+<span><span class="co">#&gt; [27] purrr_1.0.1                 hwriter_1.3.2.1            </span></span>
+<span><span class="co">#&gt; [29] BiocGenerics_0.46.0         desc_1.4.2                 </span></span>
+<span><span class="co">#&gt; [31] grid_4.3.0                  stats4_4.3.0               </span></span>
+<span><span class="co">#&gt; [33] fansi_1.0.4                 latticeExtra_0.6-30        </span></span>
+<span><span class="co">#&gt; [35] Ckmeans.1d.dp_4.3.4         colorspace_2.1-0           </span></span>
+<span><span class="co">#&gt; [37] scales_1.2.1                SummarizedExperiment_1.30.2</span></span>
+<span><span class="co">#&gt; [39] cli_3.6.1                   rmarkdown_2.22             </span></span>
+<span><span class="co">#&gt; [41] crayon_1.5.2                ragg_1.2.5                 </span></span>
+<span><span class="co">#&gt; [43] generics_0.1.3              cachem_1.0.8               </span></span>
+<span><span class="co">#&gt; [45] stringr_1.5.0               zlibbioc_1.46.0            </span></span>
+<span><span class="co">#&gt; [47] parallel_4.3.0              BiocManager_1.30.21        </span></span>
+<span><span class="co">#&gt; [49] XVector_0.40.0              matrixStats_1.0.0          </span></span>
+<span><span class="co">#&gt; [51] vctrs_0.6.3                 Matrix_1.6-0               </span></span>
+<span><span class="co">#&gt; [53] jsonlite_1.8.5              bookdown_0.34              </span></span>
+<span><span class="co">#&gt; [55] IRanges_2.34.0              S4Vectors_0.38.1           </span></span>
+<span><span class="co">#&gt; [57] systemfonts_1.0.4           jpeg_0.1-10                </span></span>
+<span><span class="co">#&gt; [59] jquerylib_0.1.4             glue_1.6.2                 </span></span>
+<span><span class="co">#&gt; [61] pkgdown_2.0.7               codetools_0.2-19           </span></span>
+<span><span class="co">#&gt; [63] stringi_1.7.12              gtable_0.3.3               </span></span>
+<span><span class="co">#&gt; [65] GenomeInfoDb_1.36.0         deldir_1.0-9               </span></span>
+<span><span class="co">#&gt; [67] GenomicRanges_1.52.0        munsell_0.5.0              </span></span>
+<span><span class="co">#&gt; [69] tibble_3.2.1                pillar_1.9.0               </span></span>
+<span><span class="co">#&gt; [71] htmltools_0.5.5             GenomeInfoDbData_1.2.10    </span></span>
+<span><span class="co">#&gt; [73] R6_2.5.1                    textshaping_0.3.6          </span></span>
+<span><span class="co">#&gt; [75] Rdpack_2.4                  rprojroot_2.0.3            </span></span>
+<span><span class="co">#&gt; [77] evaluate_0.21               Biobase_2.60.0             </span></span>
+<span><span class="co">#&gt; [79] lattice_0.21-8              rbibutils_2.2.13           </span></span>
+<span><span class="co">#&gt; [81] png_0.1-8                   Rsamtools_2.16.0           </span></span>
+<span><span class="co">#&gt; [83] memoise_2.0.1               bslib_0.5.0                </span></span>
+<span><span class="co">#&gt; [85] Rcpp_1.0.10                 gridExtra_2.3              </span></span>
+<span><span class="co">#&gt; [87] xfun_0.39                   fs_1.6.2                   </span></span>
+<span><span class="co">#&gt; [89] MatrixGenerics_1.12.2       pkgconfig_2.0.3</span></span></code></pre></div>
 </div>
   </div>
 
