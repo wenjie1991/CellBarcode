@@ -45,7 +45,7 @@ library(magrittr)
 
 # The example data is a mix of MEF lines with known barcodes
 # 2000 reads for each file have been sampled for this test dataset
-# TODO: Citation of the paper:
+# The data is from this paper: 10.1038/s41467-023-37167-8
 example_data <- system.file("extdata", "mef_test_data", package = "CellBarcode")
 fq_files <- dir(example_data, "gz", full=TRUE)
 
@@ -87,3 +87,9 @@ head(bc_2matrix(bc_sub))
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
+
+## Citation
+
+If you use **CellBarcode** in your research, please cite the following paper:
+[Sun, W. et al. Extracting, filtering and simulating cellular barcodes using CellBarcode tools. Nat Comput Sci 1–16 (2024)](doi:10.1038/s43588-024-00595-7)
+
