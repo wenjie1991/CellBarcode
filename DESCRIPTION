@@ -43,3 +43,5 @@ biocViews: Preprocessing, QualityControl, Sequencing, CRISPR
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 NeedsCompilation: yes
+URL: https://wenjie1991.github.io/CellBarcode/
+BugReports: https://github.com/wenjie1991/CellBarcode/issues
