@@ -1,4 +1,27 @@
-## Changes in Version 
+## Changes in Version 1.9.1
+
+### New features
+
+#### Adding function `bc_create_BarcodeObj` enabling import processed barcode data
+
+a16a9e7 feat: Adding function bc_create_BarcodeObj enabling import process barcode data
+45d886a test: adding test for processed data import
+1d5f4de doc: add bc_create_BarcodeObj document
+
+### Fix:
+
+#### Make sure object is `data.frame` instead of `tibble` or `data.table`
+
+895e9a9 fix: make sure the data.frame is pure data.frame instead of tibble or data.table
+31e6989 fix: error while checking data.frame
+
+### Chore:
+
+#### Error messages and input checks
+
+f84b2a1 chore: message if no barcodes found in bulk sequencings
+e0cded9 chore: Error message when no barcodes are found
+3beef87 chore: Check input for sam and bam file
 
 ## Changes in Version 1.7.2
 

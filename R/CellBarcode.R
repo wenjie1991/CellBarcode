@@ -1,26 +1,16 @@
-# TODO:
-
-## The filterFq() should be an independent package
-# filterFq() -> output the filtering detail
-
-# [ ] evaluating the sequencing depth (saturation of the sequencing)
-# [ ] bc_plot_pairwise with interactive available (plotly)
-# [ ] bc_plot_pairwise with interactive available (d3)
-# [ ] bc_plot_single with interactive (plotly)
-# [ ] bc_plot_single with interactive (d3)
-# [ ] bc_plot_pairwise with interactive (d3)
-# [ ] Explore the barcodes within a single sample or between two samples or more
-#       interactively (explore the cutoff point interactively).
-# [ ] If no barcodes in the object, give errors when processing it with
-# BarcodeObj methods.
-
-# Global help function
+##  Global help function
+##########################
 ifnullelse <- function(cand1, other) {
     if (is.null(cand1)) {
         return(other)
     } else {
         return(cand1)
     }
+}
+
+# Check if a object is a pure data.frame
+is_pure_dataframe <- function(obj) {
+    inherits(obj, "data.frame") && !inherits(obj, "tbl") && !inherits(obj, "data.table")
 }
 
 #' DNA Barcode Analysis toolkit

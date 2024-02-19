@@ -31,6 +31,11 @@ process_sc_list <- function(l) {
     )
     rownames(metadata) <- names(messyBc)
 
+    ## Stop if no barcode is extracted
+    if (length(messyBc) == 0) {
+        stop("No barcode is extracted from the input file.\nPlease check if the input file or pattern is correct.")
+    }
+
     output <- BarcodeObj(metadata = metadata, messyBc = messyBc)
 
     output
@@ -105,9 +110,17 @@ bc_extract_sc_sam <- function(
     cell_barcode_tag = "CR", 
     umi_tag = "UR"
     ) {
+
+    # check if the sam file exists
     if(!file.exists(sam)) {
         stop("The input sam file does not exist.")
     }
+
+    # check if the file is sam file
+    if(!grepl("\\.sam$", sam)) {
+        stop("The input sam file does not have the suffix of .sam.")
+    }
+
     sam <- path.expand(sam)
     l <- parse_10x_sam(sam, pattern)
 
@@ -122,9 +135,15 @@ bc_extract_sc_bam <- function(
     cell_barcode_tag = "CR",
     umi_tag = "UR"
     ) {
-    ## check if the bam file exists
+
+    # check if the bam file exists
     if(!file.exists(bam)) {
         stop("The input bam file does not exist.")
+    }
+
+    # check if the file is bam file
+    if(!grepl("\\.bam$", bam)) {
+        stop("The input bam file does not have the suffix of .bam.")
     }
 
     # Define a temporary directory

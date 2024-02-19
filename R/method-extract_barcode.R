@@ -254,7 +254,7 @@ setMethod("bc_extract", "character", function(
     #   no sample_name
     #   no rowname
     
-    if (!is.null(metadata) & !is(metadata, "data.frame")) {
+    if (!is.null(metadata) & !is_pure_dataframe(metadata)) {
         stop("metadata should be a data.frame.")
     }
 
@@ -297,6 +297,11 @@ setMethod("bc_extract", "character", function(
         names(messyBc) <- sample_name
         # output <- list(messyBc = messyBc, metadata = metadata)
         # class(output) <- "BarcodeObj"
+
+        # check if no barcodes found
+        if (all(sapply(messyBc, nrow) == 0)) {
+            message("No barcode found. Please check the input file and pattern.")
+        }
         output <- BarcodeObj(metadata=metadata, messyBc=messyBc)
         return(output)
     # } else {
@@ -356,6 +361,72 @@ setMethod("bc_extract", "list", function(
 
     # output <- list(messyBc = messyBc, metadata = metadata)
     # class(output) <- "BarcodeObj"
+
+    # check if no barcodes found
+    if (all(sapply(messyBc, nrow) == 0)) {
+        message("No barcode found. Please check the input file and pattern.")
+    }
     output <- BarcodeObj(metadata=metadata, messyBc=messyBc)
     output
 })
+
+#' @rdname bc_create_BarcodeObj
+#' @exportMethod bc_create_BarcodeObj
+setMethod("bc_create_BarcodeObj", "matrix", function(
+    x, 
+    sample_name = NULL, 
+    metadata = NULL) {
+
+    if (!is.null(metadata) & !is_pure_dataframe(metadata)) {
+        stop("metadata should be a data.frame.")
+    }
+
+    if (is.null(sample_name)) {
+        sample_name <- colnames(x)
+    } else {
+        if (length(sample_name) != ncol(x)) {
+            stop("Sample name length does not meet sample number.")
+        }
+    }
+
+    if (!is.null(metadata)) {
+        if (!all(sample_name == rownames(metadata))) {
+            stop("Sample name does not match row name of metadata.")
+        }
+    } else {
+        metadata <- data.frame(row.names = sample_name)
+    }
+
+
+    messyBc = plyr::alply(x, 2, function(z) {
+        y = data.table(barcode_seq = rownames(x), count = z)
+        y[count != 0]
+    })
+
+    attributes(messyBc) = NULL
+    names(messyBc) = sample_name
+
+    output <- BarcodeObj(metadata=metadata, messyBc=messyBc)
+    output
+})
+
+#' @rdname bc_create_BarcodeObj
+#' @exportMethod bc_create_BarcodeObj
+setMethod("bc_create_BarcodeObj", "data.frame", function(
+        x,
+        sample_name = NULL,
+        metadata = NULL) {
+    
+    if (!is_pure_dataframe(x)) {
+        stop("Input should be a data.frame, instead of tibble or data.table.")
+    }
+
+    x = data.matrix(x)
+
+    bc_create_BarcodeObj(
+        x,
+        sample_name = sample_name,
+        metadata = metadata
+    )
+})
+
