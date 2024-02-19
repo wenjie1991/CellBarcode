@@ -1,8 +1,8 @@
 bibentry(
-  entrytype = "Article",
+  bibtype = "Article",
   title = "Extracting, Filtering and Simulating Cellular Barcodes Using CellBarcode Tools",
   author = c(
-    person(c("Wenjie", "Sun"),
+    person("Wenjie", "Sun"),
     person("Meghan", "Perkins"),
     person("Mathilde", "Huyghe"),
     person("Marisa M.", "Faraldo"),

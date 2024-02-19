@@ -49,6 +49,9 @@ check_sample_name <- function(object) {
 #' 2. \code{counts}: reads count, or UMI count if the \code{cleanBc} was created by
 #' \code{bc_cure_umi}.
 #'
+#' @return
+#' A \code{BarcodeObj} object.
+#'
 #' @examples
 #'
 #' #######
