@@ -63,6 +63,9 @@ bc_obj = bc_cure_depth(bc_obj, depth=5)
 \usage{
 data(bc_obj)
 }
+\value{
+A \code{BarcodeObj} object.
+}
 \description{
 Dataset contains a \code{BarcodeObj} with makeup barcode data.
 }
