@@ -5,29 +5,29 @@
 
 **CellBarcode** is an R package for dealing with **Cellular DNA barcoding** sequencing data.
 
-The R package is created by Wenjie SUN, Anne-Marie Lyne, and Leïla Perié at Institut Curie.
+The R package was created by Wenjie SUN, Anne-Marie Lyne, and Leïla Perié at Institut Curie.
 
-## Kinds of barcodes
+## Types of barcodes
 
-**CellBarcode** can handle all kinds of DNA barcodes, as long as:
+**CellBarcode** can handle all types of DNA barcodes, provided that:
 
 - The barcodes have a pattern that can be matched by a regular expression.
 - Each barcode is within a single sequencing read.
 
 ## What you can do with **CellBarcode**
 
-- Performs quality control for the DNA sequence results, and filters the sequences according
+- Perform quality control for the DNA sequence results, and filter the sequences according
   to their quality metrics.
 
-- Identifies barcode (and UMI) information in sequencing results.
+- Identify barcode (and UMI) information in sequencing results.
 
-- Performs quality control and deals with the spurious sequence which comes from potential PCR & sequence errors.
+- Performs quality control and deal with the spurious sequences that come from potential PCR & sequence errors.
 
-- Provides toolkits to make it easier to manipulate samples and barcodes with metadata.
+- Provide toolkits to make it easier to manage samples and barcodes with metadata.
 
 ## Installing
 
-### Install devel version from GitHub
+### Install the development version from GitHub
 
 ```r
 if(!requireNamespace("remotes", quietly = TRUE))
@@ -35,7 +35,7 @@ if(!requireNamespace("remotes", quietly = TRUE))
 remotes::install_github("wenjie1991/CellBarcode")
 ```
 
-## Get start
+## Getting Started
 
 Here is an example of a basic workflow:
 
@@ -45,7 +45,7 @@ library(magrittr)
 
 # The example data is a mix of MEF lines with known barcodes
 # 2000 reads for each file have been sampled for this test dataset
-# TODO: Citation of the paper:
+# Data can be accessed here: https://zenodo.org/records/10027002
 example_data <- system.file("extdata", "mef_test_data", package = "CellBarcode")
 fq_files <- dir(example_data, "gz", full=TRUE)
 
