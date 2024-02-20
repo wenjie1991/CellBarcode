@@ -91,5 +91,5 @@ head(bc_2matrix(bc_sub))
 ## Citation
 
 If you use **CellBarcode** in your research, please cite the following paper:
-[Sun, W. et al. Extracting, filtering and simulating cellular barcodes using CellBarcode tools. Nat Comput Sci 1–16 (2024)](doi:10.1038/s43588-024-00595-7)
+[Sun, W. et al. Extracting, filtering and simulating cellular barcodes using CellBarcode tools. Nat Comput Sci 1–16 (2024)](https://www.nature.com/articles/s43588-024-00595-7)
 
