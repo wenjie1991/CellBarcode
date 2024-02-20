@@ -1,0 +1,20 @@
+bibentry(
+  bibtype = "Article",
+  title = "Extracting, Filtering and Simulating Cellular Barcodes Using CellBarcode Tools",
+  author = c(
+    person("Wenjie", "Sun"),
+    person("Meghan", "Perkins"),
+    person("Mathilde", "Huyghe"),
+    person("Marisa M.", "Faraldo"),
+    person("Silvia", "Fre"),
+    person("Leïla", "Perié"),
+    person("Anne-Marie", "Lyne")),
+  journal = "Nature Computational Science",
+  year = "2024",
+  month = "February",
+  volume = "",
+  number = "",
+  pages = "1-16",
+  doi = "10.1038/s43588-024-00595-7",
+  url = "https://doi.org/10.1038/s43588-024-00595-7"
+)

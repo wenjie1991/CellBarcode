@@ -29,10 +29,21 @@ library(ggplot2)
 library(CellBarcode)
 ```
 
+# Process single cell sequencing data
+
+The **CellBarcode** package is able to extract barcode sequence from single cell sequencing data.
+
+The **Bam**, **Sam** and **Fastq** format files are supported. 
+The **Bam** and **Sam** files should be the output of the 10X Genomics CellRanger pipeline. 
+The **Fastq** files are the raw sequencing data.
+The vignette will show how to extract barcode from the **Bam/Sam** files.
+
+For more examples, please check the **Supplementary Vignette 2** in following link: <https://static-content.springer.com/esm/art%3A10.1038%2Fs43588-024-00595-7/MediaObjects/43588_2024_595_MOESM1_ESM.pdf>
+
 # Preprocess of CellRanger output bam file
 
 **The the information in the bam file**. There are RNA sequence, Cell barcode and UMI in the bam file. We need to get the barcode in the RNA sequence together with the Cell barcode
-and UMI.
+and UMI. 
 
 **Where to find the bam file**. Usually, the bam file in in following location of the CellRanger output.
 

@@ -1,7 +1,7 @@
 Package: CellBarcode
 Type: Package
 Title: Cellular DNA Barcode Analysis toolkit
-Version: 1.9.1
+Version: 1.9.2
 Authors@R: c(
   person("Wenjie", "Sun", email = "sunwjie@gmail.com", role = c("cre", "aut"), comment=c(ORCID="0000-0002-3100-2346")),
   person("Anne-Marie", "Lyne", email = "Anne-Marie.Lyne@curie.fr", role = "aut"),
@@ -43,3 +43,5 @@ biocViews: Preprocessing, QualityControl, Sequencing, CRISPR
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 NeedsCompilation: yes
+URL: https://wenjie1991.github.io/CellBarcode/
+BugReports: https://github.com/wenjie1991/CellBarcode/issues

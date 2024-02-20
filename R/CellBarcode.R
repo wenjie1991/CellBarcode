@@ -45,6 +45,7 @@ NULL
 #' @keywords dataset
 #' @usage data(bc_obj)
 #' @format This is a BarcodeObj object
+#' @return A \code{BarcodeObj} object.
 #' @source
 #' This is a \code{BarcodeObj} object derived from makeup data by:
 #'
