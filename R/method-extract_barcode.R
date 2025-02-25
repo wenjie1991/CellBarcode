@@ -263,65 +263,43 @@ setMethod("bc_extract", "character", function(
         stop(paste0("Input file(s) do not exist."))
     }
 
+    input_names <- basename(x)
+    sample_name <- bc_process_sample_name(sample_name, metadata, input_names)
 
-    # if more than one fastq file as input
-    # if (length(x) > 1) {
+    pattern = rep(pattern, length.out = length(x))
+    maxLDist = rep(maxLDist, length.out = length(x))
 
-        input_names <- basename(x)
-        sample_name <- bc_process_sample_name(sample_name, metadata, input_names)
-
-        pattern = rep(pattern, length.out = length(x))
-        maxLDist = rep(maxLDist, length.out = length(x))
-
-        messyBc <- lapply(seq_along(x), function(i) {
-            if (grepl(".fq$", x[i]) | grepl(".fastq$", x[i])) {
-                barcode_df = read_fastq(x[i])
-            } else if (grepl(".fq.gz$", x[i]) | grepl(".fastq.gz$", x[i])) {
-                barcode_df = read_fastq_gz(x[i])
-            } else {
-                stop("The input is not Fastq file. Please check the input.")
-            }
-            bc_extract(
-                barcode_df,
-                sample_name = sample_name[i], 
-                pattern = pattern[i], 
-                maxLDist = maxLDist[i], 
-                pattern_type = pattern_type, 
-                costs = costs, 
-                ordered = ordered)
-        })
-
-        new_metadata <- bc_extract_metadata(messyBc, sample_name)
-        metadata <- bc_process_metadata(sample_name, metadata, new_metadata)
-
-        names(messyBc) <- sample_name
-        # output <- list(messyBc = messyBc, metadata = metadata)
-        # class(output) <- "BarcodeObj"
-
-        # check if no barcodes found
-        if (all(sapply(messyBc, nrow) == 0)) {
-            message("No barcode found. Please check the input file and pattern.")
+    messyBc <- lapply(seq_along(x), function(i) {
+        if (grepl(".fq$", x[i]) | grepl(".fastq$", x[i])) {
+            barcode_df = read_fastq(x[i])
+        } else if (grepl(".fq.gz$", x[i]) | grepl(".fastq.gz$", x[i])) {
+            barcode_df = read_fastq_gz(x[i])
+        } else {
+            stop("The input is not Fastq file. Please check the input.")
         }
-        output <- BarcodeObj(metadata=metadata, messyBc=messyBc)
-        return(output)
-    # } else {
-    #     # if one fastq file as input
-    #     if (grepl(".fq$", x) | grepl(".fastq$", x)) {
-    #         barcode_df = read_fastq(x)
-    #     } else if (grepl(".fq.gz$", x) | grepl(".fastq.gz", x)) {
-    #         barcode_df = read_fastq_gz(x)
-    #     } else {
-    #         stop("The input is not Fastq file. Please check the input.")
-    #     }
-    #     bc_extract(
-    #         barcode_df,
-    #         sample_name = sample_name[i], 
-    #         pattern = pattern,
-    #         maxLDist = maxLDist,
-    #         pattern_type = pattern_type,
-    #         costs = costs,
-    #         ordered = ordered)
-    # }
+        bc_extract(
+            barcode_df,
+            sample_name = sample_name[i], 
+            pattern = pattern[i], 
+            maxLDist = maxLDist[i], 
+            pattern_type = pattern_type, 
+            costs = costs, 
+            ordered = ordered)
+    })
+
+    new_metadata <- bc_extract_metadata(messyBc, sample_name)
+    metadata <- bc_process_metadata(sample_name, metadata, new_metadata)
+
+    names(messyBc) <- sample_name
+    # output <- list(messyBc = messyBc, metadata = metadata)
+    # class(output) <- "BarcodeObj"
+
+    # check if no barcodes found
+    if (all(sapply(messyBc, nrow) == 0)) {
+        message("No barcode found. Please check the input file and pattern.")
+    }
+    output <- BarcodeObj(metadata=metadata, messyBc=messyBc)
+    return(output)
 })
 
 

@@ -33,7 +33,7 @@ process_sc_list <- function(l) {
 
     ## Stop if no barcode is extracted
     if (length(messyBc) == 0) {
-        stop("No barcode is extracted from the input file.\nPlease check if the input file or pattern is correct.")
+        stop("No barcode found. Please check the input file and pattern.")
     }
 
     output <- BarcodeObj(metadata = metadata, messyBc = messyBc)
