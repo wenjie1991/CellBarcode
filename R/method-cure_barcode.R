@@ -116,6 +116,8 @@ setMethod("bc_cure_cluster", c("BarcodeObj"), function(
         , count_threshold =count_threshold 
     )
 
+    # BUG: If no @cleanBc, the function will fail.
+
     cleanBc <- barcodeObj@cleanBc
 
     if (dist_method == "hamm" & cluster_method == "greedy") {
@@ -128,11 +130,12 @@ setMethod("bc_cure_cluster", c("BarcodeObj"), function(
                 # run hamming clustering
                 seq_correct(
                     seq_v, 
-                    count_v, 
-                    parameter_df[i, "count_threshold"], 
-                    parameter_df[i, "distance"],
-                    parameter_df[i, "depth_fold_threshold"], 
-                    1
+                    as.integer(count_v), 
+                    as.integer(parameter_df[i, "count_threshold"]), 
+                    as.integer(parameter_df[i, "distance"]),
+                    as.double(parameter_df[i, "depth_fold_threshold"]), 
+                    as.integer(1),
+                    as.integer(c(0, 0, 0))  ## dummy value for replace_costs
                 )
             }
         )
@@ -144,6 +147,8 @@ setMethod("bc_cure_cluster", c("BarcodeObj"), function(
                 d$seq_freq[order(d$seq_freq$count, decreasing = TRUE), ]
             }
         )
+
+        print(cleanBc)
 
         ## The correction log
         #     cleanProc <- lapply(correct_out,
@@ -170,14 +175,12 @@ setMethod("bc_cure_cluster", c("BarcodeObj"), function(
                 # run levenshtein clustering
                 seq_correct(
                     seq_v, 
-                    count_v, 
-                    parameter_df[i, "count_threshold"], 
-                    parameter_df[i, "distance"],
-                    parameter_df[i, "depth_fold_threshold"], 
-                    2,
-                    insert_costs,
-                    delete_costs,
-                    replace_costs
+                    as.integer(count_v), 
+                    as.integer(parameter_df[i, "count_threshold"]), 
+                    as.integer(parameter_df[i, "distance"]),
+                    as.double(parameter_df[i, "depth_fold_threshold"]), 
+                    as.integer(2),
+                    as.integer(c(insert_costs, delete_costs, replace_costs))
                 )
             }
         )

@@ -122,7 +122,7 @@ bc_extract_sc_sam <- function(
     }
 
     sam <- path.expand(sam)
-    l <- parse_10x_sam(sam, pattern)
+    l <- parse_10x_sam(sam, pattern, cell_barcode_tag, umi_tag)
 
     process_sc_list(l)
 }

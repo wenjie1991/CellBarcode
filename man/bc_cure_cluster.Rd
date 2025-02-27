@@ -56,7 +56,7 @@ as a true barcode. If a barcode with a count higher than this threshold
 it will not be removed, even if the barcode is similar to a more abundant one.
 Default is 1e9.}
 
-\item{dist_costs}{A list, the cost of the events of distance algorithm, 
+\item{dist_costs}{A list, the cost (integer) of the events of distance algorithm, 
 applicable when Levenshtein distance is applied. The
 names of vector have to be \code{insert}, \code{delete} and \code{replace},
 specifying the weight of insertion, deletion, and replacement events
