@@ -44,3 +44,4 @@ NeedsCompilation: yes
 URL: https://wenjie1991.github.io/CellBarcode/
 BugReports: https://github.com/wenjie1991/CellBarcode/issues
 Config/rextendr/version: 0.3.1
+SystemRequirements: Cargo (Rust's package manager), rustc
