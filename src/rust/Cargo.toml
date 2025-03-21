@@ -1,0 +1,23 @@
+[package]
+name = 'CellBarcode'
+version = '0.1.0'
+edition = '2021'
+
+[lib]
+crate-type = [ 'staticlib' ]
+name = 'CellBarcode'
+
+[dependencies]
+extendr-api = "*"
+regex = "1"
+lazy_static = "1"
+itertools = "0.10"
+flate2 = "1.0"
+leven-distance = "1.0"
+
+[profile.release]
+opt-level = 3           
+debug = false          
+overflow-checks = false 
+lto = true              
+panic = 'abort'         
