@@ -3,13 +3,13 @@
 8a38560 [doc] Update package document
 f37a920 [bug] bc_cure_cluster() error when there is no @cleanBc slot
 dcee0d8 [doc] Update install guide
-910ce93 [feat] transform the Rcpp to rust
-d1d354f [misc] add error message when no barcode detected in bc_extract_sc_fastq()
-63f7c95 [misc] update the error message when no barcode detected
-f32bb33 [mis] Update action cache version
+910ce93 [high] transform the Rcpp to rust
+d1d354f misc: add error message when no barcode detected in bc_extract_sc_fastq()
+63f7c95 misc: update the error message when no barcode detected
+f32bb33 [misc] Update action cache version
 5c89289 [fix] zlibbioc Deprecation
-4509346 [mis] Update Makevars.win
-9589498 [mis] Document update
+4509346 [misc] Update Makevars.win
+9589498 [misc] Document update
 9f427dc [doc] Update license to Artistic-2.0
 99af8f4 [doc] update scSeq vignettes
 

@@ -151,6 +151,8 @@ setMethod("bc_cure_cluster", c("BarcodeObj"), function(
             }
         )
 
+        print(cleanBc)
+
         ## The correction log
         #     cleanProc <- lapply(correct_out,
         #       function(d) {
