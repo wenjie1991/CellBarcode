@@ -285,11 +285,6 @@ bc_extract_sc_fastq <- function(
     )
     rownames(metadata) <- names(messyBc)
 
-    # check if no barcodes found
-    if (all(sapply(messyBc, nrow) == 0)) {
-        message("No barcode found. Please check the input file and pattern.")
-    }
-
     output <- BarcodeObj(metadata = metadata, messyBc = messyBc)
 
     output
