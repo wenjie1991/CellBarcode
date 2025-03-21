@@ -2,9 +2,9 @@ name: R
 
 on:
   push:
-    branches: [ "devel", "rust" ]
+    branches: [ "devel" ]
   pull_request:
-    branches: [ "devel", "rust" ]
+    branches: [ "devel" ]
 
 permissions:
   contents: read
