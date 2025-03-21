@@ -44,5 +44,8 @@ VignetteBuilder: knitr
 NeedsCompilation: yes
 URL: https://wenjie1991.github.io/CellBarcode/
 BugReports: https://github.com/wenjie1991/CellBarcode/issues
+<<<<<<< HEAD
 Config/rextendr/version: 0.3.1
 SystemRequirements: Cargo (Rust's package manager), rustc
+=======
+>>>>>>> parent of 910ce93 ([high] transform the Rcpp to rust)

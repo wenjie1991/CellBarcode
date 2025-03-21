@@ -13,4 +13,3 @@ devtools.R
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
-^src/\.cargo$
