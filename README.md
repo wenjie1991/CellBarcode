@@ -31,50 +31,7 @@ The R package was created by Wenjie SUN, Anne-Marie Lyne, and Leïla Perié at I
 
 ## Installing
 
-**🚀 CellBarcode got a major upgrade – now powered by Rust! ⚡**
-
-If you are installing CellBarcode from Bioconductor, you should not feel differences in MacOS and Windows.
-However, if you are installing CellBarcode from GitHub, you may need to install the Rust toolchain first.
-
-### Install from Bioconductor
-
-**Stable version:**
-
-```r
-if (!requireNamespace("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
-BiocManager::install("CellBarcode")
-```
-
-**Development version:**
-
-```r
-if (!requireNamespace("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
-BiocManager::install("CellBarcode", version = "devel")
-```
-
-### Install Bioconductor version from Conda
-
-```bash
-conda install bioconda::bioconductor-cellbarcode
-```
-
 ### Install the development version from GitHub
-
-**Step1.** Check if you have the Rust toolchain installed:
-
-```bash
-rustc --version
-```
-
-If you don't get a version number, you need to install the Rust toolchain:
-
-```bash
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-```
-
-**Step2.** Then, you can install the development version of **CellBarcode** from GitHub:
 
 ```r
 if(!requireNamespace("remotes", quietly = TRUE))
