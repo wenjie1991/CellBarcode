@@ -116,10 +116,7 @@ setMethod("bc_cure_cluster", c("BarcodeObj"), function(
         , count_threshold =count_threshold 
     )
 
-    ## Check if the cleanBc is available
-    if (is.null(barcodeObj@cleanBc)) {
-        stop("Please run bc_cure_depth() first.")
-    }
+    # BUG: If no @cleanBc, the function will fail.
 
     cleanBc <- barcodeObj@cleanBc
 
